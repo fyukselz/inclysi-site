@@ -337,52 +337,60 @@ footer{padding:3rem 4rem;display:flex;align-items:center;justify-content:space-b
 <!-- POST BODY — TURKISH -->
 <article class="post-body lang-section" id="tr-content">
 
-  <p>Her SOC'un kendi versiyonu vardır bu hikayenin. Analist vardiyasını 4.000 alarma açar. İki saat triage yapar. Büyük çoğunluğunu false positive olarak kapatır. Önemli olanı kaçırır.</p>
+  <p>Siber güvenlik sektörü yıllardır aynı hatayı yapıyor: Daha fazla analist, daha fazla vardiya, daha fazla göz... Ancak uyarılar azalmak yerine katlanarak artıyor. Gerçek çözüm hiçbir zaman daha fazla insan çalıştırmak değildi; çözüm her zaman mimariydi ve bu, "sinyal" kavramını ele alış biçimimizde yatıyor.</p>
 
-  <p>Yönetimin refleks tepkisi her zaman aynıdır: daha fazla analist işe al. Daha büyük ekipler kur. Daha fazla vardiya yarat. Ama bu yaklaşım, bir sistem sorununu insan kaynağı sorunu olarak ele alır — ve ölçeklenmez.</p>
+  <p>Her SOC ekibi aslında aynı kısır döngüyü yaşıyor: Bir analist mesaisine 4.000 uyarı ile başlıyor. Saatlerce tasnif yapıyor, uyarılardan dağ gibi yanlış pozitif ayıklıyor ve tam o sırada, asıl kritik olan o tek bir uyarıyı gözden kaçırıyor.</p>
 
-  <h2>Sinyal Sorunu</h2>
+  <p>Yönetimin refleksi ise hep aynı: "Daha fazla analist alalım, ekipleri büyütelim." Oysa bu, sistemsel bir arızayı personel eksikliğiyle yamamaya çalışmaktır — ve bu yöntem asla sürdürülebilir değildir.</p>
 
-  <p>Modern SIEM ortamları <strong>maksimum kapsama</strong> için tasarlanmıştır — ilgili olabilecek her şeyi yüzeye çıkarırlar. Teknik olarak doğrudur bu. Sorun, hassasiyet olmadan maksimum kapsamın endüstriyel ölçekte gürültü üretmesidir.</p>
+  <h2>Sinyal Karmaşası</h2>
+
+  <p>Modern SIEM sistemleri, "hiçbir şeyi kaçırmamak" üzerine tasarlanmıştır. Teknik olarak bu mantıklı görünse de, netlik sağlamadan veriyi yığmak, endüstriyel ölçekte bir gürültü kirliliği yaratır.</p>
 
   <blockquote>
-    <p>"On iki kişilik bir ekiple günde 6.000 alarm triage ediyorduk. Gerçek bir olay sıraya girdiğinde, analistlerimiz onu fark edemeyecek kadar bilişsel olarak tükenmişti."</p>
-    <cite>— SOC Lideri, finansal hizmetler sektörü</cite>
+    <p>"12 kişilik bir ekiple günde 6.000 uyarıyı ayıklamaya çalışıyorduk. Gerçek bir tehdit önümüze düştüğünde, analistlerimiz artık onu fark edemeyecek kadar zihinsel olarak tükenmişti."</p>
+    <cite>— Finans Sektörü SOC Lideri</cite>
   </blockquote>
 
-  <p>SIEM işini yapıyor. Sorun, ham sinyal ile insan bilişi arasında bir katman inşa edilmemiş olması — akıl yürütebilen, filtreleyebilen ve önceliklendirebilen bir katman.</p>
+  <p>Burada SIEM görevini yapıyor. Sorun, ham veri ile insan zihni arasında bu sinyalleri anlamlandıracak, süzgeçten geçirecek ve önceliklendirecek bir akıl katmanının eksikliğidir.</p>
 
-  <h2>Neden İnsanlar Yanlış Filtredir</h2>
+  <h2>İnsan Zihni Neden Bir Filtre Değildir?</h2>
 
-  <p>İnsan analistler nüanslı muhakemede olağanüstüdür — olaylar arasında bağlam kurabilir, davranışsal anomalileri okuyabilir, belirsizlik altında karar verebilirler. Tam da bu beceriler, analistler zamanlarının %80'ini tekrarlayan, düşük sinyalli alarmları okuyarak geçirdiğinde boşa harcanır.</p>
+  <p>Analistler; olaylar arası bağlam kurma, karmaşık davranışları okuma ve belirsizlik anında inisiyatif alma konusunda rakipsizdir. Ancak bir analize zamanının %80'ini birbirini tekrar eden, düşük nitelikli uyarıları kapatmakla harcatırsanız, bu yetenekleri köreltirsiniz.</p>
 
-  <p>Triage'ın bilişsel yükü sadece yorucu değildir — gerçekten önemli alarmlardaki analiz kalitesini aktif olarak düşürür. Karar yorgunluğu gerçek ve ölçülebilirdir. Bir vardiyada 4.000. alarm, ilk alarmın aldığı dikkatin çok küçük bir bölümünü alır.</p>
+  <p>Karar yorgunluğu fiziksel bir gerçektir. Mesainin 4.000. uyarısı, asla ilk uyarı kadar dikkatli incelenmez. Bu bilişsel yük, sadece yorgunluk yaratmaz; analizin kalitesini de aktif olarak zehirler.</p>
 
-  <h2>Mimari Çözüm Nasıl Görünür</h2>
+  <h2>Mühendislik Temelli Çözüm Nedir?</h2>
 
-  <p>Cevap analistleri kaldırmak değil. Onları karar zincirinde daha yukarıya taşımak — ve altındaki her şeyi ele alan zeka katmanı inşa etmek.</p>
+  <p>Çözüm analistleri devreden çıkarmak değil, onları karar mekanizmasının en üstüne yerleştirip, alt kademedeki ham iş yükünü sisteme devretmektir.</p>
 
   <div class="callout">
-    <div class="callout-label">Temel Prensip</div>
-    <p>Yapay zeka analist kararının yerini almamalı. İlk etapta karar gerektirmeyen işi ortadan kaldırmalı.</p>
+    <div class="callout-label">Altın Kural</div>
+    <p>Yapay zeka, analistin karar yetisinin yerini almamalı; aksine, karar gerektirmeyen angarya işleri ortadan kaldırmalıdır.</p>
   </div>
 
-  <p>Bu, şunları yapabilen sistemler inşa etmek demektir:</p>
+  <p>Bu vizyonla inşa edilen bir sistem şunları yapabilmelidir:</p>
 
   <ul>
-    <li>Alarmları kural ağırlığına göre değil, gerçek tehdit olasılığına göre otomatik puanlama ve sıralama</li>
-    <li>Varlık bazında davranışsal taban çizgisi tutma — sapmaların anlamlı olması, gürültülü değil</li>
-    <li>Her analist kararından öğrenme, kurumsal bilgiyi zamanla biriktirme</li>
-    <li>Yalnızca gerçekten insan muhakemesi gerektireni yüzeye çıkarma, destekleyici kanıtlar zaten derlenmiş olarak</li>
+    <li>Uyarıları sadece kurala göre değil, gerçek tehdit olasılığına göre puanlamak.</li>
+    <li>Kullanıcı ve sistemlerin davranış haritasını çıkararak sapmaları gürültüden ayıklamak.</li>
+    <li>Analistlerin verdiği her karardan öğrenerek kurumsal hafızayı güçlendirmek.</li>
+    <li>Analistin önüne sadece müdahale gerektiren olayları, tüm kanıtları masaya serilmiş şekilde getirmek.</li>
   </ul>
 
-  <p>Sonuç daha küçük bir ekip değil. Tam bilişsel kapasitede çalışan bir ekip — gürültü yönetimi değil, gerçek tehditlere odaklanmış.</p>
+  <p>Sonuç; küçülmüş bir ekip değil, tüm enerjisini gerçek tehditleri avlamaya adamış, tam kapasiteyle çalışan bir uzman kadrosudur.</p>
+
+  <h2>Veri Gizliliği ve Hava Boşluğu</h2>
+
+  <p>Kurumsal güvenliğin en büyük engeli, hassas verilerin dışarı çıkamamasıdır. Bulut tabanlı yapay zeka çözümleri ne kadar güçlü olursa olsun, dış dünyaya kapalı sistemlerle doku uyuşmazlığı yaşarlar.</p>
+
+  <p>Bu noktada yerel çıkarım bir lüks değil, şarttır. Artık kurum içinde çalışan açık kaynaklı modern modeller, dışarıya veri sızdırmadan üst düzey analiz yapabiliyor. Yani gizlilik artık bir yetenek kısıtı değil.</p>
 
   <hr>
 
-  <p>Alert yorgunluğu gerçektir. Ama bir semptomdur. Hastalık mimaridir — sinyal hacmi ile onu işleyen zeka arasındaki boşluk. Çözüm mühendislik gerektirir, insan sayısı değil.</p>
+  <p>Uyarı yorgunluğu bir hastalık değil, bir belirtidir. Asıl hastalık, devasa sinyal hacmi ile bu veriyi işleyecek zeka arasındaki mimari boşluktur. Bu boşluğu yeni personelle dolduramazsınız; sadece mühendislikle kapatabilirsiniz.</p>
 
-  <p>Inclysi tam da bu sorunu çözmek için inşa edildi.</p>
+  <p>Inclysi, tam olarak bu boşluğu doldurmak için tasarlandı.</p>
 
 </article>
 
