@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inclysi — Precision Over Volume</title>
+<meta name="description" content="AI-powered SOC intelligence. Cut through alert noise. Respond to what matters.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090f;
+  --bg2:#0c0f1a;
+  --bg3:#111629;
+  --gold:#c9a84c;
+  --gold2:#e8c36a;
+  --red:#e63946;
+  --text:#e8eaf0;
+  --muted:#8892a4;
+  --border:#1a2035;
+  --font-display:'Syne',sans-serif;
+  --font-body:'DM Sans',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-body);
+  font-size:16px;
+  line-height:1.7;
+  overflow-x:hidden;
+}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;
+  z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.2rem 4rem;
+  background:rgba(7,9,15,0.85);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(26,32,53,0.6);
+}
+.nav-logo{
+  display:flex;align-items:center;gap:0.75rem;
+  text-decoration:none;
+}
+.nav-logo img{width:36px;height:36px;border-radius:50%}
+.nav-logo span{
+  font-family:var(--font-display);
+  font-size:1.25rem;font-weight:700;
+  color:var(--text);letter-spacing:0.02em;
+}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{
+  color:var(--muted);font-size:0.875rem;font-weight:400;
+  text-decoration:none;letter-spacing:0.04em;
+  transition:color 0.2s;
+}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{
+  font-family:var(--font-body);
+  font-size:0.8rem;font-weight:500;letter-spacing:0.08em;
+  text-transform:uppercase;
+  color:var(--gold);
+  border:1px solid rgba(201,168,76,0.4);
+  padding:0.5rem 1.25rem;
+  border-radius:2px;
+  text-decoration:none;
+  transition:all 0.2s;
+}
+.nav-cta:hover{background:rgba(201,168,76,0.08);border-color:var(--gold)}
+
+/* HERO */
+.hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;
+  padding:8rem 2rem 4rem;
+  position:relative;
+  overflow:hidden;
+}
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(201,168,76,0.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(201,168,76,0.03) 1px,transparent 1px);
+  background-size:60px 60px;
+  mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,black,transparent);
+}
+.hero-glow{
+  position:absolute;
+  width:600px;height:600px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(201,168,76,0.06) 0%,transparent 70%);
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  pointer-events:none;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  font-size:0.7rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--gold);
+  border:1px solid rgba(201,168,76,0.25);
+  padding:0.35rem 1rem;border-radius:2px;
+  margin-bottom:2.5rem;
+  position:relative;z-index:1;
+}
+.hero-badge::before{
+  content:'';width:6px;height:6px;border-radius:50%;
+  background:var(--gold);
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.hero h1{
+  font-family:var(--font-display);
+  font-size:clamp(2.8rem,7vw,5.5rem);
+  font-weight:800;
+  line-height:1.05;
+  letter-spacing:-0.02em;
+  position:relative;z-index:1;
+  max-width:900px;
+}
+.hero h1 em{
+  font-style:normal;
+  color:var(--gold);
+}
+.hero-sub{
+  font-size:clamp(1rem,2vw,1.2rem);
+  color:var(--muted);
+  font-weight:300;
+  max-width:540px;
+  margin:1.75rem auto 3rem;
+  position:relative;z-index:1;
+  line-height:1.8;
+}
+.hero-actions{
+  display:flex;align-items:center;gap:1.5rem;
+  position:relative;z-index:1;
+}
+.btn-primary{
+  font-family:var(--font-body);
+  font-size:0.85rem;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;
+  color:var(--bg);
+  background:var(--gold);
+  padding:0.85rem 2.25rem;
+  border-radius:2px;
+  text-decoration:none;
+  transition:all 0.2s;
+  border:none;cursor:pointer;
+}
+.btn-primary:hover{background:var(--gold2);transform:translateY(-1px)}
+.btn-ghost{
+  font-size:0.85rem;font-weight:400;letter-spacing:0.04em;
+  color:var(--muted);
+  text-decoration:none;
+  display:flex;align-items:center;gap:0.4rem;
+  transition:color 0.2s;
+}
+.btn-ghost:hover{color:var(--text)}
+.btn-ghost svg{width:16px;height:16px}
+.hero-scroll{
+  position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:0.5rem;
+  color:var(--muted);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;
+  animation:fadeInUp 1s 1s both;
+}
+.scroll-line{
+  width:1px;height:48px;
+  background:linear-gradient(to bottom,transparent,var(--gold),transparent);
+  animation:scrollLine 2s infinite;
+}
+@keyframes scrollLine{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* SECTION BASE */
+section{padding:7rem 2rem}
+.container{max-width:1100px;margin:0 auto}
+.section-label{
+  font-size:0.7rem;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:1rem;
+  display:flex;align-items:center;gap:0.75rem;
+}
+.section-label::before{content:'';width:24px;height:1px;background:var(--gold)}
+
+/* PROBLEM */
+.problem{background:var(--bg2)}
+.problem-inner{
+  display:grid;grid-template-columns:1fr 1fr;gap:5rem;
+  align-items:center;
+}
+.problem-visual{
+  position:relative;border-radius:4px;overflow:hidden;
+}
+.problem-visual img{
+  width:100%;display:block;
+  border-radius:4px;
+  border:1px solid var(--border);
+}
+.problem-content h2{
+  font-family:var(--font-display);
+  font-size:clamp(2rem,3.5vw,2.8rem);
+  font-weight:700;line-height:1.15;
+  margin-bottom:1.5rem;
+}
+.problem-content h2 span{color:var(--red)}
+.problem-content p{color:var(--muted);font-weight:300;font-size:1.05rem;margin-bottom:1rem}
+.problem-stats{
+  display:flex;gap:2rem;margin-top:2.5rem;
+  padding-top:2rem;
+  border-top:1px solid var(--border);
+}
+.stat-item{display:flex;flex-direction:column;gap:0.25rem}
+.stat-num{
+  font-family:var(--font-display);
+  font-size:2.2rem;font-weight:700;
+  color:var(--gold);line-height:1;
+}
+.stat-label{font-size:0.75rem;color:var(--muted);letter-spacing:0.04em}
+
+/* FEATURES */
+.features h2{
+  font-family:var(--font-display);
+  font-size:clamp(2rem,3.5vw,2.8rem);
+  font-weight:700;
+  max-width:600px;margin-bottom:1rem;
+}
+.features-sub{color:var(--muted);font-size:1.05rem;max-width:480px;margin-bottom:4rem;font-weight:300}
+.features-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:1px;
+  background:var(--border);
+  border:1px solid var(--border);
+  border-radius:4px;overflow:hidden;
+}
+.feature-card{
+  background:var(--bg);
+  padding:2.5rem;
+  transition:background 0.25s;
+  position:relative;
+}
+.feature-card:hover{background:var(--bg2)}
+.feature-card::after{
+  content:'';
+  position:absolute;top:0;left:0;right:0;
+  height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  opacity:0;
+  transition:opacity 0.25s;
+}
+.feature-card:hover::after{opacity:1}
+.feature-icon{
+  width:40px;height:40px;
+  border:1px solid rgba(201,168,76,0.3);
+  border-radius:3px;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:1.5rem;
+}
+.feature-icon svg{width:20px;height:20px;stroke:var(--gold);fill:none;stroke-width:1.5}
+.feature-card h3{
+  font-family:var(--font-display);
+  font-size:1.1rem;font-weight:600;
+  margin-bottom:0.75rem;
+}
+.feature-card p{color:var(--muted);font-size:0.9rem;font-weight:300;line-height:1.7}
+
+/* HOW */
+.how{background:var(--bg2)}
+.how-inner{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start}
+.how h2{
+  font-family:var(--font-display);
+  font-size:clamp(2rem,3.5vw,2.8rem);
+  font-weight:700;margin-bottom:1rem;
+}
+.how p{color:var(--muted);font-size:1.05rem;max-width:420px;margin-bottom:3rem;font-weight:300}
+.steps{display:flex;flex-direction:column;gap:0}
+.step{
+  display:flex;gap:1.5rem;
+  padding:1.75rem 0;
+  border-bottom:1px solid var(--border);
+  position:relative;
+}
+.step:first-child{padding-top:0}
+.step-num{
+  font-family:var(--font-display);
+  font-size:0.7rem;font-weight:700;letter-spacing:0.1em;
+  color:var(--gold);
+  min-width:28px;
+  padding-top:0.2rem;
+}
+.step-content h4{font-family:var(--font-display);font-size:1rem;font-weight:600;margin-bottom:0.35rem}
+.step-content p{color:var(--muted);font-size:0.875rem;font-weight:300}
+.how-visual{position:relative}
+.how-visual img{
+  width:100%;border-radius:4px;
+  border:1px solid var(--border);
+  display:block;
+}
+
+/* BLOG */
+.blog h2{
+  font-family:var(--font-display);
+  font-size:clamp(1.8rem,3vw,2.4rem);
+  font-weight:700;margin-bottom:0.5rem;
+}
+.blog-header{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  margin-bottom:3rem;
+}
+.blog-sub{color:var(--muted);font-size:1rem;font-weight:300}
+.view-all{
+  font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--gold);text-decoration:none;
+  display:flex;align-items:center;gap:0.4rem;
+  border-bottom:1px solid rgba(201,168,76,0.3);
+  padding-bottom:2px;
+  transition:border-color 0.2s;
+  white-space:nowrap;
+}
+.view-all:hover{border-color:var(--gold)}
+.blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.blog-card{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:4px;overflow:hidden;
+  text-decoration:none;
+  display:block;
+  transition:border-color 0.2s,transform 0.2s;
+}
+.blog-card:hover{border-color:rgba(201,168,76,0.3);transform:translateY(-3px)}
+.blog-card-img{
+  height:180px;overflow:hidden;
+  background:var(--bg3);
+}
+.blog-card-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.4s}
+.blog-card:hover .blog-card-img img{transform:scale(1.04)}
+.blog-card-body{padding:1.5rem}
+.blog-tag{
+  font-size:0.65rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:0.75rem;display:block;
+}
+.blog-card h3{
+  font-family:var(--font-display);
+  font-size:1rem;font-weight:600;
+  color:var(--text);line-height:1.4;
+  margin-bottom:0.5rem;
+}
+.blog-card p{color:var(--muted);font-size:0.825rem;font-weight:300;line-height:1.6}
+.blog-card-meta{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-top:1.25rem;
+  padding-top:1rem;
+  border-top:1px solid var(--border);
+  font-size:0.75rem;color:var(--muted);
+}
+.blog-card-meta .lang{
+  font-weight:500;letter-spacing:0.06em;
+  color:rgba(201,168,76,0.7);
+}
+
+/* CTA */
+.cta-section{
+  background:var(--bg2);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  text-align:center;
+  padding:7rem 2rem;
+  position:relative;overflow:hidden;
+}
+.cta-glow{
+  position:absolute;
+  width:500px;height:300px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(201,168,76,0.07) 0%,transparent 70%);
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  pointer-events:none;
+}
+.cta-section h2{
+  font-family:var(--font-display);
+  font-size:clamp(2rem,4vw,3.2rem);
+  font-weight:700;
+  max-width:640px;margin:0 auto 1rem;
+  position:relative;z-index:1;
+}
+.cta-section p{
+  color:var(--muted);font-size:1.05rem;font-weight:300;
+  max-width:400px;margin:0 auto 2.5rem;
+  position:relative;z-index:1;
+}
+.cta-section .btn-primary{position:relative;z-index:1}
+
+/* FOOTER */
+footer{
+  padding:3rem 4rem;
+  display:flex;align-items:center;justify-content:space-between;
+  border-top:1px solid var(--border);
+}
+.footer-logo{
+  display:flex;align-items:center;gap:0.75rem;
+  text-decoration:none;
+}
+.footer-logo img{width:28px;height:28px;border-radius:50%}
+.footer-logo span{
+  font-family:var(--font-display);
+  font-size:1rem;font-weight:600;color:var(--text);
+}
+.footer-copy{font-size:0.8rem;color:var(--muted)}
+.footer-links{display:flex;gap:2rem}
+.footer-links a{font-size:0.8rem;color:var(--muted);text-decoration:none;transition:color 0.2s}
+.footer-links a:hover{color:var(--text)}
+
+/* ANIMATIONS */
+@keyframes fadeInUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity 0.7s ease,transform 0.7s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  nav{padding:1.2rem 2rem}
+  .nav-links{display:none}
+  .problem-inner,.how-inner{grid-template-columns:1fr;gap:3rem}
+  .problem-visual{order:-1}
+  .features-grid{grid-template-columns:1fr}
+  .blog-grid{grid-template-columns:1fr}
+  .blog-header{flex-direction:column;align-items:flex-start;gap:1rem}
+  footer{flex-direction:column;gap:1.5rem;text-align:center;padding:2.5rem 2rem}
+  .footer-links{flex-wrap:wrap;justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-logo">
+    <img src="assets/logo.png" alt="Inclysi">
+    <span>Inclysi</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#product">Product</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#insights">Insights</a></li>
+  </ul>
+  <a href="mailto:contact@inclysi.com" class="nav-cta">Get in Touch</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+
+  <div class="hero-badge">AI-Powered SOC Intelligence</div>
+
+  <h1>
+    Precision<br>
+    <em>Over Volume.</em>
+  </h1>
+
+  <p class="hero-sub">
+    Your SIEM generates thousands of alerts. Your analysts shouldn't have to read all of them.
+    Inclysi does.
+  </p>
+
+  <div class="hero-actions">
+    <a href="#product" class="btn-primary">Explore the Platform</a>
+    <a href="#insights" class="btn-ghost">
+      Read Insights
+      <svg viewBox="0 0 24 24" stroke="currentColor" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    scroll
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="problem" id="product">
+  <div class="container">
+    <div class="problem-inner">
+      <div class="problem-visual fade-in">
+        <img src="assets/hero-visual.png" alt="Attack path visualization">
+      </div>
+      <div class="problem-content fade-in">
+        <div class="section-label">The Problem</div>
+        <h2>Alert fatigue is <span>real.</span><br>And it's getting worse.</h2>
+        <p>Modern SIEM environments produce thousands of signals daily. Analysts spend hours triaging noise — missing the threats that actually matter.</p>
+        <p>The problem isn't data. It's the absence of intelligence to act on it.</p>
+        <div class="problem-stats">
+          <div class="stat-item">
+            <span class="stat-num">70%</span>
+            <span class="stat-label">of alerts go uninvestigated</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num">4.5h</span>
+            <span class="stat-label">avg. triage time per incident</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num">0</span>
+            <span class="stat-label">internet dependency</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="container">
+    <div class="section-label fade-in">What We Do</div>
+    <h2 class="fade-in">Intelligence built<br>for the analyst.</h2>
+    <p class="features-sub fade-in">Not another dashboard. A system that thinks alongside your team.</p>
+
+    <div class="features-grid fade-in">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        </div>
+        <h3>AI Triage Engine</h3>
+        <p>Every offense is scored, ranked and explained — before your analyst opens the ticket. Hard evidence, soft signals, entity history: all weighted automatically.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3>Air-Gapped by Design</h3>
+        <p>Runs entirely on your infrastructure. Local LLM, local embeddings, local vector search. No data leaves your environment. Ever.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        </div>
+        <h3>Institutional Memory</h3>
+        <p>Every analyst verdict trains the system. Entity profiles, behavioral baselines and past incidents accumulate into an organizational knowledge base that compounds over time.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        </div>
+        <h3>SIEM-Native Intelligence</h3>
+        <p>Deep integration with your existing SIEM environment. No rip-and-replace. Inclysi amplifies what you already have — it doesn't replace it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="container">
+    <div class="how-inner">
+      <div>
+        <div class="section-label fade-in">How It Works</div>
+        <h2 class="fade-in">From raw signal<br>to clear action.</h2>
+        <p class="fade-in">A multi-stage AI pipeline that turns SIEM noise into prioritized, evidence-backed decisions.</p>
+
+        <div class="steps fade-in">
+          <div class="step">
+            <span class="step-num">01</span>
+            <div class="step-content">
+              <h4>Ingest &amp; Enrich</h4>
+              <p>Offenses are pulled from your SIEM with full context — events, flows, entity history, network topology.</p>
+            </div>
+          </div>
+          <div class="step">
+            <span class="step-num">02</span>
+            <div class="step-content">
+              <h4>Semantic Search</h4>
+              <p>Hybrid vector + keyword search surfaces similar past incidents. Pattern recognition at scale.</p>
+            </div>
+          </div>
+          <div class="step">
+            <span class="step-num">03</span>
+            <div class="step-content">
+              <h4>AI Analysis</h4>
+              <p>Two-stage local LLM pipeline: initial triage, then deep analysis. Confidence scoring with evidence chain.</p>
+            </div>
+          </div>
+          <div class="step">
+            <span class="step-num">04</span>
+            <div class="step-content">
+              <h4>Analyst Decision</h4>
+              <p>Clear verdict with supporting evidence. Every decision feeds back into the system, making it smarter.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="how-visual fade-in">
+        <img src="assets/chaos-visual.png" alt="Inclysi intelligence pipeline">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BLOG / INSIGHTS -->
+<section class="blog" id="insights">
+  <div class="container">
+    <div class="blog-header fade-in">
+      <div>
+        <div class="section-label">Insights</div>
+        <h2>From the SOC floor.</h2>
+        <p class="blog-sub">Technical writing on AI, threat detection and the future of security operations.</p>
+      </div>
+      <a href="blog/" class="view-all">View all posts &rarr;</a>
+    </div>
+
+    <div class="blog-grid fade-in">
+      <!-- Post cards will be populated as posts are written -->
+      <a href="blog/en/why-alert-fatigue-is-an-engineering-problem.html" class="blog-card">
+        <div class="blog-card-img">
+          <img src="assets/post-placeholder.jpg" alt="Alert fatigue">
+        </div>
+        <div class="blog-card-body">
+          <span class="blog-tag">SOC Operations</span>
+          <h3>Why Alert Fatigue Is an Engineering Problem, Not a People Problem</h3>
+          <p>The industry keeps hiring more analysts. The real fix is architectural.</p>
+          <div class="blog-card-meta">
+            <span>Apr 2026</span>
+            <span class="lang">EN / TR</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="blog/en/local-llm-in-soc.html" class="blog-card">
+        <div class="blog-card-img">
+          <img src="assets/post-placeholder-2.jpg" alt="Local LLM">
+        </div>
+        <div class="blog-card-body">
+          <span class="blog-tag">AI &amp; Security</span>
+          <h3>Running a Local LLM Inside an Air-Gapped SOC: What We Learned</h3>
+          <p>Privacy, latency and the tradeoffs no one talks about when deploying LLMs on-prem.</p>
+          <div class="blog-card-meta">
+            <span>Apr 2026</span>
+            <span class="lang">EN / TR</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="blog/en/siem-is-not-enough.html" class="blog-card">
+        <div class="blog-card-img">
+          <img src="assets/post-placeholder-3.jpg" alt="SIEM">
+        </div>
+        <div class="blog-card-body">
+          <span class="blog-tag">Threat Intelligence</span>
+          <h3>SIEM Is Not Enough. Here's What Comes After.</h3>
+          <p>A look at where traditional SIEM platforms stop and where AI-augmented operations begin.</p>
+          <div class="blog-card-meta">
+            <span>Apr 2026</span>
+            <span class="lang">EN / TR</span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-glow"></div>
+  <h2>Ready to cut through the noise?</h2>
+  <p>Inclysi is built for security teams who take precision seriously.</p>
+  <a href="mailto:contact@inclysi.com" class="btn-primary">Get in Touch</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="/" class="footer-logo">
+    <img src="assets/logo.png" alt="Inclysi">
+    <span>Inclysi</span>
+  </a>
+  <span class="footer-copy">&copy; 2026 Inclysi. All rights reserved.</span>
+  <div class="footer-links">
+    <a href="blog/">Blog</a>
+    <a href="mailto:contact@inclysi.com">Contact</a>
+  </div>
+</footer>
+
+<script>
+const observer=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible')}})
+},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(el=>observer.observe(el));
+</script>
+</body>
+</html>
