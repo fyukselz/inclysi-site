@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Insights — Inclysi</title>
+<meta name="description" content="Technical writing on AI, threat detection and the future of security operations.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090f;--bg2:#0c0f1a;--bg3:#111629;
+  --gold:#c9a84c;--gold2:#e8c36a;--red:#e63946;
+  --text:#e8eaf0;--muted:#8892a4;--border:#1a2035;
+  --font-display:'Syne',sans-serif;--font-body:'DM Sans',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:16px;line-height:1.7;overflow-x:hidden}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.2rem 4rem;background:rgba(7,9,15,0.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(26,32,53,0.6)}
+.nav-logo{display:flex;align-items:center;gap:0.75rem;text-decoration:none}
+.nav-logo img{width:36px;height:36px;border-radius:50%}
+.nav-logo span{font-family:var(--font-display);font-size:1.25rem;font-weight:700;color:var(--text);letter-spacing:0.02em}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{color:var(--muted);font-size:0.875rem;text-decoration:none;letter-spacing:0.04em;transition:color 0.2s}
+.nav-links a:hover,.nav-links a.active{color:var(--text)}
+.nav-cta{font-size:0.8rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,168,76,0.4);padding:0.5rem 1.25rem;border-radius:2px;text-decoration:none;transition:all 0.2s}
+.nav-cta:hover{background:rgba(201,168,76,0.08)}
+
+.page-header{
+  padding:10rem 2rem 5rem;
+  text-align:center;
+  border-bottom:1px solid var(--border);
+  position:relative;overflow:hidden;
+}
+.page-header::before{
+  content:'';position:absolute;inset:0;
+  background-image:linear-gradient(rgba(201,168,76,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,0.03) 1px,transparent 1px);
+  background-size:60px 60px;
+  mask-image:radial-gradient(ellipse 70% 80% at 50% 50%,black,transparent);
+}
+.page-label{font-size:0.7rem;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;position:relative}
+.page-header h1{font-family:var(--font-display);font-size:clamp(2.5rem,6vw,4rem);font-weight:800;position:relative}
+.page-header p{color:var(--muted);font-size:1.05rem;font-weight:300;max-width:480px;margin:1rem auto 0;position:relative}
+
+.container{max-width:1100px;margin:0 auto;padding:5rem 2rem}
+
+.filters{display:flex;gap:0.75rem;margin-bottom:3rem;flex-wrap:wrap}
+.filter-btn{
+  font-size:0.75rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;
+  padding:0.4rem 1rem;border-radius:2px;border:1px solid var(--border);
+  background:transparent;color:var(--muted);cursor:pointer;transition:all 0.2s;
+}
+.filter-btn:hover,.filter-btn.active{border-color:rgba(201,168,76,0.4);color:var(--gold);background:rgba(201,168,76,0.05)}
+
+.posts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+
+/* Featured post — full width */
+.post-card-featured{
+  grid-column:1/-1;
+  display:grid;grid-template-columns:1fr 1fr;
+  background:var(--bg2);border:1px solid var(--border);border-radius:4px;
+  overflow:hidden;text-decoration:none;
+  transition:border-color 0.2s;
+}
+.post-card-featured:hover{border-color:rgba(201,168,76,0.3)}
+.post-card-featured .card-img{height:100%;min-height:300px;overflow:hidden;background:var(--bg3)}
+.post-card-featured .card-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.4s}
+.post-card-featured:hover .card-img img{transform:scale(1.03)}
+.post-card-featured .card-body{padding:3rem}
+.featured-badge{font-size:0.65rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.2);padding:0.25rem 0.75rem;border-radius:2px;display:inline-block;margin-bottom:1.5rem}
+.card-tag{font-size:0.65rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-bottom:0.75rem;display:block}
+.post-card-featured h2{font-family:var(--font-display);font-size:1.6rem;font-weight:700;line-height:1.2;color:var(--text);margin-bottom:1rem}
+.post-card-featured p{color:var(--muted);font-size:0.95rem;font-weight:300;line-height:1.7;margin-bottom:1.5rem}
+.read-more{font-size:0.8rem;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:0.4rem}
+
+/* Regular post card */
+.post-card{
+  background:var(--bg2);border:1px solid var(--border);border-radius:4px;
+  overflow:hidden;text-decoration:none;display:block;
+  transition:border-color 0.2s,transform 0.2s;
+}
+.post-card:hover{border-color:rgba(201,168,76,0.3);transform:translateY(-3px)}
+.post-card .card-img{height:190px;overflow:hidden;background:var(--bg3)}
+.post-card .card-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.4s}
+.post-card:hover .card-img img{transform:scale(1.04)}
+.post-card .card-body{padding:1.5rem}
+.post-card h3{font-family:var(--font-display);font-size:1rem;font-weight:600;color:var(--text);line-height:1.4;margin-bottom:0.5rem}
+.post-card p{color:var(--muted);font-size:0.825rem;font-weight:300;line-height:1.6}
+.card-meta{display:flex;align-items:center;justify-content:space-between;margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--border);font-size:0.75rem;color:var(--muted)}
+.lang-badge{font-weight:500;letter-spacing:0.06em;color:rgba(201,168,76,0.7)}
+
+footer{padding:3rem 4rem;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border)}
+.footer-logo{display:flex;align-items:center;gap:0.75rem;text-decoration:none}
+.footer-logo img{width:28px;height:28px;border-radius:50%}
+.footer-logo span{font-family:var(--font-display);font-size:1rem;font-weight:600;color:var(--text)}
+.footer-copy{font-size:0.8rem;color:var(--muted)}
+.footer-links{display:flex;gap:2rem}
+.footer-links a{font-size:0.8rem;color:var(--muted);text-decoration:none;transition:color 0.2s}
+.footer-links a:hover{color:var(--text)}
+
+@media(max-width:900px){
+  nav{padding:1.2rem 2rem}
+  .nav-links{display:none}
+  .posts-grid{grid-template-columns:1fr}
+  .post-card-featured{grid-template-columns:1fr}
+  .post-card-featured .card-img{min-height:220px}
+  footer{flex-direction:column;gap:1.5rem;text-align:center;padding:2.5rem 2rem}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="../" class="nav-logo">
+    <img src="../assets/logo.png" alt="Inclysi">
+    <span>Inclysi</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="../#product">Product</a></li>
+    <li><a href="../#how">How It Works</a></li>
+    <li><a href="./" class="active">Insights</a></li>
+  </ul>
+  <a href="mailto:contact@inclysi.com" class="nav-cta">Get in Touch</a>
+</nav>
+
+<div class="page-header">
+  <p class="page-label">Insights</p>
+  <h1>From the SOC floor.</h1>
+  <p>Technical writing on AI, threat detection and the future of security operations.</p>
+</div>
+
+<div class="container">
+  <div class="filters">
+    <button class="filter-btn active">All</button>
+    <button class="filter-btn">SOC Operations</button>
+    <button class="filter-btn">AI &amp; Security</button>
+    <button class="filter-btn">Threat Intelligence</button>
+    <button class="filter-btn">Engineering</button>
+  </div>
+
+  <div class="posts-grid">
+
+    <!-- FEATURED -->
+    <a href="en/why-alert-fatigue-is-an-engineering-problem.html" class="post-card-featured">
+      <div class="card-img">
+        <img src="../assets/post-placeholder.jpg" alt="Alert fatigue">
+      </div>
+      <div class="card-body">
+        <span class="featured-badge">Featured</span>
+        <span class="card-tag">SOC Operations</span>
+        <h2>Why Alert Fatigue Is an Engineering Problem, Not a People Problem</h2>
+        <p>The industry keeps hiring more analysts. The real fix is architectural. We break down why the root cause of analyst burnout lives in how alerts are generated, not how humans process them.</p>
+        <div class="read-more">Read post &rarr;</div>
+        <div class="card-meta" style="margin-top:2rem">
+          <span>April 2026</span>
+          <span class="lang-badge">EN / TR</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- POST 2 -->
+    <a href="en/local-llm-in-soc.html" class="post-card">
+      <div class="card-img">
+        <img src="../assets/post-placeholder-2.jpg" alt="Local LLM">
+      </div>
+      <div class="card-body">
+        <span class="card-tag">AI &amp; Security</span>
+        <h3>Running a Local LLM Inside an Air-Gapped SOC: What We Learned</h3>
+        <p>Privacy, latency and the tradeoffs no one talks about when deploying LLMs on-prem.</p>
+        <div class="card-meta">
+          <span>April 2026</span>
+          <span class="lang-badge">EN / TR</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- POST 3 -->
+    <a href="en/siem-is-not-enough.html" class="post-card">
+      <div class="card-img">
+        <img src="../assets/post-placeholder-3.jpg" alt="SIEM">
+      </div>
+      <div class="card-body">
+        <span class="card-tag">Threat Intelligence</span>
+        <h3>SIEM Is Not Enough. Here's What Comes After.</h3>
+        <p>A look at where traditional SIEM platforms stop and where AI-augmented operations begin.</p>
+        <div class="card-meta">
+          <span>April 2026</span>
+          <span class="lang-badge">EN / TR</span>
+        </div>
+      </div>
+    </a>
+
+  </div>
+</div>
+
+<footer>
+  <a href="../" class="footer-logo">
+    <img src="../assets/logo.png" alt="Inclysi">
+    <span>Inclysi</span>
+  </a>
+  <span class="footer-copy">&copy; 2026 Inclysi. All rights reserved.</span>
+  <div class="footer-links">
+    <a href="./">Blog</a>
+    <a href="mailto:contact@inclysi.com">Contact</a>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('.filter-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Why Alert Fatigue Is an Engineering Problem — Inclysi</title>
+<meta name="description" content="The industry keeps hiring more analysts. The real fix is architectural.">
+<!-- Google Analytics -->
+<!-- G-XXXXXXXXXX yerine kendi GA kodunu koy -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090f;--bg2:#0c0f1a;--bg3:#111629;
+  --gold:#c9a84c;--gold2:#e8c36a;--red:#e63946;
+  --text:#e8eaf0;--muted:#8892a4;--border:#1a2035;
+  --font-display:'Syne',sans-serif;
+  --font-body:'DM Sans',sans-serif;
+  --font-serif:'DM Serif Display',serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:16px;line-height:1.7;overflow-x:hidden}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.2rem 4rem;background:rgba(7,9,15,0.9);backdrop-filter:blur(12px);border-bottom:1px solid rgba(26,32,53,0.6)}
+.nav-logo{display:flex;align-items:center;gap:0.75rem;text-decoration:none}
+.nav-logo img{width:36px;height:36px;border-radius:50%}
+.nav-logo span{font-family:var(--font-display);font-size:1.25rem;font-weight:700;color:var(--text);letter-spacing:0.02em}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{color:var(--muted);font-size:0.875rem;text-decoration:none;letter-spacing:0.04em;transition:color 0.2s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{font-size:0.8rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,168,76,0.4);padding:0.5rem 1.25rem;border-radius:2px;text-decoration:none;transition:all 0.2s}
+
+/* POST HERO */
+.post-hero{
+  padding:9rem 2rem 5rem;
+  max-width:800px;margin:0 auto;
+  border-bottom:1px solid var(--border);
+}
+.post-meta{
+  display:flex;align-items:center;gap:1rem;
+  margin-bottom:2rem;
+  font-size:0.75rem;color:var(--muted);
+}
+.post-tag{
+  font-weight:500;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--gold);font-size:0.7rem;
+  border:1px solid rgba(201,168,76,0.3);
+  padding:0.2rem 0.6rem;border-radius:2px;
+}
+.post-lang{
+  display:flex;gap:0.5rem;margin-left:auto;
+}
+.lang-btn{
+  font-size:0.7rem;font-weight:500;letter-spacing:0.08em;
+  padding:0.2rem 0.6rem;border-radius:2px;
+  border:1px solid var(--border);
+  color:var(--muted);text-decoration:none;transition:all 0.2s;
+}
+.lang-btn.active,.lang-btn:hover{border-color:rgba(201,168,76,0.4);color:var(--gold)}
+.post-hero h1{
+  font-family:var(--font-display);
+  font-size:clamp(2rem,4.5vw,3.2rem);
+  font-weight:800;line-height:1.1;
+  margin-bottom:1.5rem;
+}
+.post-hero .lead{
+  font-size:1.15rem;color:var(--muted);font-weight:300;line-height:1.8;
+}
+
+/* COVER IMAGE */
+.post-cover{
+  max-width:900px;margin:0 auto;
+  padding:3rem 2rem 0;
+}
+.post-cover img{
+  width:100%;border-radius:4px;
+  border:1px solid var(--border);display:block;
+}
+.img-caption{
+  font-size:0.75rem;color:var(--muted);text-align:center;
+  margin-top:0.75rem;font-style:italic;
+}
+
+/* ARTICLE BODY */
+.post-body{
+  max-width:720px;margin:0 auto;
+  padding:4rem 2rem 6rem;
+}
+
+/* Typography */
+.post-body h2{
+  font-family:var(--font-display);
+  font-size:1.7rem;font-weight:700;
+  margin:3rem 0 1rem;
+  padding-top:1rem;
+  border-top:1px solid var(--border);
+}
+.post-body h3{
+  font-family:var(--font-display);
+  font-size:1.2rem;font-weight:600;
+  margin:2rem 0 0.75rem;
+  color:var(--text);
+}
+.post-body p{
+  font-size:1.05rem;font-weight:300;
+  color:#c8cdd8;line-height:1.85;
+  margin-bottom:1.5rem;
+}
+.post-body strong{color:var(--text);font-weight:500}
+.post-body em{font-style:italic;color:var(--muted)}
+.post-body a{color:var(--gold);text-decoration:underline;text-underline-offset:3px}
+
+/* Pull quote */
+.post-body blockquote{
+  border-left:3px solid var(--gold);
+  padding:1.25rem 1.75rem;
+  margin:2.5rem 0;
+  background:rgba(201,168,76,0.04);
+  border-radius:0 4px 4px 0;
+}
+.post-body blockquote p{
+  font-family:var(--font-serif);
+  font-size:1.2rem;font-style:italic;
+  color:var(--text);margin:0;line-height:1.6;
+}
+.post-body blockquote cite{
+  font-size:0.8rem;font-style:normal;
+  color:var(--muted);display:block;margin-top:0.75rem;
+}
+
+/* Inline image */
+.post-body figure{margin:2.5rem 0}
+.post-body figure img{
+  width:100%;border-radius:4px;
+  border:1px solid var(--border);display:block;
+}
+.post-body figure.wide{
+  margin-left:-4rem;margin-right:-4rem;
+}
+.post-body figcaption{
+  font-size:0.75rem;color:var(--muted);
+  text-align:center;margin-top:0.75rem;font-style:italic;
+}
+
+/* Callout box */
+.callout{
+  background:var(--bg2);border:1px solid var(--border);
+  border-left:3px solid var(--gold);
+  border-radius:0 4px 4px 0;
+  padding:1.25rem 1.5rem;
+  margin:2rem 0;
+}
+.callout-label{
+  font-size:0.65rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:0.5rem;
+}
+.callout p{font-size:0.9rem;color:var(--muted);margin:0}
+
+/* List styles */
+.post-body ul,.post-body ol{
+  padding-left:1.5rem;margin-bottom:1.5rem;
+}
+.post-body li{
+  font-size:1.05rem;font-weight:300;
+  color:#c8cdd8;line-height:1.85;
+  margin-bottom:0.5rem;
+}
+.post-body ul li::marker{color:var(--gold)}
+.post-body ol li::marker{color:var(--gold);font-weight:500}
+
+/* Code */
+.post-body code{
+  font-family:'Courier New',monospace;
+  font-size:0.875rem;
+  background:var(--bg3);
+  border:1px solid var(--border);
+  padding:0.15rem 0.4rem;
+  border-radius:3px;
+  color:var(--gold2);
+}
+
+/* Divider */
+.post-body hr{
+  border:none;border-top:1px solid var(--border);
+  margin:3rem 0;
+}
+
+/* Turkish section toggle */
+.lang-section{display:none}
+.lang-section.active{display:block}
+
+/* Footer nav inside post */
+.post-footer-nav{
+  max-width:720px;margin:0 auto;
+  padding:3rem 2rem;
+  border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.back-link{
+  font-size:0.8rem;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;
+  color:var(--gold);text-decoration:none;
+  display:flex;align-items:center;gap:0.4rem;
+}
+.share-label{font-size:0.75rem;color:var(--muted)}
+
+footer{padding:3rem 4rem;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border)}
+.footer-logo{display:flex;align-items:center;gap:0.75rem;text-decoration:none}
+.footer-logo img{width:28px;height:28px;border-radius:50%}
+.footer-logo span{font-family:var(--font-display);font-size:1rem;font-weight:600;color:var(--text)}
+.footer-copy{font-size:0.8rem;color:var(--muted)}
+.footer-links{display:flex;gap:2rem}
+.footer-links a{font-size:0.8rem;color:var(--muted);text-decoration:none;transition:color 0.2s}
+.footer-links a:hover{color:var(--text)}
+
+/* Reading progress bar */
+.progress-bar{
+  position:fixed;top:0;left:0;height:2px;
+  background:var(--gold);width:0%;z-index:200;
+  transition:width 0.1s;
+}
+
+@media(max-width:900px){
+  nav{padding:1.2rem 2rem}
+  .nav-links{display:none}
+  .post-body figure.wide{margin-left:0;margin-right:0}
+  footer{flex-direction:column;gap:1.5rem;text-align:center;padding:2.5rem 2rem}
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<nav>
+  <a href="../../" class="nav-logo">
+    <img src="../../assets/logo.png" alt="Inclysi">
+    <span>Inclysi</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="../../#product">Product</a></li>
+    <li><a href="../../#how">How It Works</a></li>
+    <li><a href="../">Insights</a></li>
+  </ul>
+  <a href="mailto:contact@inclysi.com" class="nav-cta">Get in Touch</a>
+</nav>
+
+<!-- POST HEADER -->
+<div class="post-hero">
+  <div class="post-meta">
+    <span class="post-tag">SOC Operations</span>
+    <span>April 25, 2026</span>
+    <span>·</span>
+    <span>8 min read</span>
+    <div class="post-lang">
+      <a href="#" class="lang-btn active" data-lang="en">EN</a>
+      <a href="../../blog/tr/why-alert-fatigue-is-an-engineering-problem.html" class="lang-btn">TR</a>
+    </div>
+  </div>
+  <h1>Why Alert Fatigue Is an Engineering Problem, Not a People Problem</h1>
+  <p class="lead">The security industry has spent years hiring more analysts. More shifts, more eyes, more escalations. The alerts keep multiplying. The real fix was always architectural — and it starts with how we think about signal.</p>
+</div>
+
+<!-- COVER IMAGE -->
+<div class="post-cover">
+  <img src="../../assets/post-placeholder.jpg" alt="SOC alert dashboard">
+  <p class="img-caption">A modern SOC environment. The problem isn't the people — it's the pipeline.</p>
+</div>
+
+<!-- POST BODY — ENGLISH -->
+<article class="post-body lang-section active" id="en-content">
+
+  <p>Every security operations center has a version of the same story. An analyst opens their shift to 4,000 alerts. Triages for two hours. Closes most as false positives. Misses the one that mattered.</p>
+
+  <p>The instinctive response from leadership is always the same: hire more analysts. Build bigger teams. Run more shifts. But this approach treats a systems problem as a staffing problem — and it doesn't scale.</p>
+
+  <h2>The Signal Problem</h2>
+
+  <p>Modern SIEM environments are designed to <strong>maximize recall</strong> — they surface everything that might be relevant. This is technically correct. The problem is that maximizing recall without precision creates noise at industrial scale.</p>
+
+  <blockquote>
+    <p>"We were triaging 6,000 alerts per day with a team of twelve. By the time a real incident appeared in the queue, our analysts were too cognitively depleted to recognize it."</p>
+    <cite>— SOC Lead, financial services sector</cite>
+  </blockquote>
+
+  <p>The SIEM is doing its job. The issue is that no one built a layer between raw signal and human cognition — a layer that can reason, filter and prioritize.</p>
+
+  <h2>Why Humans Are the Wrong Filter</h2>
+
+  <p>Human analysts are exceptional at nuanced reasoning — at connecting context across events, reading anomalies in behavior, making judgment calls under uncertainty. These are precisely the skills that get wasted when analysts spend 80% of their time reading repetitive, low-signal alerts.</p>
+
+  <figure>
+    <img src="../../assets/post-image-example.jpg" alt="Alert volume vs analyst capacity">
+    <figcaption>Alert volume grows exponentially. Analyst capacity grows linearly. The gap is the problem.</figcaption>
+  </figure>
+
+  <p>The cognitive load of triage isn't just draining — it actively degrades the quality of analysis on the alerts that do matter. Decision fatigue is real and measurable. The 4,000th alert of a shift gets a fraction of the scrutiny the first one did.</p>
+
+  <h2>What an Architectural Solution Looks Like</h2>
+
+  <p>The answer isn't to remove analysts. It's to move them further up the decision stack — and build intelligence that handles everything below.</p>
+
+  <div class="callout">
+    <div class="callout-label">Key Principle</div>
+    <p>AI should not replace analyst judgment. It should eliminate the work that doesn't require judgment in the first place.</p>
+  </div>
+
+  <p>This means building systems that can:</p>
+
+  <ul>
+    <li>Automatically score and rank alerts by actual threat probability, not rule weight</li>
+    <li>Maintain behavioral baselines per entity — so deviations are meaningful, not just noisy</li>
+    <li>Learn from every analyst verdict, compounding institutional knowledge over time</li>
+    <li>Surface only what genuinely requires human judgment, with supporting evidence already assembled</li>
+  </ul>
+
+  <p>The result isn't a smaller team. It's a team operating at full cognitive capacity — focused on real threats, not noise management.</p>
+
+  <h2>The Air-Gap Constraint</h2>
+
+  <p>One challenge unique to enterprise security environments: the most sensitive data can't leave the perimeter. Cloud-based AI solutions — as capable as they are — are architecturally incompatible with air-gapped SOC environments.</p>
+
+  <p>This is where local inference becomes not just a preference, but a hard requirement. Modern open-weight models running on-premise can deliver analysis quality that was impossible two years ago. The privacy constraint is no longer a limitation on capability.</p>
+
+  <hr>
+
+  <p>Alert fatigue is real. But it's a symptom. The disease is architectural — a gap between the volume of signal and the intelligence available to process it. Solving it requires engineering, not headcount.</p>
+
+  <p>That's the problem Inclysi was built to solve.</p>
+
+</article>
+
+<!-- POST BODY — TURKISH -->
+<article class="post-body lang-section" id="tr-content">
+
+  <p>Her SOC'un kendi versiyonu vardır bu hikayenin. Analist vardiyasını 4.000 alarma açar. İki saat triage yapar. Büyük çoğunluğunu false positive olarak kapatır. Önemli olanı kaçırır.</p>
+
+  <p>Yönetimin refleks tepkisi her zaman aynıdır: daha fazla analist işe al. Daha büyük ekipler kur. Daha fazla vardiya yarat. Ama bu yaklaşım, bir sistem sorununu insan kaynağı sorunu olarak ele alır — ve ölçeklenmez.</p>
+
+  <h2>Sinyal Sorunu</h2>
+
+  <p>Modern SIEM ortamları <strong>maksimum kapsama</strong> için tasarlanmıştır — ilgili olabilecek her şeyi yüzeye çıkarırlar. Teknik olarak doğrudur bu. Sorun, hassasiyet olmadan maksimum kapsamın endüstriyel ölçekte gürültü üretmesidir.</p>
+
+  <blockquote>
+    <p>"On iki kişilik bir ekiple günde 6.000 alarm triage ediyorduk. Gerçek bir olay sıraya girdiğinde, analistlerimiz onu fark edemeyecek kadar bilişsel olarak tükenmişti."</p>
+    <cite>— SOC Lideri, finansal hizmetler sektörü</cite>
+  </blockquote>
+
+  <p>SIEM işini yapıyor. Sorun, ham sinyal ile insan bilişi arasında bir katman inşa edilmemiş olması — akıl yürütebilen, filtreleyebilen ve önceliklendirebilen bir katman.</p>
+
+  <h2>Neden İnsanlar Yanlış Filtredir</h2>
+
+  <p>İnsan analistler nüanslı muhakemede olağanüstüdür — olaylar arasında bağlam kurabilir, davranışsal anomalileri okuyabilir, belirsizlik altında karar verebilirler. Tam da bu beceriler, analistler zamanlarının %80'ini tekrarlayan, düşük sinyalli alarmları okuyarak geçirdiğinde boşa harcanır.</p>
+
+  <p>Triage'ın bilişsel yükü sadece yorucu değildir — gerçekten önemli alarmlardaki analiz kalitesini aktif olarak düşürür. Karar yorgunluğu gerçek ve ölçülebilirdir. Bir vardiyada 4.000. alarm, ilk alarmın aldığı dikkatin çok küçük bir bölümünü alır.</p>
+
+  <h2>Mimari Çözüm Nasıl Görünür</h2>
+
+  <p>Cevap analistleri kaldırmak değil. Onları karar zincirinde daha yukarıya taşımak — ve altındaki her şeyi ele alan zeka katmanı inşa etmek.</p>
+
+  <div class="callout">
+    <div class="callout-label">Temel Prensip</div>
+    <p>Yapay zeka analist kararının yerini almamalı. İlk etapta karar gerektirmeyen işi ortadan kaldırmalı.</p>
+  </div>
+
+  <p>Bu, şunları yapabilen sistemler inşa etmek demektir:</p>
+
+  <ul>
+    <li>Alarmları kural ağırlığına göre değil, gerçek tehdit olasılığına göre otomatik puanlama ve sıralama</li>
+    <li>Varlık bazında davranışsal taban çizgisi tutma — sapmaların anlamlı olması, gürültülü değil</li>
+    <li>Her analist kararından öğrenme, kurumsal bilgiyi zamanla biriktirme</li>
+    <li>Yalnızca gerçekten insan muhakemesi gerektireni yüzeye çıkarma, destekleyici kanıtlar zaten derlenmiş olarak</li>
+  </ul>
+
+  <p>Sonuç daha küçük bir ekip değil. Tam bilişsel kapasitede çalışan bir ekip — gürültü yönetimi değil, gerçek tehditlere odaklanmış.</p>
+
+  <hr>
+
+  <p>Alert yorgunluğu gerçektir. Ama bir semptomdur. Hastalık mimaridir — sinyal hacmi ile onu işleyen zeka arasındaki boşluk. Çözüm mühendislik gerektirir, insan sayısı değil.</p>
+
+  <p>Inclysi tam da bu sorunu çözmek için inşa edildi.</p>
+
+</article>
+
+<div class="post-footer-nav">
+  <a href="../" class="back-link">&larr; All Posts</a>
+  <span class="share-label">inclysi.com</span>
+</div>
+
+<footer>
+  <a href="../../" class="footer-logo">
+    <img src="../../assets/logo.png" alt="Inclysi">
+    <span>Inclysi</span>
+  </a>
+  <span class="footer-copy">&copy; 2026 Inclysi. All rights reserved.</span>
+  <div class="footer-links">
+    <a href="../">Blog</a>
+    <a href="mailto:contact@inclysi.com">Contact</a>
+  </div>
+</footer>
+
+<script>
+// Reading progress bar
+window.addEventListener('scroll',()=>{
+  const doc=document.documentElement;
+  const scrolled=(doc.scrollTop)/(doc.scrollHeight-doc.clientHeight)*100;
+  document.getElementById('progressBar').style.width=scrolled+'%';
+});
+
+// Language toggle — same page
+document.querySelectorAll('.lang-btn[data-lang]').forEach(btn=>{
+  btn.addEventListener('click',e=>{
+    e.preventDefault();
+    const lang=btn.dataset.lang;
+    document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.lang-section').forEach(s=>s.classList.remove('active'));
+    document.getElementById(lang+'-content').classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
