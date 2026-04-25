@@ -420,6 +420,8 @@ document.querySelectorAll('.lang-btn[data-lang]').forEach(btn=>{
     btn.classList.add('active');
     document.querySelectorAll('.lang-section').forEach(s=>s.classList.remove('active'));
     document.getElementById(lang+'-content').classList.add('active');
+    document.getElementById('hero-en').style.display = lang==='en' ? 'block' : 'none';
+    document.getElementById('hero-tr').style.display = lang==='tr' ? 'block' : 'none';
   });
 });
 </script>
