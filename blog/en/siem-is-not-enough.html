@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIEM Is Not Enough. Here's What Comes After. — Inclysi</title>
+<meta name="description" content="AI is reshaping every industry. Security operations is next — but only if we use it right.">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-HVX30CYXMQ"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-HVX30CYXMQ');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090f;--bg2:#0c0f1a;--bg3:#111629;
+  --gold:#c9a84c;--gold2:#e8c36a;--red:#e63946;
+  --text:#e8eaf0;--muted:#8892a4;--border:#1a2035;
+  --font-display:'Syne',sans-serif;
+  --font-body:'DM Sans',sans-serif;
+  --font-serif:'DM Serif Display',serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:16px;line-height:1.7;overflow-x:hidden}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.2rem 4rem;background:rgba(7,9,15,0.9);backdrop-filter:blur(12px);border-bottom:1px solid rgba(26,32,53,0.6)}
+.nav-logo{display:flex;align-items:center;gap:0.75rem;text-decoration:none}
+.nav-logo span{font-family:var(--font-display);font-size:1.25rem;font-weight:700;color:var(--text);letter-spacing:0.02em}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{color:var(--muted);font-size:0.875rem;text-decoration:none;letter-spacing:0.04em;transition:color 0.2s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{font-size:0.8rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,168,76,0.4);padding:0.5rem 1.25rem;border-radius:2px;text-decoration:none;transition:all 0.2s}
+
+.progress-bar{position:fixed;top:0;left:0;height:2px;background:var(--gold);width:0%;z-index:200;transition:width 0.1s}
+
+.post-hero{padding:9rem 2rem 5rem;max-width:800px;margin:0 auto;border-bottom:1px solid var(--border)}
+.post-meta{display:flex;align-items:center;gap:1rem;margin-bottom:2rem;font-size:0.75rem;color:var(--muted)}
+.post-tag{font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);font-size:0.7rem;border:1px solid rgba(201,168,76,0.3);padding:0.2rem 0.6rem;border-radius:2px}
+.post-lang{display:flex;gap:0.5rem;margin-left:auto}
+.lang-btn{font-size:0.7rem;font-weight:500;letter-spacing:0.08em;padding:0.2rem 0.6rem;border-radius:2px;border:1px solid var(--border);color:var(--muted);text-decoration:none;transition:all 0.2s;cursor:pointer;background:none}
+.lang-btn.active,.lang-btn:hover{border-color:rgba(201,168,76,0.4);color:var(--gold)}
+.post-hero h1{font-family:var(--font-display);font-size:clamp(2rem,4.5vw,3.2rem);font-weight:800;line-height:1.1;margin-bottom:1.5rem}
+.post-hero .lead{font-size:1.15rem;color:var(--muted);font-weight:300;line-height:1.8}
+
+.post-cover{max-width:900px;margin:0 auto;padding:3rem 2rem 0}
+.post-cover img{width:100%;border-radius:4px;border:1px solid var(--border);display:block}
+.img-caption{font-size:0.75rem;color:var(--muted);text-align:center;margin-top:0.75rem;font-style:italic}
+
+.post-body{max-width:720px;margin:0 auto;padding:4rem 2rem 6rem}
+.post-body h2{font-family:var(--font-display);font-size:1.7rem;font-weight:700;margin:3rem 0 1rem;padding-top:1rem;border-top:1px solid var(--border)}
+.post-body h3{font-family:var(--font-display);font-size:1.2rem;font-weight:600;margin:2rem 0 0.75rem}
+.post-body p{font-size:1.05rem;font-weight:300;color:#c8cdd8;line-height:1.85;margin-bottom:1.5rem}
+.post-body strong{color:var(--text);font-weight:500}
+.post-body a{color:var(--gold);text-decoration:underline;text-underline-offset:3px}
+.post-body blockquote{border-left:3px solid var(--gold);padding:1.25rem 1.75rem;margin:2.5rem 0;background:rgba(201,168,76,0.04);border-radius:0 4px 4px 0}
+.post-body blockquote p{font-family:var(--font-serif);font-size:1.2rem;font-style:italic;color:var(--text);margin:0;line-height:1.6}
+.post-body blockquote cite{font-size:0.8rem;font-style:normal;color:var(--muted);display:block;margin-top:0.75rem}
+.post-body figure{margin:2.5rem 0}
+.post-body figure img{width:100%;border-radius:4px;border:1px solid var(--border);display:block}
+.post-body figcaption{font-size:0.75rem;color:var(--muted);text-align:center;margin-top:0.75rem;font-style:italic}
+.callout{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:0 4px 4px 0;padding:1.25rem 1.5rem;margin:2rem 0}
+.callout-label{font-size:0.65rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem}
+.callout p{font-size:0.9rem;color:var(--muted);margin:0}
+.post-body ul,.post-body ol{padding-left:1.5rem;margin-bottom:1.5rem}
+.post-body li{font-size:1.05rem;font-weight:300;color:#c8cdd8;line-height:1.85;margin-bottom:0.5rem}
+.post-body ul li::marker{color:var(--gold)}
+.post-body hr{border:none;border-top:1px solid var(--border);margin:3rem 0}
+.lang-section{display:none}
+.lang-section.active{display:block}
+
+.post-footer-nav{max-width:720px;margin:0 auto;padding:3rem 2rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.back-link{font-size:0.8rem;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--gold);text-decoration:none;display:flex;align-items:center;gap:0.4rem}
+.share-label{font-size:0.75rem;color:var(--muted)}
+
+footer{padding:3rem 4rem;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border)}
+.footer-logo{display:flex;align-items:center;gap:0.75rem;text-decoration:none}
+.footer-logo span{font-family:var(--font-display);font-size:1rem;font-weight:600;color:var(--text)}
+.footer-copy{font-size:0.8rem;color:var(--muted)}
+.footer-links{display:flex;gap:2rem}
+.footer-links a{font-size:0.8rem;color:var(--muted);text-decoration:none;transition:color 0.2s}
+.footer-links a:hover{color:var(--text)}
+
+@media(max-width:900px){
+  nav{padding:1.2rem 2rem}
+  .nav-links{display:none}
+  footer{flex-direction:column;gap:1.5rem;text-align:center;padding:2.5rem 2rem}
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<nav>
+  <a href="../../" class="nav-logo">
+    <svg width="28" height="28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="50,2 93,26 93,74 50,98 7,74 7,26" stroke="white" stroke-width="6" fill="none"/><circle cx="50" cy="50" r="5" fill="white"/><circle cx="50" cy="22" r="4" fill="white"/><circle cx="75" cy="36" r="4" fill="white"/><circle cx="75" cy="64" r="4" fill="white"/><circle cx="50" cy="78" r="4" fill="white"/><circle cx="25" cy="64" r="4" fill="white"/><circle cx="25" cy="36" r="4" fill="white"/><line x1="50" y1="50" x2="50" y2="22" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="75" y2="36" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="75" y2="64" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="50" y2="78" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="25" y2="64" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="25" y2="36" stroke="white" stroke-width="2"/></svg>
+    <span>Inclysi AI</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="../../#product">Product</a></li>
+    <li><a href="../../#how">How It Works</a></li>
+    <li><a href="../">Insights</a></li>
+  </ul>
+  <a href="mailto:contact@inclysi.com" class="nav-cta">Get in Touch</a>
+</nav>
+
+<div class="post-hero">
+  <div class="post-meta">
+    <span class="post-tag">Threat Intelligence</span>
+    <span>April 26, 2026</span>
+    <span>·</span>
+    <span>9 min read</span>
+    <div class="post-lang">
+      <a href="#" class="lang-btn active" data-lang="en">EN</a>
+      <a href="#" class="lang-btn" data-lang="tr">TR</a>
+    </div>
+  </div>
+  <div id="hero-en">
+    <h1>SIEM Is Not Enough.<br>Here's What Comes After.</h1>
+    <p class="lead">AI is reshaping every industry at a pace we've never seen before. Security operations is no exception — but most SOC teams are still running on decade-old logic. The gap between what AI can do and what we're actually using it for in security is widening every day.</p>
+  </div>
+  <div id="hero-tr" style="display:none">
+    <h1>SIEM Yetmiyor.<br>Sırada Ne Var?</h1>
+    <p class="lead">Yapay zeka her sektörü daha önce hiç görmediğimiz bir hızla yeniden şekillendiriyor. Güvenlik operasyonları da bunun dışında değil — ancak çoğu SOC ekibi hâlâ on yıllık mantıkla çalışıyor. AI'nin yapabilecekleri ile güvenlikte gerçekte kullandıklarımız arasındaki uçurum her geçen gün büyüyor.</p>
+  </div>
+</div>
+
+<div class="post-cover">
+  <img src="../../assets/post-siem.png" alt="SIEM architecture visualization">
+  <p class="img-caption">The intelligence layer that SIEM was never designed to be.</p>
+</div>
+
+<!-- ENGLISH -->
+<article class="post-body lang-section active" id="en-content">
+
+  <p>Let's start with an uncomfortable truth: your SIEM was not built for the world we're operating in today.</p>
+
+  <p>When SIEM technology emerged, the threat landscape looked fundamentally different. Smaller attack surfaces. Slower adversaries. More predictable patterns. The SIEM's job was straightforward — collect logs, match rules, fire alerts. It did that job well.</p>
+
+  <p>But the world changed. Attack surfaces exploded. Adversaries became sophisticated, patient, and well-resourced. And SIEM kept doing exactly what it was designed to do: collect everything and alert on all of it.</p>
+
+  <p>That's the problem.</p>
+
+  <h2>What SIEM Was Built to Do — And What It Wasn't</h2>
+
+  <p>SIEM is a data aggregation and correlation engine. It is extraordinarily good at what it does: ingesting massive volumes of log data, applying rule-based detection, and surfacing events that match predefined criteria.</p>
+
+  <p>But it was never designed to <strong>reason</strong>. It cannot weigh context. It cannot learn from outcomes. It cannot distinguish between a security event that is technically correct but operationally irrelevant, and a subtle behavioral anomaly that signals a sophisticated intrusion in progress.</p>
+
+  <blockquote>
+    <p>"SIEM tells you what happened. It was never supposed to tell you what it means."</p>
+  </blockquote>
+
+  <p>The result is a system that produces enormous volumes of output with very little actionable signal. And analysts — skilled, experienced, expensive analysts — spend the majority of their working hours processing that output manually.</p>
+
+  <h2>The AI Moment We're Actually In</h2>
+
+  <p>Something shifted in the last two years. Large language models crossed a threshold. They can now read context, reason across disparate data points, synthesize evidence, and produce coherent, actionable conclusions — at machine speed.</p>
+
+  <p>This is not incremental. This is a different category of capability.</p>
+
+  <p>Every other knowledge-intensive industry is already integrating this. Legal research. Medical diagnosis. Financial analysis. Software engineering. These fields are not replacing their experts — they are amplifying them, dramatically increasing what one expert can accomplish in a given time.</p>
+
+  <p>Security operations has been slower to follow. The reasons are understandable: data sensitivity, regulatory constraints, air-gap requirements, and a well-founded distrust of black-box systems making decisions in critical environments.</p>
+
+  <p>But the cost of not adapting is becoming impossible to ignore.</p>
+
+  <h2>How Most Organizations Are Using AI Wrong</h2>
+
+  <p>The current wave of AI adoption in security follows a familiar pattern: bolt an AI layer onto existing infrastructure, point it at your log data, and wait for insights.</p>
+
+  <p>The problem is where that AI layer lives.</p>
+
+  <p>Most cloud-based AI security tools require you to send your log data — your most sensitive operational data — to external servers for processing. The intelligence you receive in return is genuinely useful. But the tradeoff is significant and rarely discussed openly.</p>
+
+  <div class="callout">
+    <div class="callout-label">The Hidden Cost</div>
+    <p>Every log you send to a cloud AI provider is a detailed map of your infrastructure, your vulnerabilities, your incident history, and your detection capabilities — handed to a third party.</p>
+  </div>
+
+  <p>For many organizations, this is an acceptable tradeoff. For others — government, defense, critical infrastructure, financial institutions with strict data residency requirements — it is not acceptable at all. It is a hard blocker.</p>
+
+  <p>There is a second failure mode: using AI as a search engine rather than a reasoning engine. Asking AI to "find threats in my logs" without giving it the context, the entity history, the behavioral baselines, and the organizational knowledge it needs to reason effectively. The output is generic. The value is limited.</p>
+
+  <h2>What Effective AI Integration Actually Looks Like</h2>
+
+  <p>The organizations that will get the most out of AI in security are not those that deploy it fastest. They are those that deploy it most thoughtfully.</p>
+
+  <p>Effective AI integration in a SOC environment means:</p>
+
+  <ul>
+    <li><strong>Local inference.</strong> The AI runs inside your perimeter. Your data never leaves. You get the reasoning capability without the privacy tradeoff.</li>
+    <li><strong>Context richness.</strong> The AI has access not just to raw events, but to entity profiles, historical verdicts, behavioral baselines, and organizational knowledge accumulated over time.</li>
+    <li><strong>Multi-stage reasoning.</strong> A single pass isn't enough. Effective triage requires an initial classification followed by deep analysis — two distinct cognitive tasks that benefit from two distinct model calls.</li>
+    <li><strong>Analyst-in-the-loop.</strong> AI surfaces conclusions with evidence. The analyst makes the final call. Every verdict feeds back into the system, making it smarter over time.</li>
+    <li><strong>Institutional memory.</strong> The system remembers. Every entity, every incident, every decision. The organizational knowledge that used to leave with every departing analyst now compounds instead of depleting.</li>
+  </ul>
+
+  <h2>The Analyst Is Not Going Away — They're Being Upgraded</h2>
+
+  <p>There is a persistent fear in the security community that AI will replace analysts. This fear misunderstands what the technology actually does.</p>
+
+  <p>AI is extraordinarily good at processing volume, applying consistent logic, and synthesizing patterns across large datasets. It is not good at the things that make a great analyst: intuition built from years of experience, creative adversarial thinking, judgment in ambiguous situations, and the ability to recognize when something feels wrong even before the data fully supports it.</p>
+
+  <p>The future of the SOC is not fewer analysts. It is analysts operating at a fundamentally different altitude — freed from the mechanical labor of log triage, focused entirely on the threats that actually require human judgment.</p>
+
+  <p>One analyst with the right AI infrastructure can accomplish what previously required a team. That is not a threat to the profession. That is the profession becoming dramatically more powerful.</p>
+
+  <h2>What Comes After SIEM</h2>
+
+  <p>SIEM isn't going away. It remains the foundational data layer — the system of record for security events. But it needs a reasoning layer on top of it.</p>
+
+  <p>That layer needs to do several things SIEM cannot: understand context, learn from decisions, maintain entity memory, reason across evidence, and deliver conclusions rather than just data.</p>
+
+  <p>The organizations that build or adopt this layer in the next 12-24 months will have a structural advantage in their security posture. The ones that don't will continue scaling headcount against an alert volume that technology is only going to increase.</p>
+
+  <hr>
+
+  <p>We built Inclysi to be that reasoning layer — local, air-gapped, and designed from the ground up for the environments where data sovereignty is non-negotiable.</p>
+
+  <p>The question isn't whether AI belongs in the SOC. It's whether you control where your data goes when you use it.</p>
+
+  <p><a href="https://inclysi.com">inclysi.com</a></p>
+
+</article>
+
+<!-- TURKISH -->
+<article class="post-body lang-section" id="tr-content">
+
+  <p>Rahatsız edici bir gerçekle başlayalım: SIEM'iniz, bugün içinde faaliyet gösterdiğimiz dünya için tasarlanmadı.</p>
+
+  <p>SIEM teknolojisi ortaya çıktığında tehdit ortamı temelden farklıydı. Daha küçük saldırı yüzeyleri. Daha yavaş saldırganlar. Daha öngörülebilir desenler. SIEM'in işi açıktı: logları topla, kurallara uygula, alarm üret. Bunu iyi yapıyordu.</p>
+
+  <p>Ama dünya değişti. Saldırı yüzeyleri patladı. Saldırganlar sofistike, sabırlı ve iyi finanse edilmiş hale geldi. Ve SIEM, tasarlandığı şeyi yapmaya devam etti: her şeyi toplayıp hepsine alarm üret.</p>
+
+  <p>İşte sorun tam da bu.</p>
+
+  <h2>SIEM'in Yapabildiği — Ve Yapamadığı</h2>
+
+  <p>SIEM bir veri toplama ve korelasyon motorudur. Yaptığı işte olağanüstü iyidir: devasa log hacimlerini işlemek, kural tabanlı tespit uygulamak ve önceden tanımlanmış kriterlere uyan olayları yüzeye çıkarmak.</p>
+
+  <p>Ama hiçbir zaman <strong>akıl yürütmek</strong> için tasarlanmadı. Bağlamı tartamaz. Sonuçlardan öğrenemez. Teknik olarak doğru ama operasyonel açıdan alakasız bir güvenlik olayı ile gelişmiş bir saldırının işaret ettiği ince davranışsal anomali arasındaki farkı ayırt edemez.</p>
+
+  <blockquote>
+    <p>"SIEM size ne olduğunu söyler. Ne anlama geldiğini söylemek için tasarlanmamıştır."</p>
+  </blockquote>
+
+  <p>Sonuç: çok az eyleme geçirilebilir sinyal içeren devasa çıktı hacimleri üreten bir sistem. Ve analistler — yetenekli, deneyimli, maliyetli analistler — çalışma saatlerinin büyük bölümünü bu çıktıları manuel olarak işleyerek geçiriyor.</p>
+
+  <h2>İçinde Bulunduğumuz AI Anı</h2>
+
+  <p>Son iki yılda bir şey değişti. Büyük dil modelleri bir eşiği geçti. Artık bağlamı okuyabiliyorlar, farklı veri noktaları arasında akıl yürütebiliyorlar, kanıtları sentezleyebiliyorlar ve tutarlı, eyleme geçirilebilir sonuçlar üretebiliyorlar — makine hızında.</p>
+
+  <p>Bu kademeli bir gelişme değil. Bu farklı bir yetenek kategorisi.</p>
+
+  <p>Diğer her bilgi yoğun sektör bunu zaten entegre ediyor. Hukuk araştırması. Tıbbi teşhis. Finansal analiz. Yazılım mühendisliği. Bu alanlar uzmanlarının yerini almıyor — onları güçlendiriyor, bir uzmanın belirli bir sürede başarabileceklerini dramatik biçimde artırıyor.</p>
+
+  <p>Güvenlik operasyonları adapte olmakta daha yavaş kaldı. Nedenler anlaşılabilir: veri hassasiyeti, düzenleyici kısıtlamalar, air-gap gereksinimleri ve kritik ortamlarda karar veren kara kutu sistemlere karşı haklı bir güvensizlik.</p>
+
+  <p>Ama adapte olmama maliyeti artık görmezden gelinemez hale geliyor.</p>
+
+  <h2>Çoğu Organizasyon AI'yı Neden Yanlış Kullanıyor</h2>
+
+  <p>Güvenlikte AI benimsemenin mevcut dalgası tanıdık bir deseni izliyor: mevcut altyapıya bir AI katmanı ekle, log verilerine yönelt ve içgörüleri bekle.</p>
+
+  <p>Sorun o AI katmanının nerede yaşadığı.</p>
+
+  <p>Bulut tabanlı AI güvenlik araçlarının çoğu, log verilerinizi — en hassas operasyonel verilerinizi — işleme için harici sunuculara göndermenizi gerektiriyor. Karşılığında aldığınız zeka gerçekten faydalı. Ama takas önemli ve nadiren açıkça tartışılıyor.</p>
+
+  <div class="callout">
+    <div class="callout-label">Gizli Maliyet</div>
+    <p>Bir bulut AI sağlayıcısına gönderdiğiniz her log, altyapınızın, güvenlik açıklarınızın, olay geçmişinizin ve tespit yeteneklerinizin ayrıntılı bir haritasıdır — üçüncü bir tarafa teslim edilmiş.</p>
+  </div>
+
+  <p>Pek çok organizasyon için bu kabul edilebilir bir takas. Diğerleri için — hükümet, savunma, kritik altyapı, katı veri yerleşim gereksinimleri olan finansal kurumlar — bu hiç kabul edilebilir değil. Kesin bir engeldir.</p>
+
+  <h2>Etkili AI Entegrasyonu Gerçekte Nasıl Görünür</h2>
+
+  <p>Güvenlikte AI'dan en fazla fayda sağlayacak organizasyonlar en hızlı dağıtanlar değil. En düşünceli şekilde dağıtanlardır.</p>
+
+  <p>SOC ortamında etkili AI entegrasyonu şu anlama gelir:</p>
+
+  <ul>
+    <li><strong>Yerel çıkarım.</strong> AI çevrenizin içinde çalışır. Veriniz dışarı çıkmaz. Gizlilik takası olmadan akıl yürütme yeteneğini elde edersiniz.</li>
+    <li><strong>Bağlam zenginliği.</strong> AI yalnızca ham olaylara değil, varlık profillerine, geçmiş kararlara, davranışsal taban çizgilerine ve zamanla birikmiş kurumsal bilgiye erişir.</li>
+    <li><strong>Çok aşamalı akıl yürütme.</strong> Tek bir geçiş yeterli değil. Etkili triage, derin analizle takip edilen ilk bir sınıflandırma gerektirir.</li>
+    <li><strong>Döngüde analist.</strong> AI kanıtlarla birlikte sonuçları yüzeye çıkarır. Son kararı analist verir. Her karar sisteme geri beslenerek zaman içinde daha akıllı hale getirir.</li>
+    <li><strong>Kurumsal hafıza.</strong> Sistem hatırlıyor. Her varlık, her olay, her karar. Ayrılan her analistle giden kurumsal bilgi artık tükenmek yerine birikim sağlıyor.</li>
+  </ul>
+
+  <h2>Analist Gitmeyecek — Yükseltiliyor</h2>
+
+  <p>Güvenlik topluluğunda AI'nin analistlerin yerini alacağına dair kalıcı bir korku var. Bu korku teknolojinin gerçekte ne yaptığını yanlış anlıyor.</p>
+
+  <p>AI hacim işlemede, tutarlı mantık uygulamada ve büyük veri setlerinde desenleri sentezlemede olağanüstü iyidir. Harika bir analisti yapan şeylerde iyi değildir: yılların deneyiminden inşa edilmiş sezgi, yaratıcı düşmansal düşünce, belirsiz durumlarda yargı ve veriler tam olarak desteklemeden önce bile bir şeylerin yanlış hissettirdiğini tanıma yeteneği.</p>
+
+  <p>SOC'un geleceği daha az analist değil. Temelden farklı bir irtifada çalışan analistler — log triage'ının mekanik iş yükünden kurtulmuş, tümüyle gerçekten insan yargısı gerektiren tehditlere odaklanmış.</p>
+
+  <h2>SIEM'den Sonra Ne Geliyor</h2>
+
+  <p>SIEM ortadan kalkmıyor. Temel veri katmanı olmaya devam ediyor. Ama üstüne bir akıl yürütme katmanı ihtiyacı var.</p>
+
+  <p>Bu katmanın SIEM'in yapamadığı birkaç şeyi yapması gerekiyor: bağlamı anlamak, kararlardan öğrenmek, varlık hafızasını korumak, kanıtlar üzerinde akıl yürütmek ve yalnızca veri değil sonuçlar sunmak.</p>
+
+  <p>Önümüzdeki 12-24 ayda bu katmanı inşa eden veya benimseyen organizasyonlar güvenlik duruşlarında yapısal bir avantaja sahip olacak. Olmayanlar, teknolojinin yalnızca artıracağı bir alarm hacmine karşı kafa sayısını ölçeklendirmeye devam edecek.</p>
+
+  <hr>
+
+  <p>Inclysi'yi tam da bu akıl yürütme katmanı olmak için inşa ettik — yerel, air-gapped ve en başından veri egemenliğinin pazarlık konusu olmadığı ortamlar için tasarlanmış.</p>
+
+  <p>Soru AI'nin SOC'a ait olup olmadığı değil. Kullandığınızda verinizin nereye gittiğini kontrol edip etmediğiniz.</p>
+
+  <p><a href="https://inclysi.com">inclysi.com</a></p>
+
+</article>
+
+<div class="post-footer-nav">
+  <a href="../" class="back-link">&larr; All Posts</a>
+  <span class="share-label">inclysi.com</span>
+</div>
+
+<footer>
+  <a href="../../" class="footer-logo">
+    <svg width="22" height="22" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="50,2 93,26 93,74 50,98 7,74 7,26" stroke="white" stroke-width="6" fill="none"/><circle cx="50" cy="50" r="5" fill="white"/><circle cx="50" cy="22" r="4" fill="white"/><circle cx="75" cy="36" r="4" fill="white"/><circle cx="75" cy="64" r="4" fill="white"/><circle cx="50" cy="78" r="4" fill="white"/><circle cx="25" cy="64" r="4" fill="white"/><circle cx="25" cy="36" r="4" fill="white"/><line x1="50" y1="50" x2="50" y2="22" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="75" y2="36" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="75" y2="64" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="50" y2="78" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="25" y2="64" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="25" y2="36" stroke="white" stroke-width="2"/></svg>
+    <span>Inclysi AI</span>
+  </a>
+  <span class="footer-copy">&copy; 2026 Inclysi. All rights reserved.</span>
+  <div class="footer-links">
+    <a href="../">Blog</a>
+    <a href="mailto:contact@inclysi.com">Contact</a>
+  </div>
+</footer>
+
+<script>
+window.addEventListener('scroll',()=>{
+  const doc=document.documentElement;
+  const scrolled=(doc.scrollTop)/(doc.scrollHeight-doc.clientHeight)*100;
+  document.getElementById('progressBar').style.width=scrolled+'%';
+});
+
+document.querySelectorAll('.lang-btn[data-lang]').forEach(btn=>{
+  btn.addEventListener('click',e=>{
+    e.preventDefault();
+    const lang=btn.dataset.lang;
+    document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.lang-section').forEach(s=>s.classList.remove('active'));
+    document.getElementById(lang+'-content').classList.add('active');
+    document.getElementById('hero-en').style.display=lang==='en'?'block':'none';
+    document.getElementById('hero-tr').style.display=lang==='tr'?'block':'none';
+  });
+});
+</script>
+</body>
+</html>
