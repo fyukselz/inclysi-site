@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Most Dangerous Thing an AI Can Do in Security Is Be Wrong With Confidence — Inclysi</title>
+<meta name="description" content="LLM hallucinations are a known problem. In most domains they're an inconvenience. In security operations, they're a threat vector.">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7W0LBMG3YK"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-7W0LBMG3YK');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090f;--bg2:#0c0f1a;--bg3:#111629;
+  --gold:#c9a84c;--gold2:#e8c36a;--red:#e63946;
+  --text:#e8eaf0;--muted:#8892a4;--border:#1a2035;
+  --font-display:'Syne',sans-serif;
+  --font-body:'DM Sans',sans-serif;
+  --font-serif:'DM Serif Display',serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:16px;line-height:1.7;overflow-x:hidden}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.2rem 4rem;background:rgba(7,9,15,0.9);backdrop-filter:blur(12px);border-bottom:1px solid rgba(26,32,53,0.6)}
+.nav-logo{display:flex;align-items:center;gap:0.75rem;text-decoration:none}
+.nav-logo span{font-family:var(--font-display);font-size:1.25rem;font-weight:700;color:var(--text);letter-spacing:0.02em}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{color:var(--muted);font-size:0.875rem;text-decoration:none;letter-spacing:0.04em;transition:color 0.2s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{font-size:0.8rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,168,76,0.4);padding:0.5rem 1.25rem;border-radius:2px;text-decoration:none;transition:all 0.2s}
+.progress-bar{position:fixed;top:0;left:0;height:2px;background:var(--gold);width:0%;z-index:200;transition:width 0.1s}
+.post-hero{padding:9rem 2rem 5rem;max-width:800px;margin:0 auto;border-bottom:1px solid var(--border)}
+.post-meta{display:flex;align-items:center;gap:1rem;margin-bottom:2rem;font-size:0.75rem;color:var(--muted)}
+.post-tag{font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);font-size:0.7rem;border:1px solid rgba(201,168,76,0.3);padding:0.2rem 0.6rem;border-radius:2px}
+.post-lang{display:flex;gap:0.5rem;margin-left:auto}
+.lang-btn{font-size:0.7rem;font-weight:500;letter-spacing:0.08em;padding:0.2rem 0.6rem;border-radius:2px;border:1px solid var(--border);color:var(--muted);text-decoration:none;transition:all 0.2s;cursor:pointer;background:none}
+.lang-btn.active,.lang-btn:hover{border-color:rgba(201,168,76,0.4);color:var(--gold)}
+.post-hero h1{font-family:var(--font-display);font-size:clamp(2rem,4.5vw,3.2rem);font-weight:800;line-height:1.1;margin-bottom:1.5rem}
+.post-hero .lead{font-size:1.15rem;color:var(--muted);font-weight:300;line-height:1.8}
+.post-cover{max-width:900px;margin:0 auto;padding:3rem 2rem 0}
+.post-cover img{width:100%;border-radius:4px;border:1px solid var(--border);display:block}
+.img-caption{font-size:0.75rem;color:var(--muted);text-align:center;margin-top:0.75rem;font-style:italic}
+.post-body{max-width:720px;margin:0 auto;padding:4rem 2rem 6rem}
+.post-body h2{font-family:var(--font-display);font-size:1.7rem;font-weight:700;margin:3rem 0 1rem;padding-top:1rem;border-top:1px solid var(--border)}
+.post-body h3{font-family:var(--font-display);font-size:1.2rem;font-weight:600;margin:2rem 0 0.75rem}
+.post-body p{font-size:1.05rem;font-weight:300;color:#c8cdd8;line-height:1.85;margin-bottom:1.5rem}
+.post-body strong{color:var(--text);font-weight:500}
+.post-body a{color:var(--gold);text-decoration:underline;text-underline-offset:3px}
+.post-body blockquote{border-left:3px solid var(--gold);padding:1.25rem 1.75rem;margin:2.5rem 0;background:rgba(201,168,76,0.04);border-radius:0 4px 4px 0}
+.post-body blockquote p{font-family:var(--font-serif);font-size:1.2rem;font-style:italic;color:var(--text);margin:0;line-height:1.6}
+.post-body blockquote cite{font-size:0.8rem;font-style:normal;color:var(--muted);display:block;margin-top:0.75rem}
+.callout{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:0 4px 4px 0;padding:1.25rem 1.5rem;margin:2rem 0}
+.callout.danger{border-left-color:var(--red)}
+.callout-label{font-size:0.65rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem}
+.callout.danger .callout-label{color:var(--red)}
+.callout p{font-size:0.9rem;color:var(--muted);margin:0}
+.post-body ul,.post-body ol{padding-left:1.5rem;margin-bottom:1.5rem}
+.post-body li{font-size:1.05rem;font-weight:300;color:#c8cdd8;line-height:1.85;margin-bottom:0.5rem}
+.post-body ul li::marker{color:var(--gold)}
+.post-body hr{border:none;border-top:1px solid var(--border);margin:3rem 0}
+.lang-section{display:none}
+.lang-section.active{display:block}
+.post-footer-nav{max-width:720px;margin:0 auto;padding:3rem 2rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.back-link{font-size:0.8rem;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--gold);text-decoration:none;display:flex;align-items:center;gap:0.4rem}
+.share-label{font-size:0.75rem;color:var(--muted)}
+footer{padding:3rem 4rem;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border)}
+.footer-logo{display:flex;align-items:center;gap:0.75rem;text-decoration:none}
+.footer-logo span{font-family:var(--font-display);font-size:1rem;font-weight:600;color:var(--text)}
+.footer-copy{font-size:0.8rem;color:var(--muted)}
+.footer-links{display:flex;gap:2rem}
+.footer-links a{font-size:0.8rem;color:var(--muted);text-decoration:none;transition:color 0.2s}
+.footer-links a:hover{color:var(--text)}
+@media(max-width:900px){nav{padding:1.2rem 2rem}.nav-links{display:none}footer{flex-direction:column;gap:1.5rem;text-align:center;padding:2.5rem 2rem}}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<nav>
+  <a href="../../" class="nav-logo">
+    <svg width="28" height="28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="50,2 93,26 93,74 50,98 7,74 7,26" stroke="white" stroke-width="6" fill="none"/><circle cx="50" cy="50" r="5" fill="white"/><circle cx="50" cy="22" r="4" fill="white"/><circle cx="75" cy="36" r="4" fill="white"/><circle cx="75" cy="64" r="4" fill="white"/><circle cx="50" cy="78" r="4" fill="white"/><circle cx="25" cy="64" r="4" fill="white"/><circle cx="25" cy="36" r="4" fill="white"/><line x1="50" y1="50" x2="50" y2="22" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="75" y2="36" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="75" y2="64" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="50" y2="78" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="25" y2="64" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="25" y2="36" stroke="white" stroke-width="2"/></svg>
+    <span>Inclysi AI</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="../../#product">Product</a></li>
+    <li><a href="../../#how">How It Works</a></li>
+    <li><a href="../">Insights</a></li>
+  </ul>
+  <a href="mailto:contact@inclysi.com" class="nav-cta">Get in Touch</a>
+</nav>
+
+<div class="post-hero">
+  <div class="post-meta">
+    <span class="post-tag">Engineering</span>
+    <span>April 26, 2026</span>
+    <span>·</span>
+    <span>10 min read</span>
+    <div class="post-lang">
+      <a href="#" class="lang-btn active" data-lang="en">EN</a>
+      <a href="#" class="lang-btn" data-lang="tr">TR</a>
+    </div>
+  </div>
+  <div id="hero-en">
+    <h1>The Most Dangerous Thing an AI Can Do in Security Is Be Wrong With Confidence</h1>
+    <p class="lead">LLM hallucinations are a known problem. In most domains, they're an inconvenience — a wrong product recommendation, a fabricated citation. In security operations, they're a threat vector. When an AI confidently tells an analyst to execute a response, and that analysis is wrong, the consequences cascade.</p>
+  </div>
+  <div id="hero-tr" style="display:none">
+    <h1>Güvenlikte Bir AI'nin Yapabileceği En Tehlikeli Şey Güvenle Yanılmaktır</h1>
+    <p class="lead">LLM halüsinasyonları bilinen bir sorundur. Çoğu alanda can sıkıcıdır — yanlış bir ürün önerisi, uydurma bir kaynak. Güvenlik operasyonlarında ise bir tehdit vektörüdür. AI bir analize güvenle "bu tehdidi uygula" dediğinde ve o analiz yanlışsa, sonuçlar zincirleme yayılır.</p>
+  </div>
+</div>
+
+<div class="post-cover">
+  <img src="../../assets/post-hallucination.png" alt="LLM hallucination in security">
+  <p class="img-caption">In security, a confident wrong answer is more dangerous than no answer.</p>
+</div>
+
+<!-- ENGLISH -->
+<article class="post-body lang-section active" id="en-content">
+
+  <p>There is a widely cited statistic in the AI research community: large language models hallucinate. They produce confident, fluent, grammatically correct output that is factually wrong. Not occasionally — structurally. It is an inherent property of how these systems work, not a bug that will eventually be patched out.</p>
+
+  <p>For most applications, this is manageable. A hallucinated product description gets corrected. A fabricated historical fact gets fact-checked. The cost of error is low, the feedback loop is fast, and the damage is reversible.</p>
+
+  <p>Security operations does not have these properties. The cost of error is high. The feedback loop is slow. And the damage, in many cases, is not reversible at all.</p>
+
+  <h2>Why LLMs Hallucinate — And Why It Cannot Be Eliminated</h2>
+
+  <p>To understand the risk, you need to understand the mechanism. Large language models are trained to predict the most probable next token given a context. They are extraordinarily good at producing output that sounds correct — that follows the patterns, conventions, and structures of accurate text in their training domain.</p>
+
+  <p>But "sounds like a correct security analysis" and "is a correct security analysis" are not the same thing. The model has no ground truth. It has no access to your actual environment, your actual logs, your actual threat landscape. It works with the context it is given — and when that context is ambiguous, incomplete, or outside its training distribution, it fills the gaps with plausible-sounding completions that may have no basis in reality.</p>
+
+  <blockquote>
+    <p>"The model doesn't know what it doesn't know. It produces the most probable answer — not the most accurate one. In security, those two things diverge at exactly the worst moments."</p>
+  </blockquote>
+
+  <p>This is not a flaw that better models will eliminate. It is a fundamental property of the architecture. Even the most capable models hallucinate. The question is not whether your AI will produce incorrect analysis — it will. The question is what structural safeguards exist to catch it before it reaches an analyst's decision queue.</p>
+
+  <h2>The Unique Danger in Security Operations</h2>
+
+  <p>What makes hallucination particularly dangerous in a SOC environment is the action orientation of the work.</p>
+
+  <p>In most knowledge work, AI output is consumed, considered, and then acted upon with significant human deliberation in between. The human is a natural filter. They read the output, compare it against their own knowledge, sense-check it, and then decide what to do.</p>
+
+  <p>In a high-volume SOC environment, this filter is under constant pressure. An analyst handling hundreds of alerts per shift is not in a position to deeply deliberate over every AI recommendation. The value proposition of AI in this context is precisely that it reduces the cognitive load — which means, necessarily, that analysts will sometimes act on AI output with less scrutiny than they would apply to their own analysis.</p>
+
+  <div class="callout danger">
+    <div class="callout-label">The Core Risk</div>
+    <p>The same property that makes AI useful in high-volume environments — reducing deliberation time — is the property that makes hallucinations dangerous. Speed and scrutiny are in tension. AI exploits the former. Hallucination exploits the latter.</p>
+  </div>
+
+  <p>The consequences of acting on a hallucinated security analysis include isolating a legitimate system, disabling a valid account, blocking benign traffic, triggering an incident response for a non-incident — and in the inverse case, failing to respond to a genuine threat because the AI confidently classified it as benign.</p>
+
+  <p>Both directions are dangerous. And both are structurally enabled by unguarded LLM output in a security context.</p>
+
+  <h2>How to Make LLMs Smarter in Security Contexts</h2>
+
+  <p>The answer is not to avoid LLMs. The answer is to architect their use in ways that systematically reduce hallucination risk. There are several proven approaches.</p>
+
+  <h3>1. Grounding — Never Let the Model Reason in a Vacuum</h3>
+
+  <p>The most effective single technique for reducing hallucination is grounding: ensuring the model's reasoning is anchored to specific, verifiable data rather than its general parametric knowledge.</p>
+
+  <p>In a security context, this means the model should never analyze an event in isolation. Before any LLM call, the system should assemble all available context: the raw event data, the entity's behavioral history, similar past incidents and their outcomes, relevant threat intelligence, the entity's role and typical activity patterns. The model reasons over this assembled evidence — not over its training data.</p>
+
+  <p>A grounded model that says "based on the following 14 data points, this matches a lateral movement pattern" is fundamentally more reliable than an ungrounded model that says "this looks like lateral movement" from general knowledge alone.</p>
+
+  <h3>2. Structured Output — Force the Model to Commit</h3>
+
+  <p>Free-form LLM output is difficult to validate programmatically. Structured output — requiring the model to produce its analysis in a defined schema with specific fields — makes validation tractable.</p>
+
+  <p>When the model must produce a JSON object with fields for threat classification, confidence score, supporting evidence, and contradicting evidence, several things happen: the model is forced to be explicit about what it knows and doesn't know, the output can be validated against expected ranges and formats, and downstream systems can flag responses that are missing required fields or contain implausible values.</p>
+
+  <p>Structured output also makes it much harder for the model to be vague or evasive — the two behaviors that most often mask hallucination.</p>
+
+  <h3>3. Two-Stage Reasoning — Separate Classification from Analysis</h3>
+
+  <p>A single LLM call asked to do everything — classify the event, assess severity, identify the attack pattern, recommend a response — is more likely to hallucinate than a pipeline where these tasks are separated.</p>
+
+  <p>The first stage handles initial triage: is this event worth deeper analysis? What category does it fall into? This is a lower-stakes classification task where the cost of error is a second look, not a wrong action.</p>
+
+  <p>The second stage, triggered only for events that pass triage, handles deep analysis: what is the full evidence chain? What is the confidence level and why? What specific response is warranted? This stage has more context, a narrower task, and a higher bar for output quality.</p>
+
+  <p>Two-stage reasoning does not eliminate hallucination. But it dramatically reduces the surface area — the first stage filters out noise before the higher-stakes second stage engages, and the second stage has a cleaner, more constrained task to reason over.</p>
+
+  <h3>4. Confidence Calibration — Teaching the Model to Say "I Don't Know"</h3>
+
+  <p>One of the most dangerous properties of hallucination is that hallucinated outputs often carry the same confident tone as accurate ones. The model does not know it is wrong. It produces "CONFIRMED THREAT" with the same fluency as it produces correct assessments.</p>
+
+  <p>Confidence calibration — prompting and fine-tuning the model to express genuine uncertainty when evidence is insufficient — is one of the most important safeguards available. A model that says "confidence: 34%, insufficient evidence to classify with certainty" is doing its job correctly. A model that says "confidence: 94%, IMMEDIATE RESPONSE" when the underlying evidence does not support that conclusion is actively dangerous.</p>
+
+  <p>Calibrated uncertainty is not a weakness. It is the most important signal an analyst can receive from an AI system.</p>
+
+  <h3>5. Output Validation — Never Trust, Always Verify</h3>
+
+  <p>Every LLM output in a security pipeline should pass through a validation layer before reaching an analyst. This layer checks for internal consistency — does the evidence actually support the conclusion? Does the confidence level match the quantity and quality of supporting signals? Are there claims in the output that cannot be traced to the input data?</p>
+
+  <p>Outputs that fail validation should be flagged, downgraded in priority, or returned to the model with specific instructions to reconsider. The analyst should see not just the output, but its validation status.</p>
+
+  <h2>The Analyst as the Final Safeguard</h2>
+
+  <p>All of the above techniques reduce hallucination risk. None of them eliminate it. The final safeguard is, and must remain, the analyst.</p>
+
+  <p>This is not a limitation of current technology — it is the correct architecture for high-stakes AI systems. The AI does the heavy lifting: volume processing, pattern recognition, evidence assembly, initial classification. The analyst does the irreplaceable work: final judgment, contextual override, accountability.</p>
+
+  <p>The system's job is to make the analyst's judgment as well-informed as possible. That means surfacing not just conclusions, but evidence. Not just scores, but confidence levels. Not just recommendations, but the reasoning behind them — including the reasoning's limitations.</p>
+
+  <p>An analyst who sees "IMMEDIATE RESPONSE — CONFIDENCE 94% — based on the following evidence chain" is in a position to make a good decision. An analyst who sees "EXECUTE RESPONSE" from an unexamined black box is in a position to make a fast one. In security, fast and good are not the same thing.</p>
+
+  <hr>
+
+  <p>Every architectural decision in Inclysi is made with hallucination risk in mind. Grounded context assembly before every model call. Structured output with mandatory evidence fields. Two-stage reasoning that separates classification from deep analysis. Confidence scores that reflect genuine uncertainty. Output validation before analyst delivery.</p>
+
+  <p>Because in security, a confident wrong answer is more dangerous than no answer at all.</p>
+
+  <p><a href="https://inclysi.com">inclysi.com</a></p>
+
+</article>
+
+<!-- TURKISH -->
+<article class="post-body lang-section" id="tr-content">
+
+  <p>AI araştırma topluluğunda sıkça alıntılanan bir gerçek var: büyük dil modelleri halüsinasyon üretir. Gerçekten yanlış olan güvenli, akıcı, dilbilgisel açıdan doğru çıktılar üretirler. Ara sıra değil — yapısal olarak. Bu, bu sistemlerin nasıl çalıştığının doğasında var olan bir özelliktir; sonunda yamanaçak bir hata değildir.</p>
+
+  <p>Çoğu uygulama için bu yönetilebilirdir. Halüsinasyonlu bir ürün açıklaması düzeltilir. Uydurma bir tarihsel gerçek doğrulanır. Hatanın maliyeti düşük, geri bildirim döngüsü hızlı ve hasar geri döndürülebilirdir.</p>
+
+  <p>Güvenlik operasyonları bu özelliklere sahip değildir. Hatanın maliyeti yüksek. Geri bildirim döngüsü yavaş. Ve hasar, pek çok durumda hiç geri döndürülemez.</p>
+
+  <h2>LLM'ler Neden Halüsinasyon Üretir — Ve Neden Ortadan Kaldırılamaz</h2>
+
+  <p>Riski anlamak için mekanizmayı anlamanız gerekir. Büyük dil modelleri, bir bağlam verildiğinde en olası sonraki token'ı tahmin etmek üzere eğitilmiştir. Doğru görünen çıktılar üretmede olağanüstü iyidirler — eğitim alanlarındaki doğru metnin desenlerini, kurallarını ve yapılarını takip eden çıktılar.</p>
+
+  <p>Ama "doğru güvenlik analizi gibi görünmek" ve "doğru güvenlik analizi olmak" aynı şey değildir. Modelin gerçeği yoktur. Gerçek ortamınıza, gerçek loglarınıza, gerçek tehdit ortamınıza erişimi yoktur. Kendisine verilen bağlamla çalışır — ve bu bağlam belirsiz, eksik veya eğitim dağılımının dışında olduğunda, boşlukları gerçeklikte hiçbir temeli olmayabilecek makul görünümlü tamamlamalarla doldurur.</p>
+
+  <blockquote>
+    <p>"Model ne bilmediğini bilmiyor. En olası cevabı üretiyor — en doğru olanı değil. Güvenlikte bu iki şey tam da en kötü anlarda birbirinden ayrılıyor."</p>
+  </blockquote>
+
+  <p>Bu, daha iyi modellerin ortadan kaldıracağı bir hata değildir. Mimarinin temel bir özelliğidir. En yetenekli modeller bile halüsinasyon üretir. Soru AI'nizin yanlış analiz üretip üretmeyeceği değil — üretecektir. Soru, bir analistin karar kuyruğuna ulaşmadan önce bunu yakalamak için hangi yapısal güvencelerin var olduğudur.</p>
+
+  <h2>Güvenlik Operasyonlarındaki Benzersiz Tehlike</h2>
+
+  <p>Halüsinasyonu SOC ortamında özellikle tehlikeli kılan şey, işin eylem yönelimli olmasıdır.</p>
+
+  <p>Çoğu bilgi işinde AI çıktısı tüketilir, değerlendirilir ve ardından arada önemli miktarda insan müzakeresiyle harekete geçilir. İnsan doğal bir filtredir.</p>
+
+  <div class="callout danger">
+    <div class="callout-label">Temel Risk</div>
+    <p>AI'yi yüksek hacimli ortamlarda kullanışlı kılan özellik — müzakere süresini azaltmak — halüsinasyonları tehlikeli kılan özelliğin aynısıdır. Hız ve inceleme gerilim içindedir. AI birincisinden yararlanır. Halüsinasyon ikincisinden.</p>
+  </div>
+
+  <p>Halüsinasyonlu bir güvenlik analizine göre hareket etmenin sonuçları şunları içerir: meşru bir sistemi izole etmek, geçerli bir hesabı devre dışı bırakmak, zararsız trafiği engellemek, gerçek olmayan bir olay için olay müdahalesi tetiklemek — ve ters durumda, AI onu güvenle zararsız olarak sınıflandırdığı için gerçek bir tehdide yanıt vermemek.</p>
+
+  <h2>LLM'leri Güvenlik Bağlamlarında Daha Akıllı Yapma</h2>
+
+  <p>Cevap LLM'lerden kaçınmak değil. Cevap, halüsinasyon riskini sistematik olarak azaltacak şekilde kullanımlarını tasarlamaktır.</p>
+
+  <h3>1. Grounding — Modelin Boşlukta Akıl Yürütmesine İzin Verme</h3>
+
+  <p>Halüsinasyonu azaltmak için kanıtlanmış en etkili tek teknik grounding'dır: modelin akıl yürütmesinin genel parametrik bilgisi yerine belirli, doğrulanabilir verilere dayandırılmasını sağlamak.</p>
+
+  <p>Güvenlik bağlamında bu, modelin bir olayı asla izole olarak analiz etmemesi gerektiği anlamına gelir. Her LLM çağrısından önce sistem mevcut tüm bağlamı bir araya getirmelidir: ham olay verisi, varlığın davranışsal geçmişi, benzer geçmiş olaylar ve sonuçları, ilgili tehdit istihbaratı.</p>
+
+  <h3>2. Yapılandırılmış Çıktı — Modeli Taahhüt Etmeye Zorla</h3>
+
+  <p>Serbest biçimli LLM çıktısını programatik olarak doğrulamak zordur. Yapılandırılmış çıktı — modelin analizini belirli alanları olan tanımlı bir şemada üretmesini gerektirmek — doğrulamayı mümkün kılar.</p>
+
+  <p>Model tehdit sınıflandırması, güven skoru, destekleyici kanıt ve çelişen kanıt için alanlar içeren bir JSON nesnesi üretmek zorunda olduğunda: model ne bildiği ve bilmediği konusunda açık olmaya zorlanır, çıktı beklenen aralıklara göre doğrulanabilir.</p>
+
+  <h3>3. İki Aşamalı Akıl Yürütme — Sınıflandırmayı Analizden Ayır</h3>
+
+  <p>Her şeyi yapmakla görevlendirilmiş tek bir LLM çağrısı — olayı sınıflandır, ciddiyeti değerlendir, saldırı desenini belirle, yanıt öner — bu görevlerin ayrıldığı bir pipeline'dan daha fazla halüsinasyon üretir.</p>
+
+  <p>İlk aşama ilk triage'ı yönetir: bu olay daha derin analize değer mi? İkinci aşama, yalnızca triage'ı geçen olaylar için tetiklenerek derin analizi yönetir: tam kanıt zinciri nedir? Güven seviyesi nedir ve neden?</p>
+
+  <h3>4. Güven Kalibrasyonu — Modele "Bilmiyorum" Demeyi Öğret</h3>
+
+  <p>Halüsinasyonun en tehlikeli özelliklerinden biri, halüsinasyonlu çıktıların genellikle doğru olanlarla aynı güvenli tonu taşımasıdır. Model yanlış olduğunu bilmez. "CONFIRMED THREAT" ifadesini doğru değerlendirmelerle aynı akıcılıkla üretir.</p>
+
+  <p>Güven kalibrasyonu — modeli kanıt yetersiz olduğunda gerçek belirsizlik ifade etmesi için yönlendirmek — mevcut en önemli güvencelerden biridir. "%34 güven, kesinlikle sınıflandırmak için yetersiz kanıt" diyen model görevini doğru yapıyordur. Altta yatan kanıt bu sonucu desteklemediğinde "%94 güven, ANINDA MÜDAHALE" diyen model aktif olarak tehlikelidir.</p>
+
+  <h3>5. Çıktı Doğrulama — Asla Güvenme, Her Zaman Doğrula</h3>
+
+  <p>Güvenlik pipeline'ındaki her LLM çıktısı, bir analistin önüne gelmeden önce bir doğrulama katmanından geçmelidir. Bu katman iç tutarlılığı kontrol eder — kanıt gerçekten sonucu destekliyor mu? Güven seviyesi destekleyici sinyallerin miktarı ve kalitesiyle örtüşüyor mu?</p>
+
+  <h2>Analist Son Güvence Olarak</h2>
+
+  <p>Yukarıdaki tekniklerin tamamı halüsinasyon riskini azaltır. Hiçbiri onu ortadan kaldırmaz. Son güvence, analisttir ve analist olarak kalmalıdır.</p>
+
+  <p>Bu mevcut teknolojinin bir sınırlaması değil — yüksek riskli AI sistemleri için doğru mimaridir. AI ağır işi yapar: hacim işleme, desen tanıma, kanıt toplama, ilk sınıflandırma. Analist vazgeçilmez işi yapar: nihai yargı, bağlamsal geçersizleştirme, hesap verebilirlik.</p>
+
+  <p>Sistemin görevi analistin yargısını mümkün olduğunca iyi bilgilendirilmiş kılmaktır. Bu, yalnızca sonuçları değil kanıtları da yüzeye çıkarmak anlamına gelir. Yalnızca skorları değil güven seviyelerini. Yalnızca önerileri değil, arkalarındaki akıl yürütmeyi — sınırlamaları dahil.</p>
+
+  <hr>
+
+  <p>Inclysi'deki her mimari karar halüsinasyon riski göz önünde bulundurularak alınmaktadır. Her model çağrısından önce temelli bağlam derlemesi. Zorunlu kanıt alanlarıyla yapılandırılmış çıktı. Sınıflandırmayı derin analizden ayıran iki aşamalı akıl yürütme. Gerçek belirsizliği yansıtan güven skorları. Analist teslimatından önce çıktı doğrulama.</p>
+
+  <p>Çünkü güvenlikte, güvenli bir yanlış cevap hiç cevap vermemekten daha tehlikelidir.</p>
+
+  <p><a href="https://inclysi.com">inclysi.com</a></p>
+
+</article>
+
+<div class="post-footer-nav">
+  <a href="../" class="back-link">&larr; All Posts</a>
+  <span class="share-label">inclysi.com</span>
+</div>
+
+<footer>
+  <a href="../../" class="footer-logo">
+    <svg width="22" height="22" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="50,2 93,26 93,74 50,98 7,74 7,26" stroke="white" stroke-width="6" fill="none"/><circle cx="50" cy="50" r="5" fill="white"/><circle cx="50" cy="22" r="4" fill="white"/><circle cx="75" cy="36" r="4" fill="white"/><circle cx="75" cy="64" r="4" fill="white"/><circle cx="50" cy="78" r="4" fill="white"/><circle cx="25" cy="64" r="4" fill="white"/><circle cx="25" cy="36" r="4" fill="white"/><line x1="50" y1="50" x2="50" y2="22" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="75" y2="36" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="75" y2="64" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="50" y2="78" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="25" y2="64" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="25" y2="36" stroke="white" stroke-width="2"/></svg>
+    <span>Inclysi AI</span>
+  </a>
+  <span class="footer-copy">&copy; 2026 Inclysi. All rights reserved.</span>
+  <div class="footer-links">
+    <a href="../">Blog</a>
+    <a href="mailto:contact@inclysi.com">Contact</a>
+  </div>
+</footer>
+
+<script>
+window.addEventListener('scroll',()=>{
+  const doc=document.documentElement;
+  const scrolled=(doc.scrollTop)/(doc.scrollHeight-doc.clientHeight)*100;
+  document.getElementById('progressBar').style.width=scrolled+'%';
+});
+document.querySelectorAll('.lang-btn[data-lang]').forEach(btn=>{
+  btn.addEventListener('click',e=>{
+    e.preventDefault();
+    const lang=btn.dataset.lang;
+    document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.lang-section').forEach(s=>s.classList.remove('active'));
+    document.getElementById(lang+'-content').classList.add('active');
+    document.getElementById('hero-en').style.display=lang==='en'?'block':'none';
+    document.getElementById('hero-tr').style.display=lang==='tr'?'block':'none';
+  });
+});
+</script>
+</body>
+</html>
