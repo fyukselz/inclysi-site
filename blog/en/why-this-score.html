@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>"Why This Score?" — Why Explainable AI Is the Only AI That Works in Security — Inclysi</title>
+<meta name="description" content="A threat score means nothing if the analyst doesn't trust it. The future of AI in security isn't smarter models — it's models that show their work.">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7W0LBMG3YK"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-7W0LBMG3YK');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090f;--bg2:#0c0f1a;--bg3:#111629;
+  --gold:#c9a84c;--gold2:#e8c36a;--red:#e63946;
+  --text:#e8eaf0;--muted:#8892a4;--border:#1a2035;
+  --font-display:'Syne',sans-serif;
+  --font-body:'DM Sans',sans-serif;
+  --font-serif:'DM Serif Display',serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:16px;line-height:1.7;overflow-x:hidden}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.2rem 4rem;background:rgba(7,9,15,0.9);backdrop-filter:blur(12px);border-bottom:1px solid rgba(26,32,53,0.6)}
+.nav-logo{display:flex;align-items:center;gap:0.75rem;text-decoration:none}
+.nav-logo span{font-family:var(--font-display);font-size:1.25rem;font-weight:700;color:var(--text);letter-spacing:0.02em}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{color:var(--muted);font-size:0.875rem;text-decoration:none;letter-spacing:0.04em;transition:color 0.2s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{font-size:0.8rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,168,76,0.4);padding:0.5rem 1.25rem;border-radius:2px;text-decoration:none;transition:all 0.2s}
+.progress-bar{position:fixed;top:0;left:0;height:2px;background:var(--gold);width:0%;z-index:200;transition:width 0.1s}
+.post-hero{padding:9rem 2rem 5rem;max-width:800px;margin:0 auto;border-bottom:1px solid var(--border)}
+.post-meta{display:flex;align-items:center;gap:1rem;margin-bottom:2rem;font-size:0.75rem;color:var(--muted)}
+.post-tag{font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);font-size:0.7rem;border:1px solid rgba(201,168,76,0.3);padding:0.2rem 0.6rem;border-radius:2px}
+.post-lang{display:flex;gap:0.5rem;margin-left:auto}
+.lang-btn{font-size:0.7rem;font-weight:500;letter-spacing:0.08em;padding:0.2rem 0.6rem;border-radius:2px;border:1px solid var(--border);color:var(--muted);text-decoration:none;transition:all 0.2s;cursor:pointer;background:none}
+.lang-btn.active,.lang-btn:hover{border-color:rgba(201,168,76,0.4);color:var(--gold)}
+.post-hero h1{font-family:var(--font-display);font-size:clamp(2rem,4.5vw,3.2rem);font-weight:800;line-height:1.1;margin-bottom:1.5rem}
+.post-hero .lead{font-size:1.15rem;color:var(--muted);font-weight:300;line-height:1.8}
+.post-cover{max-width:900px;margin:0 auto;padding:3rem 2rem 0}
+.post-cover img{width:100%;border-radius:4px;border:1px solid var(--border);display:block}
+.img-caption{font-size:0.75rem;color:var(--muted);text-align:center;margin-top:0.75rem;font-style:italic}
+.post-body{max-width:720px;margin:0 auto;padding:4rem 2rem 6rem}
+.post-body h2{font-family:var(--font-display);font-size:1.7rem;font-weight:700;margin:3rem 0 1rem;padding-top:1rem;border-top:1px solid var(--border)}
+.post-body h3{font-family:var(--font-display);font-size:1.2rem;font-weight:600;margin:2rem 0 0.75rem}
+.post-body p{font-size:1.05rem;font-weight:300;color:#c8cdd8;line-height:1.85;margin-bottom:1.5rem}
+.post-body strong{color:var(--text);font-weight:500}
+.post-body a{color:var(--gold);text-decoration:underline;text-underline-offset:3px}
+.post-body blockquote{border-left:3px solid var(--gold);padding:1.25rem 1.75rem;margin:2.5rem 0;background:rgba(201,168,76,0.04);border-radius:0 4px 4px 0}
+.post-body blockquote p{font-family:var(--font-serif);font-size:1.2rem;font-style:italic;color:var(--text);margin:0;line-height:1.6}
+.post-body blockquote cite{font-size:0.8rem;font-style:normal;color:var(--muted);display:block;margin-top:0.75rem}
+.callout{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:0 4px 4px 0;padding:1.25rem 1.5rem;margin:2rem 0}
+.callout-label{font-size:0.65rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem}
+.callout p{font-size:0.9rem;color:var(--muted);margin:0}
+.post-body ul,.post-body ol{padding-left:1.5rem;margin-bottom:1.5rem}
+.post-body li{font-size:1.05rem;font-weight:300;color:#c8cdd8;line-height:1.85;margin-bottom:0.5rem}
+.post-body ul li::marker{color:var(--gold)}
+.post-body hr{border:none;border-top:1px solid var(--border);margin:3rem 0}
+.lang-section{display:none}
+.lang-section.active{display:block}
+.post-footer-nav{max-width:720px;margin:0 auto;padding:3rem 2rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.back-link{font-size:0.8rem;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--gold);text-decoration:none;display:flex;align-items:center;gap:0.4rem}
+.share-label{font-size:0.75rem;color:var(--muted)}
+footer{padding:3rem 4rem;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border)}
+.footer-logo{display:flex;align-items:center;gap:0.75rem;text-decoration:none}
+.footer-logo span{font-family:var(--font-display);font-size:1rem;font-weight:600;color:var(--text)}
+.footer-copy{font-size:0.8rem;color:var(--muted)}
+.footer-links{display:flex;gap:2rem}
+.footer-links a{font-size:0.8rem;color:var(--muted);text-decoration:none;transition:color 0.2s}
+.footer-links a:hover{color:var(--text)}
+@media(max-width:900px){nav{padding:1.2rem 2rem}.nav-links{display:none}footer{flex-direction:column;gap:1.5rem;text-align:center;padding:2.5rem 2rem}}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<nav>
+  <a href="../../" class="nav-logo">
+    <svg width="28" height="28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="50,2 93,26 93,74 50,98 7,74 7,26" stroke="white" stroke-width="6" fill="none"/><circle cx="50" cy="50" r="5" fill="white"/><circle cx="50" cy="22" r="4" fill="white"/><circle cx="75" cy="36" r="4" fill="white"/><circle cx="75" cy="64" r="4" fill="white"/><circle cx="50" cy="78" r="4" fill="white"/><circle cx="25" cy="64" r="4" fill="white"/><circle cx="25" cy="36" r="4" fill="white"/><line x1="50" y1="50" x2="50" y2="22" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="75" y2="36" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="75" y2="64" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="50" y2="78" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="25" y2="64" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="25" y2="36" stroke="white" stroke-width="2"/></svg>
+    <span>Inclysi AI</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="../../#product">Product</a></li>
+    <li><a href="../../#how">How It Works</a></li>
+    <li><a href="../">Insights</a></li>
+  </ul>
+  <a href="mailto:contact@inclysi.com" class="nav-cta">Get in Touch</a>
+</nav>
+
+<div class="post-hero">
+  <div class="post-meta">
+    <span class="post-tag">AI &amp; Security</span>
+    <span>April 26, 2026</span>
+    <span>·</span>
+    <span>9 min read</span>
+    <div class="post-lang">
+      <a href="#" class="lang-btn active" data-lang="en">EN</a>
+      <a href="#" class="lang-btn" data-lang="tr">TR</a>
+    </div>
+  </div>
+  <div id="hero-en">
+    <h1>"Why This Score?" — The Only Question That Makes AI Trustworthy in Security</h1>
+    <p class="lead">A threat score of 91 means nothing if the analyst doesn't know why. The future of AI in security operations isn't smarter models — it's models that show their work. Black-box AI has no place in an environment where every decision carries operational consequence.</p>
+  </div>
+  <div id="hero-tr" style="display:none">
+    <h1>"Bu Skor Neden?" — Güvenlikte AI'yi Güvenilir Kılan Tek Soru</h1>
+    <p class="lead">91'lik bir tehdit skoru, analist nedenini bilmiyorsa hiçbir anlam taşımaz. Güvenlik operasyonlarında AI'nin geleceği daha akıllı modeller değil — çalışmasını gösteren modellerdir. Kara kutu AI, her kararın operasyonel sonuç doğurduğu bir ortamda yeri yoktur.</p>
+  </div>
+</div>
+
+<div class="post-cover">
+  <img src="../../assets/post-explainable.png" alt="Explainable AI evidence chain">
+  <p class="img-caption">Every score. Fully explained. The evidence chain behind every decision.</p>
+</div>
+
+<!-- ENGLISH -->
+<article class="post-body lang-section active" id="en-content">
+
+  <p>Imagine an analyst receives an alert scored at 91 out of 100. Critical priority. Immediate response recommended.</p>
+
+  <p>The analyst looks at the score. Then looks at the raw event data. Then looks back at the score. There is no bridge between the two — no explanation of what drove the number, no indication of which signals were weighted most heavily, no way to validate or challenge the assessment.</p>
+
+  <p>What does the analyst do?</p>
+
+  <p>In most cases, one of two things: they either blindly trust the score and act — becoming an executor rather than a thinking professional — or they distrust it entirely and go back to manual analysis, defeating the purpose of having AI in the first place.</p>
+
+  <p>This is the black-box problem. And it is the single biggest reason AI adoption fails in security operations.</p>
+
+  <h2>Why Black-Box AI Fails in Security</h2>
+
+  <p>In many domains, black-box AI is perfectly acceptable. A recommendation algorithm doesn't need to explain why it suggested a particular product. A spam filter doesn't need to justify every classification. The consequences of being wrong are low and reversible.</p>
+
+  <p>Security is categorically different.</p>
+
+  <p>In a SOC environment, every decision carries real operational weight. A false negative means a breach goes undetected. A false positive means resources are misallocated, analyst time is wasted, and — critically — trust in the system erodes. A pattern of unexplained decisions, even correct ones, produces analysts who feel like observers rather than professionals exercising judgment.</p>
+
+  <blockquote>
+    <p>"Our analysts stopped trusting the AI scores within three weeks. Not because they were wrong — but because they couldn't understand them. A score you can't interrogate is a score you can't defend."</p>
+    <cite>— Security Operations Director, critical infrastructure sector</cite>
+  </blockquote>
+
+  <p>The moment an analyst cannot answer "why does this score say 91?" when questioned by their manager or in a post-incident review, the AI system has failed — regardless of its technical accuracy.</p>
+
+  <h2>The Evidence Chain: Showing the Work</h2>
+
+  <p>The solution is not simpler AI. It is more transparent AI — systems designed from the ground up to surface not just conclusions, but the reasoning that produced them.</p>
+
+  <p>Every threat score should be the output of a visible, interrogable chain of evidence. Each contributing signal should be named, weighted, and explained. The analyst should be able to look at a score and immediately understand:</p>
+
+  <ul>
+    <li><strong>What drove it up.</strong> Which signals elevated the score and by how much. An IP with high reputation risk. A behavioral anomaly three standard deviations from baseline. A kill chain pattern consistent with lateral movement.</li>
+    <li><strong>What would drive it down.</strong> What context, if present, would reduce the score. A known maintenance window. A whitelisted process. An entity with a clean history.</li>
+    <li><strong>What is uncertain.</strong> Where the evidence is thin, where confidence is lower, where the analyst's judgment is most needed.</li>
+  </ul>
+
+  <p>This is not just a usability feature. It is a fundamental requirement for AI to function as a genuine partner in security operations rather than an opaque oracle.</p>
+
+  <h2>The Anatomy of a Score</h2>
+
+  <p>Consider what a properly explained threat score actually looks like in practice.</p>
+
+  <p>An offense arrives. The score is 91. Behind that number:</p>
+
+  <ul>
+    <li><strong>IP Reputation: HIGH RISK</strong> — the source IP appears on multiple threat intelligence feeds, associated with command-and-control infrastructure in two previous campaigns.</li>
+    <li><strong>Behavioral Anomaly: +3σ</strong> — the affected entity's authentication pattern deviates three standard deviations from its 90-day baseline. This level of deviation, in this entity's history, has preceded confirmed incidents twice before.</li>
+    <li><strong>Kill Chain: Lateral Movement</strong> — the event sequence matches a recognized lateral movement pattern. Initial access followed by credential enumeration followed by internal reconnaissance. Stage three of a five-stage progression.</li>
+    <li><strong>Entity History: 3 Prior Incidents</strong> — this specific IP address or user account has appeared in three previous security incidents. Two were confirmed true positives. One was escalated to incident response.</li>
+    <li><strong>Temporal Pattern: Off-Hours</strong> — the activity occurred at 2:47 AM on a Tuesday. For this entity, 94% of legitimate activity occurs during business hours.</li>
+    <li><strong>Confidence: 94%</strong> — based on the strength and consistency of the above signals, the system's confidence in this classification is high.</li>
+  </ul>
+
+  <div class="callout">
+    <div class="callout-label">The Difference</div>
+    <p>An analyst who sees "Score: 91" has a number. An analyst who sees the evidence chain has a case. One produces action. The other produces understanding — and then action.</p>
+  </div>
+
+  <p>The analyst who receives this evidence chain can now do something the analyst who receives only a score cannot: they can validate, challenge, supplement, and ultimately own the decision. They can add context the AI doesn't have. They can identify if something in the chain is wrong. They can escalate with confidence, presenting the evidence rather than deferring to an unexplained number.</p>
+
+  <h2>Trust Is Built Through Transparency</h2>
+
+  <p>There is a deeper reason why explainability matters beyond operational efficiency. It is about the relationship between the analyst and the system they work with.</p>
+
+  <p>Trust in any tool is built through predictability and transparency. When a system's reasoning is visible, analysts can develop an accurate mental model of how it thinks. They learn when to trust it implicitly and when to scrutinize it more carefully. They develop calibrated confidence rather than either blind faith or blanket skepticism.</p>
+
+  <p>A black-box system produces neither calibration nor confidence. It produces dependency without understanding — which is, in a high-stakes operational environment, one of the most dangerous conditions possible.</p>
+
+  <p>The analyst who understands why a score is 91 is a fundamentally different professional than the analyst who simply accepts it. The former exercises judgment. The latter executes instructions. In security operations, the difference between these two states is the difference between a resilient team and a brittle one.</p>
+
+  <h2>Explainability as a Security Property</h2>
+
+  <p>Here is a perspective that is rarely articulated: explainability is not just an operational convenience. It is itself a security property.</p>
+
+  <p>A system whose reasoning cannot be examined cannot be audited. It cannot be improved systematically when it makes mistakes. It cannot be defended in a regulatory context. It cannot be trusted in an incident response scenario where every decision may later be reviewed.</p>
+
+  <p>In regulated industries — finance, healthcare, critical infrastructure, government — the inability to explain an AI-driven security decision is not just an operational problem. It is a compliance problem. Regulators increasingly expect organizations to be able to demonstrate the basis for significant decisions, including security classifications.</p>
+
+  <p>An AI system that says "trust me" is not enterprise-grade. An AI system that says "here is every signal, every weight, every piece of evidence that produced this conclusion — verify it, challenge it, improve it" is the only kind that belongs in a serious security operation.</p>
+
+  <h2>The Analyst as the Final Authority</h2>
+
+  <p>The most important thing explainability enables is analyst authority.</p>
+
+  <p>When an analyst can see the full evidence chain behind a score, they are positioned as the final decision-maker — not a rubber stamp for an opaque system, but a professional who reviews evidence, applies judgment, and owns the outcome. The AI presents a case. The analyst renders a verdict.</p>
+
+  <p>This is the correct architecture for human-AI collaboration in high-stakes environments. The AI handles volume, consistency, and pattern recognition at scale. The human handles judgment, context, and accountability. Neither operates in isolation. Neither is subordinate to the other.</p>
+
+  <p>The question "why this score?" is not a sign of distrust in the AI. It is the sign of a professional doing their job. The system's answer to that question — detailed, transparent, interrogable — is what makes the collaboration work.</p>
+
+  <hr>
+
+  <p>Every score Inclysi produces comes with a full evidence chain. Every signal is named. Every weight is visible. Every conclusion is accompanied by the reasoning that produced it.</p>
+
+  <p>Not because it makes the AI look more impressive. Because it makes the analyst more effective.</p>
+
+  <p><a href="https://inclysi.com">inclysi.com</a></p>
+
+</article>
+
+<!-- TURKISH -->
+<article class="post-body lang-section" id="tr-content">
+
+  <p>Bir analistin 100 üzerinden 91 puan alan bir alarm aldığını hayal edin. Kritik öncelik. Anında müdahale öneriliyor.</p>
+
+  <p>Analist skora bakıyor. Sonra ham olay verilerine bakıyor. Sonra tekrar skora. İkisi arasında köprü yok — sayıyı neyin yönlendirdiğine dair açıklama yok, hangi sinyallerin en ağır şekilde ağırlıklandırıldığına dair ipucu yok, değerlendirmeyi doğrulama veya sorgulama yolu yok.</p>
+
+  <p>Analist ne yapar?</p>
+
+  <p>Çoğu durumda iki şeyden biri: ya skora körü körüne güvenip harekete geçer — düşünen bir profesyonelden ziyade bir uygulayıcı olur — ya da tamamen güvensizlik duyarak manuel analize geri döner, baştan AI kullanmanın amacını ortadan kaldırır.</p>
+
+  <p>İşte kara kutu sorunu bu. Ve güvenlik operasyonlarında AI benimsemenin başarısız olmasının en büyük tek nedeni budur.</p>
+
+  <h2>Kara Kutu AI Güvenlikte Neden Başarısız Olur</h2>
+
+  <p>Pek çok alanda kara kutu AI tamamen kabul edilebilir. Bir öneri algoritmasının neden belirli bir ürünü önerdiğini açıklaması gerekmez. Bir spam filtresi her sınıflandırmayı gerekçelendirmek zorunda değildir. Yanılmanın sonuçları düşük ve geri döndürülebilirdir.</p>
+
+  <p>Güvenlik kategorik olarak farklıdır.</p>
+
+  <p>SOC ortamında her karar gerçek operasyonel ağırlık taşır. Yanlış negatif, bir ihlalin fark edilmeden geçmesi anlamına gelir. Yanlış pozitif, kaynakların yanlış tahsis edilmesi, analist zamanının boşa harcanması ve — kritik olarak — sisteme olan güvenin aşınması anlamına gelir.</p>
+
+  <blockquote>
+    <p>"Analistlerimiz üç hafta içinde AI skorlarına güvenmeyi bıraktı. Yanlış oldukları için değil — anlayamadıkları için. Sorgulayamadığınız bir skor, savunamadığınız bir skordur."</p>
+    <cite>— Güvenlik Operasyonları Direktörü, kritik altyapı sektörü</cite>
+  </blockquote>
+
+  <p>Bir analist yöneticisi veya olay sonrası incelemede sorgulandığında "bu skor neden 91 diyor?" sorusunu yanıtlayamadığı an, AI sistemi teknik doğruluğundan bağımsız olarak başarısız olmuştur.</p>
+
+  <h2>Kanıt Zinciri: Çalışmayı Göstermek</h2>
+
+  <p>Çözüm daha basit AI değil. Daha şeffaf AI — yalnızca sonuçları değil, onları üreten akıl yürütmeyi de yüzeye çıkarmak üzere tasarlanmış sistemler.</p>
+
+  <p>Her tehdit skoru, görünür ve sorgulanabilir bir kanıt zincirinin çıktısı olmalıdır. Her katkıda bulunan sinyal adlandırılmalı, ağırlıklandırılmalı ve açıklanmalıdır. Analist bir skora bakıp hemen şunları anlayabilmelidir:</p>
+
+  <ul>
+    <li><strong>Skoru ne artırdı.</strong> Hangi sinyaller skoru yükseltti ve ne kadar. Yüksek itibar riski olan bir IP. Taban çizgisinden üç standart sapma uzakta davranışsal anomali. Yanal hareketle tutarlı bir kill chain deseni.</li>
+    <li><strong>Skoru ne düşürürdü.</strong> Mevcut olsaydı skoru düşürecek bağlam. Bilinen bir bakım penceresi. Beyaz listedeki bir süreç. Temiz geçmişi olan bir varlık.</li>
+    <li><strong>Neyin belirsiz olduğu.</strong> Kanıtın zayıf olduğu, güvenin daha düşük olduğu, analistin yargısına en çok ihtiyaç duyulan yer.</li>
+  </ul>
+
+  <p>Bu yalnızca bir kullanılabilirlik özelliği değil. AI'nin güvenlik operasyonlarında gerçek bir ortak olarak işlev görmesi için temel bir gereksinimdir.</p>
+
+  <h2>Bir Skorun Anatomisi</h2>
+
+  <p>Düzgün açıklanmış bir tehdit skorunun pratikte nasıl göründüğünü düşünelim. 91 skorunun arkasında:</p>
+
+  <ul>
+    <li><strong>IP İtibarı: YÜKSEK RİSK</strong> — kaynak IP birden fazla tehdit istihbarat beslemesinde görünüyor, iki önceki kampanyada komuta-kontrol altyapısıyla ilişkili.</li>
+    <li><strong>Davranışsal Anomali: +3σ</strong> — etkilenen varlığın kimlik doğrulama deseni 90 günlük taban çizgisinden üç standart sapma sapıyor. Bu düzeyde sapma, bu varlığın geçmişinde daha önce iki kez doğrulanmış olaylara öncülük etti.</li>
+    <li><strong>Kill Chain: Yanal Hareket</strong> — olay dizisi tanınan bir yanal hareket desenine uyuyor. İlk erişim, ardından kimlik bilgisi numaralandırması, ardından iç keşif. Beş aşamalı bir ilerlemenin üçüncü aşaması.</li>
+    <li><strong>Varlık Geçmişi: 3 Önceki Olay</strong> — bu IP adresi veya kullanıcı hesabı daha önce üç güvenlik olayında göründü. İkisi doğrulanmış gerçek pozitifti. Biri olay müdahalesine eskalasyon edildi.</li>
+    <li><strong>Zamansal Desen: Mesai Dışı</strong> — aktivite Salı sabahı 02:47'de gerçekleşti. Bu varlık için meşru aktivitenin %94'ü mesai saatlerinde gerçekleşiyor.</li>
+    <li><strong>Güven: %94</strong> — yukarıdaki sinyallerin gücü ve tutarlılığına dayanarak sistem bu sınıflandırmaya yüksek güven duyuyor.</li>
+  </ul>
+
+  <div class="callout">
+    <div class="callout-label">Fark</div>
+    <p>Yalnızca "Skor: 91" gören analistin bir sayısı vardır. Kanıt zincirini gören analistin bir davası vardır. Biri eylem üretir. Diğeri anlayış — ve sonra eylem.</p>
+  </div>
+
+  <p>Bu kanıt zincirini alan analist artık yalnızca skor alan analistin yapamadığı bir şeyi yapabilir: doğrulayabilir, sorgulayabilir, tamamlayabilir ve nihayetinde kararın sahibi olabilir.</p>
+
+  <h2>Güven Şeffaflıkla İnşa Edilir</h2>
+
+  <p>Açıklanabilirliğin operasyonel verimlilik ötesinde daha derin bir önemi var. Analist ile çalıştığı sistem arasındaki ilişkiyle ilgili.</p>
+
+  <p>Herhangi bir araçtaki güven, öngörülebilirlik ve şeffaflık aracılığıyla inşa edilir. Bir sistemin akıl yürütmesi görünür olduğunda, analistler onun nasıl düşündüğüne dair doğru bir zihinsel model geliştirebilir. Ona ne zaman örtülü olarak güveneceklerini ve ne zaman daha dikkatli inceleyeceklerini öğrenirler.</p>
+
+  <p>Kara kutu sistem ne kalibrasyon ne de güven üretir. Anlayış olmadan bağımlılık üretir — yüksek riskli bir operasyonel ortamda bu mümkün olan en tehlikeli koşullardan biridir.</p>
+
+  <h2>Açıklanabilirlik Bir Güvenlik Özelliğidir</h2>
+
+  <p>Nadiren dile getirilen bir perspektif: açıklanabilirlik yalnızca operasyonel bir kolaylık değil. Kendisi bir güvenlik özelliğidir.</p>
+
+  <p>Akıl yürütmesi incelenemez bir sistem denetlenemez. Hata yaptığında sistematik olarak geliştirilemez. Düzenleyici bağlamda savunulamaz. Her kararın daha sonra gözden geçirilebileceği bir olay müdahale senaryosunda güvenilemez.</p>
+
+  <p>Düzenlenmiş sektörlerde — finans, sağlık, kritik altyapı, kamu — AI güdümlü bir güvenlik kararını açıklayamamak yalnızca operasyonel bir sorun değil. Uyumluluk sorunudur.</p>
+
+  <p>"Bana güven" diyen AI sistemi kurumsal düzeyde değildir. "İşte bu sonucu üreten her sinyal, her ağırlık, her kanıt parçası — doğrulayın, sorgulayın, geliştirin" diyen AI sistemi, ciddi bir güvenlik operasyonuna ait olan tek türdür.</p>
+
+  <h2>Analist Nihai Otorite Olarak</h2>
+
+  <p>Açıklanabilirliğin sağladığı en önemli şey analist otoritesidir.</p>
+
+  <p>Bir analist bir skorun arkasındaki tam kanıt zincirini görebildiğinde, nihai karar verici olarak konumlanır — opak bir sistemin onay mührü değil, kanıtları inceleyen, yargı uygulayan ve sonucun sahibi olan bir profesyonel. AI davayı sunar. Analist kararı verir.</p>
+
+  <p>"Bu skor neden?" sorusu AI'ye güvensizliğin işareti değil. Görevini yapan bir profesyonelin işaretidir. Sistemin bu soruya verdiği yanıt — ayrıntılı, şeffaf, sorgulanabilir — işbirliğini işe yarar kılan şeydir.</p>
+
+  <hr>
+
+  <p>Inclysi'nin ürettiği her skor tam bir kanıt zinciriyle birlikte gelir. Her sinyal adlandırılır. Her ağırlık görünürdür. Her sonuç, onu üreten akıl yürütmeyle birlikte sunulur.</p>
+
+  <p>AI'yi daha etkileyici göstermek için değil. Analisti daha etkin kılmak için.</p>
+
+  <p><a href="https://inclysi.com">inclysi.com</a></p>
+
+</article>
+
+<div class="post-footer-nav">
+  <a href="../" class="back-link">&larr; All Posts</a>
+  <span class="share-label">inclysi.com</span>
+</div>
+
+<footer>
+  <a href="../../" class="footer-logo">
+    <svg width="22" height="22" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="50,2 93,26 93,74 50,98 7,74 7,26" stroke="white" stroke-width="6" fill="none"/><circle cx="50" cy="50" r="5" fill="white"/><circle cx="50" cy="22" r="4" fill="white"/><circle cx="75" cy="36" r="4" fill="white"/><circle cx="75" cy="64" r="4" fill="white"/><circle cx="50" cy="78" r="4" fill="white"/><circle cx="25" cy="64" r="4" fill="white"/><circle cx="25" cy="36" r="4" fill="white"/><line x1="50" y1="50" x2="50" y2="22" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="75" y2="36" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="75" y2="64" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="50" y2="78" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="25" y2="64" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="25" y2="36" stroke="white" stroke-width="2"/></svg>
+    <span>Inclysi AI</span>
+  </a>
+  <span class="footer-copy">&copy; 2026 Inclysi. All rights reserved.</span>
+  <div class="footer-links">
+    <a href="../">Blog</a>
+    <a href="mailto:contact@inclysi.com">Contact</a>
+  </div>
+</footer>
+
+<script>
+window.addEventListener('scroll',()=>{
+  const doc=document.documentElement;
+  const scrolled=(doc.scrollTop)/(doc.scrollHeight-doc.clientHeight)*100;
+  document.getElementById('progressBar').style.width=scrolled+'%';
+});
+document.querySelectorAll('.lang-btn[data-lang]').forEach(btn=>{
+  btn.addEventListener('click',e=>{
+    e.preventDefault();
+    const lang=btn.dataset.lang;
+    document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.lang-section').forEach(s=>s.classList.remove('active'));
+    document.getElementById(lang+'-content').classList.add('active');
+    document.getElementById('hero-en').style.display=lang==='en'?'block':'none';
+    document.getElementById('hero-tr').style.display=lang==='tr'?'block':'none';
+  });
+});
+</script>
+</body>
+</html>
