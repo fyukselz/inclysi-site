@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The SOC Has No Memory. That's a Security Vulnerability. — Inclysi</title>
+<meta name="description" content="Every time a senior analyst leaves, your organization loses years of accumulated threat knowledge. We built a system that never forgets.">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-HVX30CYXMQ"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-HVX30CYXMQ');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090f;--bg2:#0c0f1a;--bg3:#111629;
+  --gold:#c9a84c;--gold2:#e8c36a;--red:#e63946;
+  --text:#e8eaf0;--muted:#8892a4;--border:#1a2035;
+  --font-display:'Syne',sans-serif;
+  --font-body:'DM Sans',sans-serif;
+  --font-serif:'DM Serif Display',serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:16px;line-height:1.7;overflow-x:hidden}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.2rem 4rem;background:rgba(7,9,15,0.9);backdrop-filter:blur(12px);border-bottom:1px solid rgba(26,32,53,0.6)}
+.nav-logo{display:flex;align-items:center;gap:0.75rem;text-decoration:none}
+.nav-logo span{font-family:var(--font-display);font-size:1.25rem;font-weight:700;color:var(--text);letter-spacing:0.02em}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{color:var(--muted);font-size:0.875rem;text-decoration:none;letter-spacing:0.04em;transition:color 0.2s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{font-size:0.8rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,168,76,0.4);padding:0.5rem 1.25rem;border-radius:2px;text-decoration:none;transition:all 0.2s}
+.progress-bar{position:fixed;top:0;left:0;height:2px;background:var(--gold);width:0%;z-index:200;transition:width 0.1s}
+.post-hero{padding:9rem 2rem 5rem;max-width:800px;margin:0 auto;border-bottom:1px solid var(--border)}
+.post-meta{display:flex;align-items:center;gap:1rem;margin-bottom:2rem;font-size:0.75rem;color:var(--muted)}
+.post-tag{font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);font-size:0.7rem;border:1px solid rgba(201,168,76,0.3);padding:0.2rem 0.6rem;border-radius:2px}
+.post-lang{display:flex;gap:0.5rem;margin-left:auto}
+.lang-btn{font-size:0.7rem;font-weight:500;letter-spacing:0.08em;padding:0.2rem 0.6rem;border-radius:2px;border:1px solid var(--border);color:var(--muted);text-decoration:none;transition:all 0.2s;cursor:pointer;background:none}
+.lang-btn.active,.lang-btn:hover{border-color:rgba(201,168,76,0.4);color:var(--gold)}
+.post-hero h1{font-family:var(--font-display);font-size:clamp(2rem,4.5vw,3.2rem);font-weight:800;line-height:1.1;margin-bottom:1.5rem}
+.post-hero .lead{font-size:1.15rem;color:var(--muted);font-weight:300;line-height:1.8}
+.post-cover{max-width:900px;margin:0 auto;padding:3rem 2rem 0}
+.post-cover img{width:100%;border-radius:4px;border:1px solid var(--border);display:block}
+.img-caption{font-size:0.75rem;color:var(--muted);text-align:center;margin-top:0.75rem;font-style:italic}
+.post-body{max-width:720px;margin:0 auto;padding:4rem 2rem 6rem}
+.post-body h2{font-family:var(--font-display);font-size:1.7rem;font-weight:700;margin:3rem 0 1rem;padding-top:1rem;border-top:1px solid var(--border)}
+.post-body h3{font-family:var(--font-display);font-size:1.2rem;font-weight:600;margin:2rem 0 0.75rem}
+.post-body p{font-size:1.05rem;font-weight:300;color:#c8cdd8;line-height:1.85;margin-bottom:1.5rem}
+.post-body strong{color:var(--text);font-weight:500}
+.post-body a{color:var(--gold);text-decoration:underline;text-underline-offset:3px}
+.post-body blockquote{border-left:3px solid var(--gold);padding:1.25rem 1.75rem;margin:2.5rem 0;background:rgba(201,168,76,0.04);border-radius:0 4px 4px 0}
+.post-body blockquote p{font-family:var(--font-serif);font-size:1.2rem;font-style:italic;color:var(--text);margin:0;line-height:1.6}
+.post-body blockquote cite{font-size:0.8rem;font-style:normal;color:var(--muted);display:block;margin-top:0.75rem}
+.callout{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:0 4px 4px 0;padding:1.25rem 1.5rem;margin:2rem 0}
+.callout-label{font-size:0.65rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem}
+.callout p{font-size:0.9rem;color:var(--muted);margin:0}
+.post-body ul,.post-body ol{padding-left:1.5rem;margin-bottom:1.5rem}
+.post-body li{font-size:1.05rem;font-weight:300;color:#c8cdd8;line-height:1.85;margin-bottom:0.5rem}
+.post-body ul li::marker{color:var(--gold)}
+.post-body hr{border:none;border-top:1px solid var(--border);margin:3rem 0}
+.lang-section{display:none}
+.lang-section.active{display:block}
+.post-footer-nav{max-width:720px;margin:0 auto;padding:3rem 2rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.back-link{font-size:0.8rem;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--gold);text-decoration:none;display:flex;align-items:center;gap:0.4rem}
+.share-label{font-size:0.75rem;color:var(--muted)}
+footer{padding:3rem 4rem;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border)}
+.footer-logo{display:flex;align-items:center;gap:0.75rem;text-decoration:none}
+.footer-logo span{font-family:var(--font-display);font-size:1rem;font-weight:600;color:var(--text)}
+.footer-copy{font-size:0.8rem;color:var(--muted)}
+.footer-links{display:flex;gap:2rem}
+.footer-links a{font-size:0.8rem;color:var(--muted);text-decoration:none;transition:color 0.2s}
+.footer-links a:hover{color:var(--text)}
+@media(max-width:900px){nav{padding:1.2rem 2rem}.nav-links{display:none}footer{flex-direction:column;gap:1.5rem;text-align:center;padding:2.5rem 2rem}}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<nav>
+  <a href="../../" class="nav-logo">
+    <svg width="28" height="28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="50,2 93,26 93,74 50,98 7,74 7,26" stroke="white" stroke-width="6" fill="none"/><circle cx="50" cy="50" r="5" fill="white"/><circle cx="50" cy="22" r="4" fill="white"/><circle cx="75" cy="36" r="4" fill="white"/><circle cx="75" cy="64" r="4" fill="white"/><circle cx="50" cy="78" r="4" fill="white"/><circle cx="25" cy="64" r="4" fill="white"/><circle cx="25" cy="36" r="4" fill="white"/><line x1="50" y1="50" x2="50" y2="22" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="75" y2="36" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="75" y2="64" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="50" y2="78" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="25" y2="64" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="25" y2="36" stroke="white" stroke-width="2"/></svg>
+    <span>Inclysi AI</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="../../#product">Product</a></li>
+    <li><a href="../../#how">How It Works</a></li>
+    <li><a href="../">Insights</a></li>
+  </ul>
+  <a href="mailto:contact@inclysi.com" class="nav-cta">Get in Touch</a>
+</nav>
+
+<div class="post-hero">
+  <div class="post-meta">
+    <span class="post-tag">SOC Operations</span>
+    <span>April 26, 2026</span>
+    <span>·</span>
+    <span>8 min read</span>
+    <div class="post-lang">
+      <a href="#" class="lang-btn active" data-lang="en">EN</a>
+      <a href="#" class="lang-btn" data-lang="tr">TR</a>
+    </div>
+  </div>
+  <div id="hero-en">
+    <h1>The SOC Has No Memory.<br>That's a Security Vulnerability.</h1>
+    <p class="lead">Every time a senior analyst leaves your organization, they take years of accumulated threat knowledge with them. The incidents they handled. The patterns they recognized. The decisions they made and why. All of it walks out the door. We built a system that never forgets.</p>
+  </div>
+  <div id="hero-tr" style="display:none">
+    <h1>SOC'un Hafızası Yok.<br>Bu da Bir Güvenlik Açığıdır.</h1>
+    <p class="lead">Kıdemli bir analist kurumunuzdan ayrıldığında, yıllar içinde biriktirdiği tehdit bilgisini beraberinde götürür. Yönettiği vakalar. Tanıdığı desenler. Verdiği kararlar ve nedenleri. Hepsi kapıdan çıkıp gider. Biz hiç unutmayan bir sistem inşa ettik.</p>
+  </div>
+</div>
+
+<div class="post-cover">
+  <img src="../../assets/post-memory.png" alt="Institutional memory visualization">
+  <p class="img-caption">Every decision. Remembered. Every threat pattern. Learned.</p>
+</div>
+
+<!-- ENGLISH -->
+<article class="post-body lang-section active" id="en-content">
+
+  <p>Picture this scenario. Six months ago, your SOC handled a sophisticated lateral movement attack. It started quietly — a single compromised service account, anomalous authentication patterns across three internal systems, a gradual escalation that took twelve hours to become obvious. Your most experienced analyst caught it. She knew what to look for because she'd seen something similar two years prior at a different organization.</p>
+
+  <p>She documented the case. Filed the report. Closed the ticket.</p>
+
+  <p>Three months later, she left for a better offer. Her documentation lived in a ticketing system no one reads retroactively. Her pattern recognition — the actual cognitive asset — left with her.</p>
+
+  <p>Last week, the same attack pattern reappeared. Different source IP. Different target. Same technique. A junior analyst picked it up, categorized it as a routine authentication anomaly, and closed it as low priority.</p>
+
+  <p>This is not a staffing problem. This is a memory problem.</p>
+
+  <h2>The Knowledge That Walks Out the Door</h2>
+
+  <p>Security operations is an experience-compounding discipline. The more incidents you handle, the better you get at handling them. Patterns become recognizable. Response playbooks become intuitive. The difference between a genuine threat and sophisticated noise becomes something you feel before you can fully articulate it.</p>
+
+  <p>This accumulated knowledge is arguably the most valuable asset a SOC possesses. And it is almost entirely stored in the heads of individual analysts.</p>
+
+  <blockquote>
+    <p>"We lost our best analyst in January. It took us four months to realize how much institutional knowledge had walked out with her — and we only realized it when we misclassified an incident she would have caught in minutes."</p>
+    <cite>— SOC Manager, enterprise financial institution</cite>
+  </blockquote>
+
+  <p>The average tenure of a SOC analyst is less than two years. The cybersecurity industry has one of the highest burnout and attrition rates of any technical field. This means the knowledge problem isn't occasional — it's structural and continuous.</p>
+
+  <h2>Why Tickets and Documentation Don't Solve This</h2>
+
+  <p>The instinctive response is better documentation. More detailed tickets. Post-incident reports. Knowledge base articles. These are all valuable. They are not sufficient.</p>
+
+  <p>Documentation captures what happened. It rarely captures why a decision was made, what the analyst considered and rejected, what contextual signals elevated their concern, or how this incident relates to something that happened eight months ago in a different part of the network.</p>
+
+  <p>More importantly, documentation requires someone to search for it, find it, read it, and apply it in real time — while also handling a live incident queue. In practice, this almost never happens.</p>
+
+  <div class="callout">
+    <div class="callout-label">The Real Problem</div>
+    <p>Institutional knowledge only has value if it's accessible at the moment it's needed. Static documentation fails this test almost every time.</p>
+  </div>
+
+  <h2>What It Actually Means to Have Memory</h2>
+
+  <p>Imagine a system that remembers every significant decision ever made in your SOC — not as a document to be searched, but as active context that surfaces automatically when a new incident arrives.</p>
+
+  <p>A new event comes in. An IP address triggers an alert. Before your analyst opens the ticket, the system already knows: this IP was seen six months ago in a confirmed intrusion attempt. At that time, the behavioral pattern started with the same authentication sequence. The analyst who handled it escalated immediately and found a compromised service account within the hour.</p>
+
+  <p>That context is waiting in the analyst's workspace before they've typed a single keystroke.</p>
+
+  <p>This is not search. This is memory. The distinction matters enormously in a high-pressure, high-volume environment where the cost of a missed connection is measured in breach impact.</p>
+
+  <h2>Patterns Don't Repeat Exactly — But They Rhyme</h2>
+
+  <p>Sophisticated attackers don't reuse the same infrastructure. They rotate IPs, change domains, modify their tooling. A signature-based approach to detection fails against this kind of operational security.</p>
+
+  <p>But the underlying techniques — the way they move laterally, the sequence in which they escalate privileges, the timing patterns of their reconnaissance — these are far more persistent. Attackers change their tools more easily than they change their tradecraft.</p>
+
+  <p>A system with genuine institutional memory doesn't just match on exact indicators. It recognizes behavioral similarity. It surfaces incidents where the <strong>shape</strong> of the attack resembles something seen before, even when every specific indicator is different.</p>
+
+  <p>This is the difference between a junior analyst seeing an anomalous authentication event and a veteran analyst recognizing it as the opening move of a technique they've seen three times before.</p>
+
+  <h2>Memory as a Compounding Asset</h2>
+
+  <p>Here is what makes institutional memory genuinely transformative: it compounds.</p>
+
+  <p>A system that learns from every analyst decision becomes more valuable with every passing month. The first incident it handles, it knows nothing. The thousandth incident it handles, it carries the accumulated context of everything that came before. The pattern recognition that took your best analyst five years to develop becomes available to every analyst on day one.</p>
+
+  <ul>
+    <li>A new analyst joins the team. From their first shift, they have access to the full institutional knowledge of every analyst who came before them.</li>
+    <li>An attack technique appears that was last seen eight months ago. The system surfaces the relevant historical context automatically — the original incident, the response that worked, the indicators that were most significant.</li>
+    <li>An entity — an IP address, a user account, a hostname — appears in a new alert. The system already knows everything that entity has ever been associated with, across every incident in the organization's history.</li>
+  </ul>
+
+  <p>The knowledge doesn't deplete when analysts leave. It stays. It grows. It becomes the organizational immune system that no individual departure can compromise.</p>
+
+  <h2>The Analyst Who Never Forgets</h2>
+
+  <p>The goal is not to replace experienced analysts. It is to ensure that the experience they accumulate never gets lost.</p>
+
+  <p>Every verdict an analyst renders — this is a true positive, this is a false positive, this warrants escalation, this can be closed — is a data point. A judgment call made by a human expert in a specific context. That judgment, captured and made accessible, is worth more than any signature or rule set.</p>
+
+  <p>Over time, a SOC with institutional memory stops being a collection of individual analysts and becomes something more: an organization that genuinely learns. One that gets measurably better at recognizing threats the longer it operates. One where the departure of any single analyst, however experienced, no longer represents a catastrophic loss of capability.</p>
+
+  <hr>
+
+  <p>We built Inclysi around this principle. Every analyst decision feeds back into the system. Every entity builds a history. Every incident adds to a growing body of organizational knowledge that no attrition event can erase.</p>
+
+  <p>It remembers every decision. So your analysts don't have to.</p>
+
+  <p><a href="https://inclysi.com">inclysi.com</a></p>
+
+</article>
+
+<!-- TURKISH -->
+<article class="post-body lang-section" id="tr-content">
+
+  <p>Şu senaryoyu düşünün. Altı ay önce SOC'unuz sofistike bir yanal hareket saldırısıyla ilgilendi. Sessizce başladı — tek bir ele geçirilmiş servis hesabı, üç iç sistemde anormal kimlik doğrulama desenleri, on iki saat içinde belirginleşen yavaş bir yükseliş. En deneyimli analistiniz fark etti. Ne arayacağını biliyordu çünkü farklı bir organizasyonda iki yıl önce benzer bir şey görmüştü.</p>
+
+  <p>Vakayı belgeledi. Raporu yazdı. Ticket'ı kapattı.</p>
+
+  <p>Üç ay sonra daha iyi bir teklif için ayrıldı. Belgeleri kimsenin geriye dönük okumadığı bir sistemde kaldı. Gerçek bilişsel varlık — desen tanıma yeteneği — onunla birlikte gitti.</p>
+
+  <p>Geçen hafta aynı saldırı deseni yeniden ortaya çıktı. Farklı kaynak IP. Farklı hedef. Aynı teknik. Genç bir analist fark etti, rutin bir kimlik doğrulama anomalisi olarak sınıflandırdı ve düşük öncelikli olarak kapattı.</p>
+
+  <p>Bu bir personel sorunu değil. Bu bir hafıza sorunudur.</p>
+
+  <h2>Kapıdan Çıkıp Giden Bilgi</h2>
+
+  <p>Güvenlik operasyonları, deneyimin birleşik faiz gibi büyüdüğü bir disiplindir. Ne kadar çok vakayla ilgilenirseniz, onları ele almakta o kadar iyi olursunuz. Desenler tanınır hale gelir. Müdahale süreçleri sezgisel olur. Gerçek bir tehdit ile sofistike gürültü arasındaki fark, tam olarak ifade edemeden önce hissedilen bir şey haline gelir.</p>
+
+  <p>Bu birikmiş bilgi, bir SOC'un sahip olduğu en değerli varlıktır. Ve neredeyse tamamen bireysel analistlerin kafalarında depolanmaktadır.</p>
+
+  <blockquote>
+    <p>"En iyi analistimizi Ocak'ta kaybettik. Ne kadar kurumsal bilginin onunla birlikte gittiğini dört ay içinde anladık — ve bunu ancak onun dakikalar içinde yakalayacağı bir olayı yanlış sınıflandırdığımızda fark ettik."</p>
+    <cite>— SOC Müdürü, kurumsal finansal kuruluş</cite>
+  </blockquote>
+
+  <p>Bir SOC analistinin ortalama görev süresi iki yıldan azdır. Siber güvenlik sektörü, herhangi bir teknik alanın en yüksek tükenmişlik ve yıpranma oranlarından birine sahiptir. Bu, bilgi sorununun ara sıra yaşanan bir durum olmadığı anlamına gelir — yapısal ve süreklidir.</p>
+
+  <h2>Neden Ticket ve Belgeleme Bunu Çözmüyor</h2>
+
+  <p>Refleks yanıt daha iyi belgeleme olur. Daha ayrıntılı ticket'lar. Olay sonrası raporlar. Bilgi tabanı makaleleri. Bunların hepsi değerlidir. Yeterli değildir.</p>
+
+  <p>Belgeleme ne olduğunu yakalar. Bir kararın neden verildiğini, analistin ne değerlendirip ne reddettiğini, hangi bağlamsal sinyallerin endişelerini artırdığını veya bu olayın sekiz ay önce ağın farklı bir bölümünde yaşanan bir şeyle nasıl ilişkili olduğunu nadiren yakalar.</p>
+
+  <div class="callout">
+    <div class="callout-label">Gerçek Sorun</div>
+    <p>Kurumsal bilgi ancak ihtiyaç duyulduğu anda erişilebilir olduğunda değer taşır. Statik belgeleme bu testi neredeyse her zaman başarısız olur.</p>
+  </div>
+
+  <h2>Hafızaya Sahip Olmak Gerçekte Ne Anlama Gelir</h2>
+
+  <p>Şunu hayal edin: SOC'unuzda alınan her önemli kararı hatırlayan bir sistem — aranacak bir belge olarak değil, yeni bir olay geldiğinde otomatik olarak yüzeye çıkan aktif bağlam olarak.</p>
+
+  <p>Yeni bir olay geliyor. Bir IP adresi alarm tetikliyor. Analistiniz ticket'ı açmadan önce sistem zaten biliyor: bu IP altı ay önce doğrulanmış bir saldırı girişiminde görüldü. O zaman davranışsal desen aynı kimlik doğrulama dizisiyle başlamıştı. Vakayı ele alan analist hemen eskalasyon yaptı ve bir saat içinde ele geçirilmiş bir servis hesabı buldu.</p>
+
+  <p>Bu bağlam, analist tek tuşa basmadan önce çalışma alanında bekliyordur.</p>
+
+  <p>Bu arama değil. Bu hafıza. Ayrım, bir ihlal etkisiyle ölçülen kaçırılmış bir bağlantının maliyetinin yüksek baskı ve yüksek hacimli bir ortamda son derece önemlidir.</p>
+
+  <h2>Desenler Tam Olarak Tekrarlanmaz — Ama Yankılanır</h2>
+
+  <p>Sofistike saldırganlar aynı altyapıyı yeniden kullanmaz. IP döndürürler, alan adlarını değiştirirler, araçlarını modifiye ederler. İmza tabanlı bir tespit yaklaşımı bu tür operasyonel güvenliğe karşı başarısız olur.</p>
+
+  <p>Ama altta yatan teknikler — yanal hareket biçimleri, ayrıcalıkları artırma sırası, keşif zamanlama desenleri — çok daha kalıcıdır. Saldırganlar araçlarını değiştirmek yerine tekniklerini değiştirir.</p>
+
+  <p>Gerçek kurumsal hafızaya sahip bir sistem yalnızca tam göstergeleri eşleştirmez. Davranışsal benzerliği tanır. Her spesifik gösterge farklı olsa bile saldırının <strong>şeklinin</strong> daha önce görülene benzediği olayları yüzeye çıkarır.</p>
+
+  <h2>Biriken Bir Varlık Olarak Hafıza</h2>
+
+  <p>İşte kurumsal hafızayı gerçekten dönüştürücü yapan şey: birikim sağlar.</p>
+
+  <p>Her analist kararından öğrenen bir sistem her geçen ay daha değerli hale gelir. İlk vakada hiçbir şey bilmez. Bininci vakada, önceki her şeyin birikmiş bağlamını taşır. En iyi analistinizin beş yılda geliştirdiği desen tanıma her analist için ilk günden itibaren kullanılabilir hale gelir.</p>
+
+  <ul>
+    <li>Yeni bir analist ekibe katılır. İlk vardiyasından itibaren kendisinden önce gelen her analistin kurumsal bilgisine erişim sahibidir.</li>
+    <li>Sekiz ay önce son görülen bir saldırı tekniği ortaya çıkar. Sistem ilgili tarihsel bağlamı otomatik olarak yüzeye çıkarır — orijinal olay, işe yarayan müdahale, en anlamlı göstergeler.</li>
+    <li>Yeni bir alarmda bir varlık — IP adresi, kullanıcı hesabı, hostname — görünür. Sistem, o varlığın organizasyonun tarihindeki her olayda daha önce neyle ilişkilendirildiğini zaten bilir.</li>
+  </ul>
+
+  <p>Analistler ayrıldığında bilgi tükenmez. Kalır. Büyür. Hiçbir bireysel ayrılığın tehlikeye atamayacağı kurumsal bağışıklık sistemi haline gelir.</p>
+
+  <h2>Hiç Unutmayan Analist</h2>
+
+  <p>Hedef deneyimli analistlerin yerini almak değil. Biriktirdikleri deneyimin asla kaybolmamasını sağlamaktır.</p>
+
+  <p>Bir analistin verdiği her karar — bu gerçek pozitif, bu yanlış pozitif, bu eskalasyon gerektirir, bu kapatılabilir — bir veri noktasıdır. Belirli bir bağlamda insan uzmanı tarafından verilen bir yargı. Bu yargı, yakalanıp erişilebilir kılındığında, herhangi bir imza veya kural setinden daha değerlidir.</p>
+
+  <p>Zamanla, kurumsal hafızaya sahip bir SOC bireysel analistlerin koleksiyonu olmaktan çıkar ve daha fazlası haline gelir: gerçekten öğrenen bir organizasyon. Ne kadar uzun süre faaliyet gösterirse tehditleri tanımada o kadar iyi olan. Herhangi bir analistin ayrılmasının, ne kadar deneyimli olursa olsun, artık yetenek kaybı anlamına gelmediği bir yer.</p>
+
+  <hr>
+
+  <p>Inclysi'yi bu prensip etrafında inşa ettik. Her analist kararı sisteme geri besleniyor. Her varlık bir geçmiş oluşturuyor. Her olay, hiçbir yıpranma olayının silemeyeceği büyüyen bir kurumsal bilgi birikimine katkıda bulunuyor.</p>
+
+  <p>Her kararı hatırlar. Böylece analistlerinizin hatırlaması gerekmez.</p>
+
+  <p><a href="https://inclysi.com">inclysi.com</a></p>
+
+</article>
+
+<div class="post-footer-nav">
+  <a href="../" class="back-link">&larr; All Posts</a>
+  <span class="share-label">inclysi.com</span>
+</div>
+
+<footer>
+  <a href="../../" class="footer-logo">
+    <svg width="22" height="22" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="50,2 93,26 93,74 50,98 7,74 7,26" stroke="white" stroke-width="6" fill="none"/><circle cx="50" cy="50" r="5" fill="white"/><circle cx="50" cy="22" r="4" fill="white"/><circle cx="75" cy="36" r="4" fill="white"/><circle cx="75" cy="64" r="4" fill="white"/><circle cx="50" cy="78" r="4" fill="white"/><circle cx="25" cy="64" r="4" fill="white"/><circle cx="25" cy="36" r="4" fill="white"/><line x1="50" y1="50" x2="50" y2="22" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="75" y2="36" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="75" y2="64" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="50" y2="78" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="25" y2="64" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="25" y2="36" stroke="white" stroke-width="2"/></svg>
+    <span>Inclysi AI</span>
+  </a>
+  <span class="footer-copy">&copy; 2026 Inclysi. All rights reserved.</span>
+  <div class="footer-links">
+    <a href="../">Blog</a>
+    <a href="mailto:contact@inclysi.com">Contact</a>
+  </div>
+</footer>
+
+<script>
+window.addEventListener('scroll',()=>{
+  const doc=document.documentElement;
+  const scrolled=(doc.scrollTop)/(doc.scrollHeight-doc.clientHeight)*100;
+  document.getElementById('progressBar').style.width=scrolled+'%';
+});
+document.querySelectorAll('.lang-btn[data-lang]').forEach(btn=>{
+  btn.addEventListener('click',e=>{
+    e.preventDefault();
+    const lang=btn.dataset.lang;
+    document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.lang-section').forEach(s=>s.classList.remove('active'));
+    document.getElementById(lang+'-content').classList.add('active');
+    document.getElementById('hero-en').style.display=lang==='en'?'block':'none';
+    document.getElementById('hero-tr').style.display=lang==='tr'?'block':'none';
+  });
+});
+</script>
+</body>
+</html>
