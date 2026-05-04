@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>From Alert to Action in 11 Seconds — Inclysi</title>
+<meta name="description" content="What happens between the moment a SIEM fires an alert and the moment an analyst knows exactly what to do. A walkthrough of the full Inclysi analysis pipeline.">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7W0LBMG3YK"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-7W0LBMG3YK');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090f;--bg2:#0c0f1a;--bg3:#111629;
+  --gold:#c9a84c;--gold2:#e8c36a;--red:#e63946;
+  --text:#e8eaf0;--muted:#8892a4;--border:#1a2035;
+  --font-display:'Syne',sans-serif;
+  --font-body:'DM Sans',sans-serif;
+  --font-serif:'DM Serif Display',serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:16px;line-height:1.7;overflow-x:hidden}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.2rem 4rem;background:rgba(7,9,15,0.9);backdrop-filter:blur(12px);border-bottom:1px solid rgba(26,32,53,0.6)}
+.nav-logo{display:flex;align-items:center;gap:0.75rem;text-decoration:none}
+.nav-logo span{font-family:var(--font-display);font-size:1.25rem;font-weight:700;color:var(--text);letter-spacing:0.02em}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{color:var(--muted);font-size:0.875rem;text-decoration:none;letter-spacing:0.04em;transition:color 0.2s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{font-size:0.8rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,168,76,0.4);padding:0.5rem 1.25rem;border-radius:2px;text-decoration:none;transition:all 0.2s}
+.progress-bar{position:fixed;top:0;left:0;height:2px;background:var(--gold);width:0%;z-index:200;transition:width 0.1s}
+.post-hero{padding:9rem 2rem 5rem;max-width:800px;margin:0 auto;border-bottom:1px solid var(--border)}
+.post-meta{display:flex;align-items:center;gap:1rem;margin-bottom:2rem;font-size:0.75rem;color:var(--muted)}
+.post-tag{font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);font-size:0.7rem;border:1px solid rgba(201,168,76,0.3);padding:0.2rem 0.6rem;border-radius:2px}
+.post-lang{display:flex;gap:0.5rem;margin-left:auto}
+.lang-btn{font-size:0.7rem;font-weight:500;letter-spacing:0.08em;padding:0.2rem 0.6rem;border-radius:2px;border:1px solid var(--border);color:var(--muted);text-decoration:none;transition:all 0.2s;cursor:pointer;background:none}
+.lang-btn.active,.lang-btn:hover{border-color:rgba(201,168,76,0.4);color:var(--gold)}
+.post-hero h1{font-family:var(--font-display);font-size:clamp(2rem,4.5vw,3.2rem);font-weight:800;line-height:1.1;margin-bottom:1.5rem}
+.post-hero .lead{font-size:1.15rem;color:var(--muted);font-weight:300;line-height:1.8}
+.post-cover{max-width:900px;margin:0 auto;padding:3rem 2rem 0}
+.post-cover img{width:100%;border-radius:4px;border:1px solid var(--border);display:block}
+.img-caption{font-size:0.75rem;color:var(--muted);text-align:center;margin-top:0.75rem;font-style:italic}
+.post-body{max-width:720px;margin:0 auto;padding:4rem 2rem 6rem}
+.post-body h2{font-family:var(--font-display);font-size:1.7rem;font-weight:700;margin:3rem 0 1rem;padding-top:1rem;border-top:1px solid var(--border)}
+.post-body h3{font-family:var(--font-display);font-size:1.2rem;font-weight:600;margin:2rem 0 0.75rem;color:var(--gold)}
+.post-body p{font-size:1.05rem;font-weight:300;color:#c8cdd8;line-height:1.85;margin-bottom:1.5rem}
+.post-body strong{color:var(--text);font-weight:500}
+.post-body a{color:var(--gold);text-decoration:underline;text-underline-offset:3px}
+.post-body blockquote{border-left:3px solid var(--gold);padding:1.25rem 1.75rem;margin:2.5rem 0;background:rgba(201,168,76,0.04);border-radius:0 4px 4px 0}
+.post-body blockquote p{font-family:var(--font-serif);font-size:1.2rem;font-style:italic;color:var(--text);margin:0;line-height:1.6}
+.post-body blockquote cite{font-size:0.8rem;font-style:normal;color:var(--muted);display:block;margin-top:0.75rem}
+.callout{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:0 4px 4px 0;padding:1.25rem 1.5rem;margin:2rem 0}
+.callout-label{font-size:0.65rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem}
+.callout p{font-size:0.9rem;color:var(--muted);margin:0}
+.post-body ul,.post-body ol{padding-left:1.5rem;margin-bottom:1.5rem}
+.post-body li{font-size:1.05rem;font-weight:300;color:#c8cdd8;line-height:1.85;margin-bottom:0.5rem}
+.post-body ul li::marker{color:var(--gold)}
+.post-body hr{border:none;border-top:1px solid var(--border);margin:3rem 0}
+
+/* Timeline steps */
+.timeline{display:flex;flex-direction:column;gap:0;margin:2.5rem 0}
+.timeline-step{
+  display:flex;gap:1.5rem;
+  padding:1.75rem 0;
+  border-bottom:1px solid var(--border);
+  position:relative;
+}
+.timeline-step:last-child{border-bottom:none}
+.step-time{
+  font-family:var(--font-display);
+  font-size:0.75rem;font-weight:700;
+  color:var(--gold);letter-spacing:0.06em;
+  min-width:60px;padding-top:0.2rem;
+  white-space:nowrap;
+}
+.step-content h4{font-family:var(--font-display);font-size:1rem;font-weight:600;margin-bottom:0.35rem;color:var(--text)}
+.step-content p{color:var(--muted);font-size:0.9rem;font-weight:300;margin:0;line-height:1.6}
+
+.lang-section{display:none}
+.lang-section.active{display:block}
+.post-footer-nav{max-width:720px;margin:0 auto;padding:3rem 2rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.back-link{font-size:0.8rem;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--gold);text-decoration:none;display:flex;align-items:center;gap:0.4rem}
+.share-label{font-size:0.75rem;color:var(--muted)}
+footer{padding:3rem 4rem;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border)}
+.footer-logo{display:flex;align-items:center;gap:0.75rem;text-decoration:none}
+.footer-logo span{font-family:var(--font-display);font-size:1rem;font-weight:600;color:var(--text)}
+.footer-copy{font-size:0.8rem;color:var(--muted)}
+.footer-links{display:flex;gap:2rem}
+.footer-links a{font-size:0.8rem;color:var(--muted);text-decoration:none;transition:color 0.2s}
+.footer-links a:hover{color:var(--text)}
+@media(max-width:900px){nav{padding:1.2rem 2rem}.nav-links{display:none}footer{flex-direction:column;gap:1.5rem;text-align:center;padding:2.5rem 2rem}}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<nav>
+  <a href="../../" class="nav-logo">
+    <svg width="28" height="28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="50,2 93,26 93,74 50,98 7,74 7,26" stroke="white" stroke-width="6" fill="none"/><circle cx="50" cy="50" r="5" fill="white"/><circle cx="50" cy="22" r="4" fill="white"/><circle cx="75" cy="36" r="4" fill="white"/><circle cx="75" cy="64" r="4" fill="white"/><circle cx="50" cy="78" r="4" fill="white"/><circle cx="25" cy="64" r="4" fill="white"/><circle cx="25" cy="36" r="4" fill="white"/><line x1="50" y1="50" x2="50" y2="22" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="75" y2="36" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="75" y2="64" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="50" y2="78" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="25" y2="64" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="25" y2="36" stroke="white" stroke-width="2"/></svg>
+    <span>Inclysi AI</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="../../#product">Product</a></li>
+    <li><a href="../../#how">How It Works</a></li>
+    <li><a href="../">Insights</a></li>
+  </ul>
+  <a href="mailto:contact@inclysi.com" class="nav-cta">Get in Touch</a>
+</nav>
+
+<div class="post-hero">
+  <div class="post-meta">
+    <span class="post-tag">Product</span>
+    <span>May 2026</span>
+    <span>·</span>
+    <span>7 min read</span>
+    <div class="post-lang">
+      <a href="#" class="lang-btn active" data-lang="en">EN</a>
+      <a href="#" class="lang-btn" data-lang="tr">TR</a>
+    </div>
+  </div>
+  <div id="hero-en">
+    <h1>From Alert to Action<br>in 11 Seconds.</h1>
+    <p class="lead">An alert fires in your SIEM. Somewhere in that queue is something that matters. The question has always been: how long does it take to find it, understand it, and know what to do? We built a system that answers that question in the time it takes to read this sentence.</p>
+  </div>
+  <div id="hero-tr" style="display:none">
+    <h1>Alarmdan Aksiyona<br>11 Saniyede.</h1>
+    <p class="lead">SIEM'inizde bir alarm tetikleniyor. O kuyrukta bir yerde gerçekten önemli olan bir şey var. Soru hep aynıydı: onu bulmak, anlamak ve ne yapacağını bilmek ne kadar sürer? Bu cümleyi okuyacak kadar sürede yanıt veren bir sistem inşa ettik.</p>
+  </div>
+</div>
+
+<div class="post-cover">
+  <img src="../../assets/post-dashboard.png" alt="Inclysi AI analysis dashboard">
+  <p class="img-caption">Offense #4471 — analyzed, scored, explained and actioned. Total time: 11.2 seconds.</p>
+</div>
+
+<!-- ENGLISH -->
+<article class="post-body lang-section active" id="en-content">
+
+  <p>The gap between a SIEM alert and analyst action has always been measured in minutes — sometimes hours. Triage takes time. Context takes time. Understanding takes time. And in a high-volume SOC environment, time is exactly what analysts don't have.</p>
+
+  <p>We built Inclysi to close that gap. Not by making analysts faster — but by doing everything that precedes their decision automatically, instantly, and without sending a single byte of data outside your perimeter.</p>
+
+  <p>Here is what happens in those 11 seconds.</p>
+
+  <h2>The Pipeline</h2>
+
+  <div class="timeline">
+    <div class="timeline-step">
+      <span class="step-time">0.0s</span>
+      <div class="step-content">
+        <h4>Alert Received</h4>
+        <p>An offense arrives from your SIEM. Offense #4471: Multiple Login Failures Followed by Success. The system immediately begins context assembly — pulling all available data associated with this event before any analysis begins.</p>
+      </div>
+    </div>
+    <div class="timeline-step">
+      <span class="step-time">0–2s</span>
+      <div class="step-content">
+        <h4>Context Assembly</h4>
+        <p>Entity history is retrieved. The source IP's full incident record is loaded. Behavioral baselines are calculated. Similar past incidents are surfaced from the knowledge base. Network context is classified. By the time analysis begins, the system already knows everything that can be known about this entity from your organization's history.</p>
+      </div>
+    </div>
+    <div class="timeline-step">
+      <span class="step-time">2–5s</span>
+      <div class="step-content">
+        <h4>Stage 1 — Triage</h4>
+        <p>The first analysis stage runs. A fast classification pass determines: is this alert worth deeper analysis? What category does it fall into? What is the initial severity indication? This stage is designed for speed — its job is to filter, not to reason deeply. Low-signal alerts are scored and closed here. High-signal alerts proceed.</p>
+      </div>
+    </div>
+    <div class="timeline-step">
+      <span class="step-time">5–10s</span>
+      <div class="step-content">
+        <h4>Stage 2 — Deep Analysis</h4>
+        <p>The second stage engages with the full assembled context. This is where reasoning happens. The model works through the evidence — IP reputation, behavioral deviation, kill chain stage, entity history, temporal patterns — and builds the evidence chain. Each signal is weighted. Confidence is calculated. The threat score emerges not from a rule, but from a reasoned assessment of everything available.</p>
+      </div>
+    </div>
+    <div class="timeline-step">
+      <span class="step-time">10–11s</span>
+      <div class="step-content">
+        <h4>Output Assembly</h4>
+        <p>The analysis is structured into analyst-ready output. Threat score. Confidence level. Evidence chain with every contributing signal named and explained. Recommended actions. The complete picture, assembled and waiting.</p>
+      </div>
+    </div>
+    <div class="timeline-step">
+      <span class="step-time">11.2s</span>
+      <div class="step-content">
+        <h4>Analyst Opens the Ticket</h4>
+        <p>Everything is already there. Score: 91/100. High Confidence. Five evidence signals, each explained. Three recommended actions. The analyst doesn't triage — they decide.</p>
+      </div>
+    </div>
+  </div>
+
+  <h2>What the Analyst Sees</h2>
+
+  <p>When the analyst opens Offense #4471, they don't see a raw event log. They see a complete analysis.</p>
+
+  <p><strong>Threat Score: 91/100 — HIGH CONFIDENCE.</strong> Not a number pulled from thin air — a score built from five distinct evidence signals, each visible and interrogable.</p>
+
+  <p>The evidence chain answers the question every analyst asks first: <strong>why this score?</strong></p>
+
+  <ul>
+    <li><strong>IP Reputation: HIGH RISK</strong> — this source IP appears on multiple threat intelligence feeds, previously associated with credential-stuffing campaigns.</li>
+    <li><strong>Behavioral Anomaly: +3.2σ from baseline</strong> — the authentication pattern for this entity deviates 3.2 standard deviations from its 90-day baseline. Statistically, this level of deviation is rare and significant.</li>
+    <li><strong>Kill Chain Stage: Lateral Movement</strong> — the event sequence matches a recognized pattern: failed authentications followed by a success, consistent with credential access leading to initial foothold.</li>
+    <li><strong>Entity History: 3 Prior Incidents</strong> — this IP has appeared in three previous security events in your environment. Two were investigated. One was escalated.</li>
+    <li><strong>Temporal Pattern: Off-Hours Activity</strong> — the authentication occurred at 2:47 AM. For this entity, 96% of legitimate activity occurs during business hours.</li>
+  </ul>
+
+  <p>Below the evidence chain: three recommended actions. Not generic advice — specific, prioritized, executable steps derived from the analysis.</p>
+
+  <div class="callout">
+    <div class="callout-label">The Difference</div>
+    <p>A traditional workflow: analyst opens ticket → reads raw logs → searches for context → manually correlates → decides. Time: 20–45 minutes per alert, under ideal conditions. Inclysi workflow: analyst opens ticket → evidence is assembled → analyst decides. Time: seconds of analyst engagement per alert.</p>
+  </div>
+
+  <h2>Everything Local. Nothing Leaves.</h2>
+
+  <p>Every step of this pipeline runs inside your environment. The LLM that performs the analysis runs on your hardware. The knowledge base that surfaces similar past incidents is your organization's data. The entity profiles are built from your logs.</p>
+
+  <p>The bottom of every analysis card carries a line that matters: <strong>Local LLM — Zero data exfiltration.</strong></p>
+
+  <p>This is not a feature. It is the foundation. In security operations, the system that analyzes your threats cannot be the system that exfiltrates your data. These two requirements are architecturally incompatible with cloud-based AI solutions. They are the reason Inclysi was built the way it was built.</p>
+
+  <h2>Speed Is a Security Property</h2>
+
+  <p>Eleven seconds sounds like a technical achievement. It is also a security one.</p>
+
+  <p>Mean time to detect and mean time to respond are the metrics that define SOC effectiveness. Every minute between alert and analyst action is a minute the threat has to move. Every alert that sits uninvestigated in a queue is an opportunity the attacker is using.</p>
+
+  <p>Eleven seconds is not the goal. The goal is that the analyst who opens that ticket at 2:47 AM, three hours into a night shift, with 200 other alerts in the queue, has everything they need to make a good decision — immediately, without searching, without correlating, without guessing.</p>
+
+  <p>That is what 11 seconds actually means.</p>
+
+  <hr>
+
+  <p>Inclysi is built for security teams who cannot afford to be slow, cannot afford to be wrong, and cannot afford to send their data anywhere to get the intelligence they need.</p>
+
+  <p><a href="https://inclysi.com">inclysi.com</a></p>
+
+</article>
+
+<!-- TURKISH -->
+<article class="post-body lang-section" id="tr-content">
+
+  <p>SIEM alarmı ile analist aksiyonu arasındaki boşluk her zaman dakikalarla — bazen saatlerle — ölçülmüştür. Triage zaman alır. Bağlam zaman alır. Anlama zaman alır. Ve yüksek hacimli bir SOC ortamında, zaman tam da analistlerin sahip olmadığı şeydir.</p>
+
+  <p>Inclysi'yi tam bu boşluğu kapatmak için inşa ettik. Analistleri daha hızlı yaparak değil — kararlarından önce gelen her şeyi otomatik olarak, anında ve çevrenizin dışına tek bir byte veri göndermeden yaparak.</p>
+
+  <p>O 11 saniyede neler olduğunu anlatalım.</p>
+
+  <h2>Pipeline</h2>
+
+  <div class="timeline">
+    <div class="timeline-step">
+      <span class="step-time">0.0s</span>
+      <div class="step-content">
+        <h4>Alarm Alındı</h4>
+        <p>SIEM'den bir offense geliyor. Offense #4471: Ardından Başarı Gelen Çoklu Giriş Başarısızlıkları. Sistem hemen bağlam derlemeye başlıyor — herhangi bir analiz başlamadan önce bu olayla ilişkili tüm mevcut verileri çekiyor.</p>
+      </div>
+    </div>
+    <div class="timeline-step">
+      <span class="step-time">0–2s</span>
+      <div class="step-content">
+        <h4>Bağlam Derleme</h4>
+        <p>Varlık geçmişi alınıyor. Kaynak IP'nin tam olay kaydı yükleniyor. Davranışsal taban çizgileri hesaplanıyor. Bilgi tabanından benzer geçmiş olaylar yüzeye çıkarılıyor. Analiz başladığında sistem, bu varlık hakkında kurumunuzun geçmişinden bilinebilecek her şeyi zaten biliyor.</p>
+      </div>
+    </div>
+    <div class="timeline-step">
+      <span class="step-time">2–5s</span>
+      <div class="step-content">
+        <h4>Aşama 1 — Triage</h4>
+        <p>İlk analiz aşaması çalışıyor. Hızlı bir sınıflandırma geçişi belirliyor: bu alarm daha derin analize değer mi? Hangi kategoriye giriyor? Başlangıç ciddiyet göstergesi nedir? Düşük sinyalli alarmlar burada puanlanıp kapatılıyor. Yüksek sinyalli alarmlar devam ediyor.</p>
+      </div>
+    </div>
+    <div class="timeline-step">
+      <span class="step-time">5–10s</span>
+      <div class="step-content">
+        <h4>Aşama 2 — Derin Analiz</h4>
+        <p>İkinci aşama tam derlenmiş bağlamla devreye giriyor. Akıl yürütme burada gerçekleşiyor. Model kanıtlar üzerinde çalışıyor — IP itibarı, davranışsal sapma, kill chain aşaması, varlık geçmişi, zamansal desenler — ve kanıt zincirini oluşturuyor. Her sinyal ağırlıklandırılıyor. Güven hesaplanıyor. Tehdit skoru bir kuraldan değil, mevcut her şeyin akıl yürütülmüş değerlendirmesinden ortaya çıkıyor.</p>
+      </div>
+    </div>
+    <div class="timeline-step">
+      <span class="step-time">10–11s</span>
+      <div class="step-content">
+        <h4>Çıktı Derleme</h4>
+        <p>Analiz, analist için hazır çıktıya yapılandırılıyor. Tehdit skoru. Güven seviyesi. Her katkıda bulunan sinyal adlandırılmış ve açıklanmış kanıt zinciri. Önerilen aksiyonlar. Eksiksiz tablo, derlenmiş ve bekliyor.</p>
+      </div>
+    </div>
+    <div class="timeline-step">
+      <span class="step-time">11.2s</span>
+      <div class="step-content">
+        <h4>Analist Ticket'ı Açıyor</h4>
+        <p>Her şey zaten orada. Skor: 91/100. Yüksek Güven. Her biri açıklanmış beş kanıt sinyali. Üç önerilen aksiyon. Analist triage yapmıyor — karar veriyor.</p>
+      </div>
+    </div>
+  </div>
+
+  <h2>Analistin Gördüğü</h2>
+
+  <p>Analist Offense #4471'i açtığında ham bir olay logu görmüyor. Eksiksiz bir analiz görüyor.</p>
+
+  <p><strong>Tehdit Skoru: 91/100 — YÜKSEK GÜVENİRLİLİK.</strong> Havadan alınmış bir sayı değil — her biri görünür ve sorgulanabilir beş farklı kanıt sinyalinden oluşturulmuş bir skor.</p>
+
+  <p>Kanıt zinciri her analistin ilk sorduğu soruyu yanıtlıyor: <strong>bu skor neden?</strong></p>
+
+  <ul>
+    <li><strong>IP İtibarı: YÜKSEK RİSK</strong> — bu kaynak IP birden fazla tehdit istihbarat beslemesinde görünüyor, daha önce kimlik bilgisi doldurma kampanyalarıyla ilişkilendirilmiş.</li>
+    <li><strong>Davranışsal Anomali: Taban çizgisinden +3.2σ</strong> — bu varlık için kimlik doğrulama deseni 90 günlük taban çizgisinden 3.2 standart sapma sapıyor.</li>
+    <li><strong>Kill Chain Aşaması: Yanal Hareket</strong> — olay dizisi tanınan bir desenle eşleşiyor: başarıya uluşan başarısız kimlik doğrulamalar, ilk tutunmaya yol açan kimlik bilgisi erişimiyle tutarlı.</li>
+    <li><strong>Varlık Geçmişi: 3 Önceki Olay</strong> — bu IP ortamınızda daha önce üç güvenlik olayında göründü. İkisi araştırıldı. Biri eskalasyon edildi.</li>
+    <li><strong>Zamansal Desen: Mesai Dışı Aktivite</strong> — kimlik doğrulama sabah 02:47'de gerçekleşti. Bu varlık için meşru aktivitenin %96'sı mesai saatlerinde gerçekleşiyor.</li>
+  </ul>
+
+  <div class="callout">
+    <div class="callout-label">Fark</div>
+    <p>Geleneksel iş akışı: analist ticket'ı açar → ham logları okur → bağlam arar → manuel olarak ilişkilendirir → karar verir. Süre: ideal koşullarda alarm başına 20-45 dakika. Inclysi iş akışı: analist ticket'ı açar → kanıtlar derlenmiş → analist karar verir. Süre: alarm başına saniyeler.</p>
+  </div>
+
+  <h2>Her Şey Yerel. Hiçbir Şey Dışarı Çıkmıyor.</h2>
+
+  <p>Bu pipeline'ın her adımı ortamınızın içinde çalışıyor. Analizi gerçekleştiren LLM sizin donanımınızda çalışıyor. Benzer geçmiş olayları yüzeye çıkaran bilgi tabanı sizin kurumunuzun verisi. Varlık profilleri sizin loglarınızdan oluşturuluyor.</p>
+
+  <p>Her analiz kartının altında önemli bir satır var: <strong>Yerel LLM — Sıfır veri sızıntısı.</strong></p>
+
+  <p>Bu bir özellik değil. Bu temeldir. Güvenlik operasyonlarında tehditlerini analiz eden sistem, verinizi sızdıran sistem olamaz.</p>
+
+  <h2>Hız Bir Güvenlik Özelliğidir</h2>
+
+  <p>On bir saniye teknik bir başarı gibi görünüyor. Aynı zamanda bir güvenlik başarısıdır.</p>
+
+  <p>Ortalama tespit süresi ve ortalama yanıt süresi, SOC etkinliğini tanımlayan metriklerdir. Alarm ile analist aksiyonu arasındaki her dakika, tehdidin hareket etmesi için bir dakikadır. Kuyrukta araştırılmadan bekleyen her alarm, saldırganın kullandığı bir fırsattır.</p>
+
+  <p>On bir saniye hedef değil. Hedef şu: gece vardiyasının üçüncü saatinde, kuyrukta 200 başka alarm varken, o ticket'ı açan analistin — hemen, aramadan, ilişkilendirmeden, tahmin etmeden — iyi bir karar vermek için ihtiyacı olan her şeye sahip olması.</p>
+
+  <p>11 saniyenin gerçekte anlattığı şey bu.</p>
+
+  <hr>
+
+  <p>Inclysi, yavaş olmayı göze alamayan, yanılmayı göze alamayan ve ihtiyaç duydukları istihbaratı almak için verilerini herhangi bir yere göndermeyi göze alamayan güvenlik ekipleri için inşa edildi.</p>
+
+  <p><a href="https://inclysi.com">inclysi.com</a></p>
+
+</article>
+
+<div class="post-footer-nav">
+  <a href="../" class="back-link">&larr; All Posts</a>
+  <span class="share-label">inclysi.com</span>
+</div>
+
+<footer>
+  <a href="../../" class="footer-logo">
+    <svg width="22" height="22" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="50,2 93,26 93,74 50,98 7,74 7,26" stroke="white" stroke-width="6" fill="none"/><circle cx="50" cy="50" r="5" fill="white"/><circle cx="50" cy="22" r="4" fill="white"/><circle cx="75" cy="36" r="4" fill="white"/><circle cx="75" cy="64" r="4" fill="white"/><circle cx="50" cy="78" r="4" fill="white"/><circle cx="25" cy="64" r="4" fill="white"/><circle cx="25" cy="36" r="4" fill="white"/><line x1="50" y1="50" x2="50" y2="22" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="75" y2="36" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="75" y2="64" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="50" y2="78" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="25" y2="64" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="25" y2="36" stroke="white" stroke-width="2"/></svg>
+    <span>Inclysi AI</span>
+  </a>
+  <span class="footer-copy">&copy; 2026 Inclysi. All rights reserved.</span>
+  <div class="footer-links">
+    <a href="../">Blog</a>
+    <a href="mailto:contact@inclysi.com">Contact</a>
+  </div>
+</footer>
+
+<script>
+window.addEventListener('scroll',()=>{
+  const doc=document.documentElement;
+  const scrolled=(doc.scrollTop)/(doc.scrollHeight-doc.clientHeight)*100;
+  document.getElementById('progressBar').style.width=scrolled+'%';
+});
+document.querySelectorAll('.lang-btn[data-lang]').forEach(btn=>{
+  btn.addEventListener('click',e=>{
+    e.preventDefault();
+    const lang=btn.dataset.lang;
+    document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.lang-section').forEach(s=>s.classList.remove('active'));
+    document.getElementById(lang+'-content').classList.add('active');
+    document.getElementById('hero-en').style.display=lang==='en'?'block':'none';
+    document.getElementById('hero-tr').style.display=lang==='tr'?'block':'none';
+  });
+});
+</script>
+</body>
+</html>
