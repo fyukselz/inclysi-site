@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7W0LBMG3YK"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-7W0LBMG3YK');</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Most Expensive Minute in Cybersecurity — Inclysi</title>
+<meta name="description" content="After an alert fires, how long does it take for an analyst to decide? That window is where breaches happen.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090f;--bg2:#0c0f1a;--bg3:#111629;
+  --gold:#c9a84c;--gold2:#e8c36a;--red:#e63946;
+  --text:#e8eaf0;--muted:#8892a4;--border:#1a2035;
+  --font-display:'Syne',sans-serif;
+  --font-body:'DM Sans',sans-serif;
+  --font-serif:'DM Serif Display',serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:16px;line-height:1.7;overflow-x:hidden}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.2rem 4rem;background:rgba(7,9,15,0.9);backdrop-filter:blur(12px);border-bottom:1px solid rgba(26,32,53,0.6)}
+.nav-logo{display:flex;align-items:center;gap:0.75rem;text-decoration:none}
+.nav-logo img{width:36px;height:36px;border-radius:50%}
+.nav-logo span{font-family:var(--font-display);font-size:1.25rem;font-weight:700;color:var(--text);letter-spacing:0.02em}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{color:var(--muted);font-size:0.875rem;text-decoration:none;letter-spacing:0.04em;transition:color 0.2s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{font-size:0.8rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,168,76,0.4);padding:0.5rem 1.25rem;border-radius:2px;text-decoration:none;transition:all 0.2s}
+
+.post-hero{padding:9rem 2rem 5rem;max-width:800px;margin:0 auto;border-bottom:1px solid var(--border)}
+.post-meta{display:flex;align-items:center;gap:1rem;margin-bottom:2rem;font-size:0.75rem;color:var(--muted)}
+.post-tag{font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);font-size:0.7rem;border:1px solid rgba(201,168,76,0.3);padding:0.2rem 0.6rem;border-radius:2px}
+.post-lang{display:flex;gap:0.5rem;margin-left:auto}
+.lang-btn{font-size:0.7rem;font-weight:500;letter-spacing:0.08em;padding:0.2rem 0.6rem;border-radius:2px;border:1px solid var(--border);color:var(--muted);text-decoration:none;transition:all 0.2s;cursor:pointer}
+.lang-btn.active,.lang-btn:hover{border-color:rgba(201,168,76,0.4);color:var(--gold)}
+.post-hero h1{font-family:var(--font-display);font-size:clamp(2rem,4.5vw,3.2rem);font-weight:800;line-height:1.1;margin-bottom:1.5rem}
+.post-hero .lead{font-size:1.15rem;color:var(--muted);font-weight:300;line-height:1.8}
+
+.post-cover{max-width:900px;margin:0 auto;padding:3rem 2rem 0}
+.post-cover img{width:100%;border-radius:4px;border:1px solid var(--border);display:block}
+.img-caption{font-size:0.75rem;color:var(--muted);text-align:center;margin-top:0.75rem;font-style:italic}
+
+.post-body{max-width:720px;margin:0 auto;padding:4rem 2rem 6rem}
+.post-body h2{font-family:var(--font-display);font-size:1.7rem;font-weight:700;margin:3rem 0 1rem;padding-top:1rem;border-top:1px solid var(--border)}
+.post-body h3{font-family:var(--font-display);font-size:1.2rem;font-weight:600;margin:2rem 0 0.75rem;color:var(--text)}
+.post-body p{font-size:1.05rem;font-weight:300;color:#c8cdd8;line-height:1.85;margin-bottom:1.5rem}
+.post-body strong{color:var(--text);font-weight:500}
+.post-body em{font-style:italic;color:var(--muted)}
+.post-body a{color:var(--gold);text-decoration:underline;text-underline-offset:3px}
+
+.post-body blockquote{border-left:3px solid var(--gold);padding:1.25rem 1.75rem;margin:2.5rem 0;background:rgba(201,168,76,0.04);border-radius:0 4px 4px 0}
+.post-body blockquote p{font-family:var(--font-serif);font-size:1.2rem;font-style:italic;color:var(--text);margin:0;line-height:1.6}
+.post-body blockquote cite{font-size:0.8rem;font-style:normal;color:var(--muted);display:block;margin-top:0.75rem}
+
+.post-body figure{margin:2.5rem 0}
+.post-body figure img{width:100%;border-radius:4px;border:1px solid var(--border);display:block}
+.post-body figure.wide{margin-left:-4rem;margin-right:-4rem}
+.post-body figcaption{font-size:0.75rem;color:var(--muted);text-align:center;margin-top:0.75rem;font-style:italic}
+
+.callout{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:0 4px 4px 0;padding:1.25rem 1.5rem;margin:2rem 0}
+.callout-label{font-size:0.65rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem}
+.callout p{font-size:0.9rem;color:var(--muted);margin:0}
+
+.post-body ul,.post-body ol{padding-left:1.5rem;margin-bottom:1.5rem}
+.post-body li{font-size:1.05rem;font-weight:300;color:#c8cdd8;line-height:1.85;margin-bottom:0.5rem}
+.post-body ul li::marker{color:var(--gold)}
+.post-body ol li::marker{color:var(--gold);font-weight:500}
+
+.post-body code{font-family:'Courier New',monospace;font-size:0.875rem;background:var(--bg3);border:1px solid var(--border);padding:0.15rem 0.4rem;border-radius:3px;color:var(--gold2)}
+.post-body hr{border:none;border-top:1px solid var(--border);margin:3rem 0}
+
+/* scene block */
+.scene{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:1.5rem 2rem;margin:2rem 0}
+.scene-label{font-size:0.65rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:0.75rem}
+.scene p{font-size:1rem;color:#c8cdd8;margin:0;line-height:1.8}
+.scene .time{font-family:var(--font-display);font-size:1.4rem;font-weight:800;color:var(--gold);display:block;margin-bottom:0.5rem}
+
+/* stat highlight */
+.stat-row{display:flex;gap:2rem;margin:2.5rem 0;flex-wrap:wrap}
+.stat-block{flex:1;min-width:160px;background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:1.25rem 1.5rem}
+.stat-number{font-family:var(--font-display);font-size:2rem;font-weight:800;color:var(--gold);line-height:1}
+.stat-label{font-size:0.8rem;color:var(--muted);margin-top:0.4rem;line-height:1.4}
+
+.lang-section{display:none}
+.lang-section.active{display:block}
+
+.post-footer-nav{max-width:720px;margin:0 auto;padding:3rem 2rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.back-link{font-size:0.8rem;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--gold);text-decoration:none;display:flex;align-items:center;gap:0.4rem}
+.share-label{font-size:0.75rem;color:var(--muted)}
+
+footer{padding:3rem 4rem;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border)}
+.footer-logo{display:flex;align-items:center;gap:0.75rem;text-decoration:none}
+.footer-logo span{font-family:var(--font-display);font-size:1rem;font-weight:600;color:var(--text)}
+.footer-copy{font-size:0.8rem;color:var(--muted)}
+.footer-links{display:flex;gap:2rem}
+.footer-links a{font-size:0.8rem;color:var(--muted);text-decoration:none;transition:color 0.2s}
+.footer-links a:hover{color:var(--text)}
+
+.progress-bar{position:fixed;top:0;left:0;height:2px;background:var(--gold);width:0%;z-index:200;transition:width 0.1s}
+
+@media(max-width:900px){
+  nav{padding:1.2rem 2rem}
+  .nav-links{display:none}
+  .post-body figure.wide{margin-left:0;margin-right:0}
+  .stat-row{flex-direction:column}
+  footer{flex-direction:column;gap:1.5rem;text-align:center;padding:2.5rem 2rem}
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<nav>
+  <a href="../../" class="nav-logo">
+    <svg width="28" height="28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="50,2 93,26 93,74 50,98 7,74 7,26" stroke="white" stroke-width="6" fill="none"/><circle cx="50" cy="50" r="5" fill="white"/><circle cx="50" cy="22" r="4" fill="white"/><circle cx="75" cy="36" r="4" fill="white"/><circle cx="75" cy="64" r="4" fill="white"/><circle cx="50" cy="78" r="4" fill="white"/><circle cx="25" cy="64" r="4" fill="white"/><circle cx="25" cy="36" r="4" fill="white"/><line x1="50" y1="50" x2="50" y2="22" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="75" y2="36" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="75" y2="64" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="50" y2="78" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="25" y2="64" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="25" y2="36" stroke="white" stroke-width="2"/></svg>
+    <span>Inclysi AI</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="../../#product">Product</a></li>
+    <li><a href="../../#how">How It Works</a></li>
+    <li><a href="../">Insights</a></li>
+  </ul>
+  <a href="mailto:contact@inclysi.com" class="nav-cta">Get in Touch</a>
+</nav>
+
+<!-- POST HEADER -->
+<div class="post-hero">
+  <div class="post-meta">
+    <span class="post-tag">SOC Operations</span>
+    <span>May 2026</span>
+    <span>·</span>
+    <span>10 min read</span>
+    <div class="post-lang">
+      <a href="#" class="lang-btn active" data-lang="en">EN</a>
+      <a href="#" class="lang-btn" data-lang="tr">TR</a>
+    </div>
+  </div>
+  <div id="hero-en">
+    <h1>The Most Expensive Minute in Cybersecurity Is the One Before You Decide</h1>
+    <p class="lead">An alert fires. The analyst looks at the screen, opens tabs, pulls history, checks baselines — and somewhere between 15 minutes and two hours later, a decision emerges. During that entire window, the breach continues.</p>
+  </div>
+  <div id="hero-tr" style="display:none">
+    <h1>Siber Güvenlikte En Pahalı Dakika: Karar Vermeden Önceki Dakika</h1>
+    <p class="lead">Alarm gelir. Analist ekrana bakar, sekmeler açar, geçmişi çeker, baseline'ları kontrol eder — ve 15 dakika ile 2 saat arasında bir yerde bir karar çıkar ortaya. O süre boyunca breach devam eder.</p>
+  </div>
+</div>
+
+<!-- COVER IMAGE placeholder -->
+<div class="post-cover">
+  <img src="../../assets/post-expensive-minute.png" alt="Triage window visualization">
+  <p class="img-caption">The triage window — the gap between alert and decision — is where breach impact is decided.</p>
+</div>
+
+<!-- ENGLISH -->
+<article class="post-body lang-section active" id="en-content">
+
+  <p>The security industry has spent years obsessing over dwell time — the average 16 to 21 days an attacker spends inside a network before detection. It's a meaningful metric. But it measures the wrong gap.</p>
+
+  <p>There's another window that nobody tracks. It opens the moment an alert fires and closes the moment an analyst decides what to do about it. We call it the <strong>triage window</strong>. And this is where breach outcomes are actually determined.</p>
+
+  <h2>Scene 1: Gathering Context</h2>
+
+  <div class="scene">
+    <span class="time">02:17 AM</span>
+    <p>A new alert. QRadar has flagged unusual outbound traffic from an internal server. The source IP looks familiar — there was something on this address last week, but it was closed out, marked as a false positive. The analyst looks at the screen. Tired. Six hours into the shift.<br><br><em>"Is this real?"</em></p>
+  </div>
+
+  <p>The analyst opens QRadar. Reads the alert details. Then starts searching the history of that IP. Another tab. Log search. Date range. Filters. In parallel, checking MITRE ATT&CK — which technique does this traffic pattern map to? Another tab. Was this IP on a watchlist? Opens threat intel. Another tab. Is this traffic volume normal at this hour? What was the baseline? Another tab.</p>
+
+  <p><strong>Ten minutes in. Still no decision.</strong></p>
+
+  <h2>Scene 2: The Lost Decision Problem</h2>
+
+  <p>The analyst looks up last week's "false positive" call. Who made it? On what grounds? Was it documented?</p>
+
+  <p>It wasn't.</p>
+
+  <p>The analyst who made that call is on leave. The context is gone. Now what's on the table: conflicting signals, an incomplete history, a tired mind, and traffic that's still flowing.</p>
+
+  <p><strong>Fifteen minutes in.</strong></p>
+
+  <h2>Scene 3: The Decision</h2>
+
+  <p>Escalate — if wrong, the team gets woken up at 2 AM. Credibility takes a hit. Let it go — if real, the breach continues unchecked. Wait for more data — which means more time, more exposure.</p>
+
+  <blockquote>
+    <p>This is not a competence problem. This is a system design problem.</p>
+  </blockquote>
+
+  <p>The analyst isn't failing. The system is failing the analyst — by making them the last line of context assembly in a process that should have been automated from the start.</p>
+
+  <h2>Triage Window: The Metric Nobody Measures</h2>
+
+  <p>The industry tracks dwell time religiously. But the triage window — the gap between alert and decision — is almost never measured. It should be.</p>
+
+  <div class="stat-row">
+    <div class="stat-block">
+      <div class="stat-number">15–45<span style="font-size:1rem;color:var(--muted)"> min</span></div>
+      <div class="stat-label">Average analyst time per moderately complex alert</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-number">2+<span style="font-size:1rem;color:var(--muted)"> hrs</span></div>
+      <div class="stat-label">Time spent on high-priority events with scattered context</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-number">300+</div>
+      <div class="stat-label">Average daily alerts per SOC environment</div>
+    </div>
+  </div>
+
+  <p>Multiply those numbers. Divide by a three-person team. The math is brutal: <strong>analysts spend the majority of their time not making decisions — but gathering the information needed to make one.</strong> The attack continues throughout.</p>
+
+  <h2>Why Does It Take This Long? A Structural Problem</h2>
+
+  <p>Not bad tools. Not undertrained analysts. The modern SOC stack is simply built for data collection, not for decision-making.</p>
+
+  <p>A SIEM generates alerts. But it doesn't surface the history of the entity behind that alert — the previous analyst decisions on that IP, what normal looks like for that category at that hour, where this signal sits on the kill chain, whether the false positive pattern from last week should change how we weight this one.</p>
+
+  <p>You have to gather all of that. Manually. Every time.</p>
+
+  <div class="callout">
+    <div class="callout-label">The Core Problem</div>
+    <p>Every "false positive" call silently disappears from the next analyst's view. Institutional memory doesn't accumulate. Same IP, same pattern, same question — starting from zero again. Experience accumulates in people. The system stays empty.</p>
+  </div>
+
+  <h2>Alert Fatigue: The Invisible Cost</h2>
+
+  <p>The average false positive rate in a SOC runs between <strong>40 and 60 percent</strong>. In some environments it reaches 80.</p>
+
+  <p>What does that mean in practice? Analysts know that 4 to 8 out of every 10 alerts aren't real — but they can't tell which ones upfront. The result: every alert is approached with built-in skepticism. An instinctive resistance to escalation develops over time.</p>
+
+  <p>This is exactly where real threats slip through. Alert fatigue isn't an attention problem. <strong>It's the inevitable output of a miscalibrated system.</strong></p>
+
+  <h2>How Inclysi Addresses This</h2>
+
+  <p>Inclysi redesigns that 2:17 AM scene from the ground up. When the alert arrives, the system already knows:</p>
+
+  <ul>
+    <li>This IP was seen before. Last week's false positive — who marked it, and why.</li>
+    <li>Since that decision, three new signals have come from this IP.</li>
+    <li>Current activity is off-hours. It overlaps with a lateral movement pattern.</li>
+    <li>It follows reconnaissance on the kill chain. This is not noise.</li>
+  </ul>
+
+  <p>Triage score: <strong>78. High priority. Here's why.</strong></p>
+
+  <p>When the analyst looks at the screen, they're not starting to gather context. <strong>It's already there.</strong> What they need to decide doesn't change — but the position they're deciding from does. Not in the dark. In full light.</p>
+
+  <h2>Why 11 Seconds Matters</h2>
+
+  <p>When we say "alert to decision in 11 seconds," we're not making a marketing claim. We're stating an architectural result.</p>
+
+  <p>If a system has already processed entity history, prior decisions, temporal anomalies, and MITRE mappings by the time an alert arrives — all the analyst needs to do is evaluate and decide. Collection time: zero. Decision time: maximum.</p>
+
+  <div class="callout">
+    <div class="callout-label">Key Principle</div>
+    <p>Speed isn't achieved by sacrificing accuracy. It comes from context being pre-processed — so the analyst arrives at every alert already ready to decide.</p>
+  </div>
+
+  <h2>Decision Quality Is Not a Talent Problem</h2>
+
+  <p>The best analyst with the wrong tools will make slow, error-prone decisions. The least experienced analyst with the right context will make faster, more confident ones.</p>
+
+  <p>Inclysi's goal is not to replace the analyst. It's to make sure every analyst arrives at every alert ready — with the context already assembled, the history already surfaced, the pattern already identified.</p>
+
+  <hr>
+
+  <p>In that 2:17 AM scene, the 20 minutes a tired analyst spends gathering context isn't just inefficiency.</p>
+
+  <p><strong>Those are the minutes the breach is happening.</strong></p>
+
+</article>
+
+<!-- TURKISH -->
+<article class="post-body lang-section" id="tr-content">
+
+  <p>Siber güvenlik sektörü yıllardır "dwell time"ı konuşuyor — bir saldırganın tespit edilmeden önce sistemde geçirdiği ortalama 16-21 günlük süre. Anlamlı bir metrik. Ama yanlış boşluğu ölçüyor.</p>
+
+  <p>Kimsenin takip etmediği başka bir pencere daha var. Bir alarm tetiklendiği an açılıyor, analist ne yapacağına karar verdiği an kapanıyor. Biz buna <strong>triage window</strong> — ayıklama penceresi — diyoruz. Ve breach'in kaderini belirleyen asıl yer burası.</p>
+
+  <h2>Sahne 1: Bağlamı Toplamak</h2>
+
+  <div class="scene">
+    <span class="time">02:17</span>
+    <p>Yeni bir alarm. QRadar, bir internal sunucudan alışılmadık outbound trafik tespit etti. Kaynak IP tanıdık — geçen hafta da bir şeyler vardı bu adresten, ama false positive diye kapatıldı. Analist ekrana bakıyor. Yorgun. Shiftin 6. saatinde.<br><br><em>"Bu gerçek mi?"</em></p>
+  </div>
+
+  <p>Analist QRadar'ı açıyor. Alert detaylarına bakıyor. O IP'nin geçmişini aramaya başlıyor. Başka bir sekme. Log arama. Tarih aralığı. Filtreler. Paralelde MITRE ATT&CK'a bakıyor — bu trafik pattern'ı hangi tekniğe uyuyor? Başka bir sekme. Bu IP watchlist'teydi mi? Threat intel aracını açıyor. Bu saatte bu trafik normal mi? Baseline neydi? Başka bir sekme.</p>
+
+  <p><strong>10 dakika geçti. Hâlâ karar yok.</strong></p>
+
+  <h2>Sahne 2: Kaybolan Karar Problemi</h2>
+
+  <p>Geçen haftaki "false positive" kararına bakıyor. Kim verdi? Hangi gerekçeyle? Dokümante edilmiş mi?</p>
+
+  <p>Edilmemiş.</p>
+
+  <p>O kararı veren analist izinde. Bağlam kaybolmuş. Şimdi elinde şunlar var: tutarsız sinyaller, eksik geçmiş, yorgun bir zihin ve hâlâ akan trafik.</p>
+
+  <p><strong>15 dakika geçti.</strong></p>
+
+  <h2>Sahne 3: Karar</h2>
+
+  <p>Escalate ederse — yanlışsa, ekibi gece 2'de uyandırmış olacak. Geçerse — gerçekse, breach devam edecek. Beklerse — daha fazla zaman, daha fazla maruziyet.</p>
+
+  <blockquote>
+    <p>Bu bir yetenek problemi değil. Bu bir sistem tasarım problemi.</p>
+  </blockquote>
+
+  <p>Analist başarısız olmuyour. Sistem analistin başarısız olmasına zemin hazırlıyor — baştan otomatize edilmesi gereken bir süreçte onu bağlam toplama zincirinin son halkası haline getirerek.</p>
+
+  <h2>Triage Window: Kimsenin Ölçmediği Metrik</h2>
+
+  <p>Sektör dwell time'ı titizlikle takip ediyor. Ama triage window — alarm ile karar arasındaki boşluk — neredeyse hiç ölçülmüyor. Ölçülmeli.</p>
+
+  <div class="stat-row">
+    <div class="stat-block">
+      <div class="stat-number">15–45<span style="font-size:1rem;color:var(--muted)"> dk</span></div>
+      <div class="stat-label">Orta karmaşıklıktaki bir alert için ortalama analist süresi</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-number">2+<span style="font-size:1rem;color:var(--muted)"> saat</span></div>
+      <div class="stat-label">Dağınık bağlamlı yüksek öncelikli olaylarda harcanan süre</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-number">300+</div>
+      <div class="stat-label">Bir SOC ortamında günlük ortalama alarm sayısı</div>
+    </div>
+  </div>
+
+  <p>Bu sayıları çarp. Üç kişilik bir ekibe böl. Matematik acımasız: <strong>Analistler zamanlarının büyük çoğunluğunu karar vermek için değil, karar verebilmek için gereken bilgiyi toplamak için harcıyor.</strong> Saldırı bu süre boyunca devam ediyor.</p>
+
+  <h2>Neden Bu Kadar Uzun Sürüyor? Yapısal Bir Problem</h2>
+
+  <p>Kötü araçlar değil. Yetersiz analistler değil. Modern SOC stack'i yalnızca veri toplamak için tasarlanmış — karar vermek için değil.</p>
+
+  <p>Bir SIEM alarm üretir. Ama o alarm'ın arkasındaki entity'nin geçmişini sunmaz — o IP üzerindeki önceki analist kararlarını, o saat diliminde o kategoride normun ne olduğunu, bu sinyalin kill chain'de nereye oturduğunu, geçen haftaki false positive pattern'ının bu sefer skoru nasıl etkilemesi gerektiğini.</p>
+
+  <p>Bunları sen toplamalısın. Manuel olarak. Her seferinde.</p>
+
+  <div class="callout">
+    <div class="callout-label">Temel Problem</div>
+    <p>Her "false positive" kararı bir sonraki analistin görüş alanından sessizce kayboluyor. Kurumsal hafıza birikmiyor. Aynı IP, aynı pattern, aynı soru — sıfırdan başlıyorsunuz. Deneyim insanlarda birikir. Sistem boş kalır.</p>
+  </div>
+
+  <h2>False Positive Yorgunluğu: Görünmez Maliyet</h2>
+
+  <p>Bir SOC'ta ortalama false positive oranı <strong>%40 ile %60</strong> arasında seyrediyor. Bazı ortamlarda %80'e çıkıyor.</p>
+
+  <p>Bu pratikte ne anlama geliyor? Analistler her 10 alarm'dan 4 ila 8'inin gerçek olmadığını biliyor — ama hangilerinin olduğunu önceden bilemiyor. Sonuç: her alarm'a içgüdüsel bir şüpheyle yaklaşılıyor. Zamanla escalate etmeye karşı bir direnç gelişiyor.</p>
+
+  <p>Gerçek tehditler tam bu noktada sıyrılıp geçiyor. False positive yorgunluğu bir dikkat problemi değil. <strong>Yanlış kalibre edilmiş bir sistemin kaçınılmaz çıktısı.</strong></p>
+
+  <h2>Inclysi Bunu Nasıl Ele Alıyor?</h2>
+
+  <p>Inclysi o 02:17 sahnesini baştan yeniden tasarlıyor. Alarm geldiğinde sistem zaten biliyor:</p>
+
+  <ul>
+    <li>Bu IP'yi daha önce gördük. Geçen haftaki false positive — kim işaretledi, neden.</li>
+    <li>O karardan bu yana bu IP'den 3 yeni sinyal geldi.</li>
+    <li>Şu anki aktivite off-hours. Lateral movement pattern'ıyla örtüşüyor.</li>
+    <li>Kill chain'de reconnaissance'ın hemen ardından geliyor. Bu gürültü değil.</li>
+  </ul>
+
+  <p>Triage skoru: <strong>78. Yüksek öncelik. İşte nedeni.</strong></p>
+
+  <p>Analist ekrana baktığında bağlamı toplamaya başlamıyor. <strong>Zaten önünde.</strong> Ne karar vereceği değişmiyor — ama karar vereceği konum değişiyor. Karanlıkta değil, tam ışıkta.</p>
+
+  <h2>11 Saniye Neden Önemli?</h2>
+
+  <p>"Alarm'dan karara 11 saniye" dediğimizde bunu bir pazarlama iddiası olarak söylemiyoruz. Bir mimari sonucu olarak söylüyoruz.</p>
+
+  <p>Eğer bir sistem alarm geldiğinde entity geçmişini, önceki kararları, temporal anomaliyi ve MITRE eşleşmesini zaten işlemişse — analistin yapması gereken tek şey değerlendirmek ve karar vermek. Toplama süresi sıfır. Karar süresi maksimum.</p>
+
+  <div class="callout">
+    <div class="callout-label">Temel İlke</div>
+    <p>Hız doğruluktan ödün verilerek elde edilmiyor. Bağlamın önceden işlenmiş olmasından geliyor — analist her alarm'a zaten karar vermeye hazır geliyor.</p>
+  </div>
+
+  <h2>Karar Kalitesi Bir Yetenek Meselesi Değil</h2>
+
+  <p>En iyi analist yanlış araçlarla yavaş ve hatalı kararlar verir. En az deneyimli analist doğru bağlamla daha hızlı ve daha güvenli kararlar verir.</p>
+
+  <p>Inclysi'nin hedefi analistin yerini almak değil. Her analistin her alarm'a hazır gelmesini sağlamak — bağlam zaten derlenmiş, geçmiş zaten yüzey almış, pattern zaten tanımlanmış.</p>
+
+  <hr>
+
+  <p>O 02:17 sahnesinde, yorgun bir analistin bağlam toplamak için harcadığı 20 dakika sadece verimsizlik değil.</p>
+
+  <p><strong>O dakikalar, breach'in yaşandığı dakikalar.</strong></p>
+
+</article>
+
+<div class="post-footer-nav">
+  <a href="../" class="back-link">&larr; All Posts</a>
+  <span class="share-label">inclysi.com</span>
+</div>
+
+<footer>
+  <a href="../../" class="footer-logo">
+    <svg width="22" height="22" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="50,2 93,26 93,74 50,98 7,74 7,26" stroke="white" stroke-width="6" fill="none"/><circle cx="50" cy="50" r="5" fill="white"/><circle cx="50" cy="22" r="4" fill="white"/><circle cx="75" cy="36" r="4" fill="white"/><circle cx="75" cy="64" r="4" fill="white"/><circle cx="50" cy="78" r="4" fill="white"/><circle cx="25" cy="64" r="4" fill="white"/><circle cx="25" cy="36" r="4" fill="white"/><line x1="50" y1="50" x2="50" y2="22" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="75" y2="36" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="75" y2="64" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="50" y2="78" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="25" y2="64" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="25" y2="36" stroke="white" stroke-width="2"/></svg>
+    <span>Inclysi AI</span>
+  </a>
+  <span class="footer-copy">&copy; 2026 Inclysi. All rights reserved.</span>
+  <div class="footer-links">
+    <a href="../">Blog</a>
+    <a href="mailto:contact@inclysi.com">Contact</a>
+  </div>
+</footer>
+
+<script>
+window.addEventListener('scroll',()=>{
+  const doc=document.documentElement;
+  const scrolled=(doc.scrollTop)/(doc.scrollHeight-doc.clientHeight)*100;
+  document.getElementById('progressBar').style.width=scrolled+'%';
+});
+
+document.querySelectorAll('.lang-btn[data-lang]').forEach(btn=>{
+  btn.addEventListener('click',e=>{
+    e.preventDefault();
+    const lang=btn.dataset.lang;
+    document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.lang-section').forEach(s=>s.classList.remove('active'));
+    document.getElementById(lang+'-content').classList.add('active');
+    document.getElementById('hero-en').style.display=lang==='en'?'block':'none';
+    document.getElementById('hero-tr').style.display=lang==='tr'?'block':'none';
+  });
+});
+</script>
+</body>
+</html>
