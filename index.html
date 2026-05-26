@@ -61,6 +61,10 @@ nav{
   transition:color 0.2s;
 }
 .nav-links a:hover{color:var(--text)}
+.nav-social{display:flex;align-items:center;gap:1.25rem;margin-right:1.5rem}
+.nav-social-btn{color:var(--muted);transition:color 0.2s;display:flex;align-items:center}
+.nav-social-btn:hover{color:var(--gold)}
+.nav-social-btn svg{width:15px;height:15px}
 .nav-cta{
   font-family:var(--font-body);
   font-size:0.8rem;font-weight:500;letter-spacing:0.08em;
@@ -408,9 +412,13 @@ footer{
   font-size:1rem;font-weight:600;color:var(--text);
 }
 .footer-copy{font-size:0.8rem;color:var(--muted)}
-.footer-links{display:flex;gap:2rem}
+.footer-links{display:flex;gap:2rem;align-items:center}
 .footer-links a{font-size:0.8rem;color:var(--muted);text-decoration:none;transition:color 0.2s}
 .footer-links a:hover{color:var(--text)}
+.footer-social{display:flex;gap:1rem;align-items:center;margin-left:1rem}
+.footer-social a{color:var(--muted);transition:color 0.2s;display:flex;align-items:center}
+.footer-social a:hover{color:var(--gold)}
+.footer-social svg{width:15px;height:15px}
 
 /* ANIMATIONS */
 @keyframes fadeInUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
@@ -421,6 +429,7 @@ footer{
 @media(max-width:900px){
   nav{padding:1.2rem 2rem}
   .nav-links{display:none}
+  .nav-social{display:none}
   .problem-inner,.how-inner{grid-template-columns:1fr;gap:3rem}
   .problem-visual{order:-1}
   .features-grid{grid-template-columns:1fr}
@@ -444,6 +453,14 @@ footer{
     <li><a href="#how">How It Works</a></li>
     <li><a href="#insights">Insights</a></li>
   </ul>
+  <div class="nav-social">
+    <a href="https://www.linkedin.com/company/inclysi-ai/" target="_blank" class="nav-social-btn" aria-label="LinkedIn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+    </a>
+    <a href="https://www.instagram.com/inclysiai/" target="_blank" class="nav-social-btn" aria-label="Instagram">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+    </a>
+  </div>
   <a href="mailto:contact@inclysi.com" class="nav-cta">Get in Touch</a>
 </nav>
 
@@ -609,7 +626,6 @@ footer{
     </div>
 
     <div class="blog-grid fade-in">
-      <!-- Post cards will be populated as posts are written -->
 <a href="blog/en/soc-has-no-memory.html" class="blog-card">
   <div class="blog-card-img">
     <img src="assets/post-memory.png" alt="Institutional Memory">
@@ -674,6 +690,14 @@ footer{
   <div class="footer-links">
     <a href="blog/">Blog</a>
     <a href="mailto:contact@inclysi.com">Contact</a>
+    <div class="footer-social">
+      <a href="https://www.linkedin.com/company/inclysi-ai/" target="_blank" aria-label="LinkedIn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+      </a>
+      <a href="https://www.instagram.com/inclysiai/" target="_blank" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+      </a>
+    </div>
   </div>
 </footer>
 
