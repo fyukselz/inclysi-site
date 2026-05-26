@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7W0LBMG3YK"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-7W0LBMG3YK');</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The SOC Analyst Is Not the Problem. The Job Description Is. — Inclysi</title>
+<meta name="description" content="The analyst's role has been defined wrong for decades. Not an alert reader — a decision-maker. A manifesto for how security operations should actually work.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090f;--bg2:#0c0f1a;--bg3:#111629;
+  --gold:#c9a84c;--gold2:#e8c36a;--red:#e63946;
+  --text:#e8eaf0;--muted:#8892a4;--border:#1a2035;
+  --font-display:'Syne',sans-serif;
+  --font-body:'DM Sans',sans-serif;
+  --font-serif:'DM Serif Display',serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:16px;line-height:1.7;overflow-x:hidden}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.2rem 4rem;background:rgba(7,9,15,0.9);backdrop-filter:blur(12px);border-bottom:1px solid rgba(26,32,53,0.6)}
+.nav-logo{display:flex;align-items:center;gap:0.75rem;text-decoration:none}
+.nav-logo span{font-family:var(--font-display);font-size:1.25rem;font-weight:700;color:var(--text);letter-spacing:0.02em}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{color:var(--muted);font-size:0.875rem;text-decoration:none;letter-spacing:0.04em;transition:color 0.2s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{font-size:0.8rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,168,76,0.4);padding:0.5rem 1.25rem;border-radius:2px;text-decoration:none;transition:all 0.2s}
+
+.progress-bar{position:fixed;top:0;left:0;height:2px;background:var(--gold);width:0%;z-index:200;transition:width 0.1s}
+
+.post-hero{padding:9rem 2rem 5rem;max-width:800px;margin:0 auto;border-bottom:1px solid var(--border)}
+.post-meta{display:flex;align-items:center;gap:1rem;margin-bottom:2rem;font-size:0.75rem;color:var(--muted)}
+.post-tag{font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);font-size:0.7rem;border:1px solid rgba(201,168,76,0.3);padding:0.2rem 0.6rem;border-radius:2px}
+.post-lang{display:flex;gap:0.5rem;margin-left:auto}
+.lang-btn{font-size:0.7rem;font-weight:500;letter-spacing:0.08em;padding:0.2rem 0.6rem;border-radius:2px;border:1px solid var(--border);color:var(--muted);text-decoration:none;transition:all 0.2s;cursor:pointer;background:none}
+.lang-btn.active,.lang-btn:hover{border-color:rgba(201,168,76,0.4);color:var(--gold)}
+.post-hero h1{font-family:var(--font-display);font-size:clamp(2rem,4.5vw,3.2rem);font-weight:800;line-height:1.1;margin-bottom:1.5rem}
+.post-hero .lead{font-size:1.15rem;color:var(--muted);font-weight:300;line-height:1.8}
+
+.post-cover{max-width:900px;margin:0 auto;padding:3rem 2rem 0}
+.post-cover img{width:100%;border-radius:4px;border:1px solid var(--border);display:block}
+.img-caption{font-size:0.75rem;color:var(--muted);text-align:center;margin-top:0.75rem;font-style:italic}
+
+.post-body{max-width:720px;margin:0 auto;padding:4rem 2rem 6rem}
+.post-body h2{font-family:var(--font-display);font-size:1.7rem;font-weight:700;margin:3rem 0 1rem;padding-top:1rem;border-top:1px solid var(--border)}
+.post-body h3{font-family:var(--font-display);font-size:1.2rem;font-weight:600;margin:2rem 0 0.75rem;color:var(--gold)}
+.post-body p{font-size:1.05rem;font-weight:300;color:#c8cdd8;line-height:1.85;margin-bottom:1.5rem}
+.post-body strong{color:var(--text);font-weight:500}
+.post-body em{font-style:italic;color:var(--muted)}
+.post-body a{color:var(--gold);text-decoration:underline;text-underline-offset:3px}
+
+.post-body blockquote{border-left:3px solid var(--gold);padding:1.25rem 1.75rem;margin:2.5rem 0;background:rgba(201,168,76,0.04);border-radius:0 4px 4px 0}
+.post-body blockquote p{font-family:var(--font-serif);font-size:1.25rem;font-style:italic;color:var(--text);margin:0;line-height:1.6}
+
+.callout{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:0 4px 4px 0;padding:1.25rem 1.5rem;margin:2rem 0}
+.callout-label{font-size:0.65rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem}
+.callout p{font-size:0.9rem;color:var(--muted);margin:0;line-height:1.7}
+
+/* Manifesto block */
+.manifesto{
+  background:linear-gradient(135deg,rgba(201,168,76,0.06) 0%,rgba(201,168,76,0.02) 100%);
+  border:1px solid rgba(201,168,76,0.2);
+  border-radius:4px;
+  padding:2.5rem;
+  margin:3rem 0;
+}
+.manifesto p{color:var(--text);font-size:1.05rem;margin-bottom:1rem}
+.manifesto p:last-child{margin-bottom:0}
+.manifesto strong{color:var(--gold)}
+
+.post-body ul,.post-body ol{padding-left:1.5rem;margin-bottom:1.5rem}
+.post-body li{font-size:1.05rem;font-weight:300;color:#c8cdd8;line-height:1.85;margin-bottom:0.5rem}
+.post-body ul li::marker{color:var(--gold)}
+.post-body hr{border:none;border-top:1px solid var(--border);margin:3rem 0}
+
+.lang-section{display:none}
+.lang-section.active{display:block}
+
+.post-footer-nav{max-width:720px;margin:0 auto;padding:3rem 2rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.back-link{font-size:0.8rem;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--gold);text-decoration:none;display:flex;align-items:center;gap:0.4rem}
+.share-label{font-size:0.75rem;color:var(--muted)}
+
+footer{padding:3rem 4rem;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border)}
+.footer-logo{display:flex;align-items:center;gap:0.75rem;text-decoration:none}
+.footer-logo span{font-family:var(--font-display);font-size:1rem;font-weight:600;color:var(--text)}
+.footer-copy{font-size:0.8rem;color:var(--muted)}
+.footer-links{display:flex;gap:2rem}
+.footer-links a{font-size:0.8rem;color:var(--muted);text-decoration:none;transition:color 0.2s}
+.footer-links a:hover{color:var(--text)}
+
+@media(max-width:900px){
+  nav{padding:1.2rem 2rem}
+  .nav-links{display:none}
+  footer{flex-direction:column;gap:1.5rem;text-align:center;padding:2.5rem 2rem}
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<nav>
+  <a href="../../" class="nav-logo">
+    <svg width="28" height="28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="50,2 93,26 93,74 50,98 7,74 7,26" stroke="white" stroke-width="6" fill="none"/><circle cx="50" cy="50" r="5" fill="white"/><circle cx="50" cy="22" r="4" fill="white"/><circle cx="75" cy="36" r="4" fill="white"/><circle cx="75" cy="64" r="4" fill="white"/><circle cx="50" cy="78" r="4" fill="white"/><circle cx="25" cy="64" r="4" fill="white"/><circle cx="25" cy="36" r="4" fill="white"/><line x1="50" y1="50" x2="50" y2="22" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="75" y2="36" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="75" y2="64" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="50" y2="78" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="25" y2="64" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="25" y2="36" stroke="white" stroke-width="2"/></svg>
+    <span>Inclysi AI</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="../../#product">Product</a></li>
+    <li><a href="../../#how">How It Works</a></li>
+    <li><a href="../">Insights</a></li>
+  </ul>
+  <a href="mailto:contact@inclysi.com" class="nav-cta">Get in Touch</a>
+</nav>
+
+<!-- POST HEADER -->
+<div class="post-hero">
+  <div class="post-meta">
+    <span class="post-tag">SOC Operations</span>
+    <span>May 2026</span>
+    <span>·</span>
+    <span>12 min read</span>
+    <div class="post-lang">
+      <a href="#" class="lang-btn active" data-lang="en">EN</a>
+      <a href="#" class="lang-btn" data-lang="tr">TR</a>
+    </div>
+  </div>
+  <div id="hero-en">
+    <h1>The SOC Analyst Is Not the Problem.<br>The Job Description Is.</h1>
+    <p class="lead">For decades, the security industry has blamed analysts for what systems failed to provide. Wrong diagnosis. The role was never defined correctly — and it's time to rewrite it.</p>
+  </div>
+  <div id="hero-tr" style="display:none">
+    <h1>SOC Analistinin Suçu Yok.<br>İş Tanımının Var.</h1>
+    <p class="lead">Onlarca yıldır güvenlik sektörü, sistemlerin sağlayamadığı şeyler için analistleri suçladı. Yanlış teşhis. Rol hiçbir zaman doğru tanımlanmadı — ve yeniden yazmanın zamanı geldi.</p>
+  </div>
+</div>
+
+<!-- COVER -->
+<div class="post-cover">
+  <img src="../../assets/post-analyst-role.png" alt="SOC Analyst Role">
+  <p class="img-caption">The analyst's role was never the problem. The system around them was.</p>
+</div>
+
+<!-- ENGLISH -->
+<article class="post-body lang-section active" id="en-content">
+
+  <p>Have you ever read a SOC analyst job posting?</p>
+
+  <p><em>"Monitors, analyzes and reports on security events. Identifies anomalous activity. Utilizes SIEM tools. Prioritizes alerts."</em></p>
+
+  <p>Sounds reasonable. But this description sentences a human being to drowning in thousands of lines of logs. And then we wonder — why does so much get missed?</p>
+
+  <h2>What This Person Actually Does</h2>
+
+  <p>Morning shift starts. 300 alerts in the queue. Accumulated overnight.</p>
+
+  <p>Opens the first alert. Logs into QRadar. Reads the logs. Investigates the IP. Another tab. Opens MITRE ATT&CK. Another tab. Threat intel tool. Another tab. What was the similar event last week? Lucky if someone documented it.</p>
+
+  <p>Twenty minutes later, a decision. False positive. Closed.</p>
+
+  <p>Moves to alert 301.</p>
+
+  <p>In that time, what did they actually do? Collected data. Assembled context. Opened tabs. Searched. Found. Compared. And finally — thought.</p>
+
+  <p>How much time was left for the actual decision? A few minutes. Maybe less.</p>
+
+  <blockquote>
+    <p>The job description says "analyze." The actual job is "gather."</p>
+  </blockquote>
+
+  <h2>This Is Not a Talent Problem</h2>
+
+  <p>The industry always reaches for the same answer: better analysts. More training. Stricter hiring. Higher certification standards.</p>
+
+  <p>Wrong diagnosis. Wrong medicine.</p>
+
+  <p>Take the best SOC analyst in the world. Give them 500 alerts a day. Force them to manually assemble context for each one. Leave past decisions undocumented. Put them on the night shift. Hour six.</p>
+
+  <p>That analyst will fail. Because the system was designed for failure.</p>
+
+  <p><strong>The problem isn't the person. The problem is what the person is being asked to do.</strong></p>
+
+  <h2>What a SIEM Cannot Do</h2>
+
+  <p>Modern SIEM technology is genuinely powerful. It can process millions of events in real time. It can write correlation rules. It generates alerts.</p>
+
+  <p>But there is one thing it cannot do: <strong>decide.</strong></p>
+
+  <p>There is an enormous gap between generating an alert and understanding what that alert means. The SIEM tells you "something happened." It does not answer "does this matter, why does it matter, what should you do."</p>
+
+  <p>You fill that gap with a human being. And that human being spends the majority of their time — gathering context, searching history, finding patterns — before they can even begin to think.</p>
+
+  <p>The human mind is not the wrong tool for this job. <strong>The wrong expectation is where you ask it to operate.</strong></p>
+
+  <h2>Cognitive Load Is Not a Weakness. It's a Fact.</h2>
+
+  <p>Decision fatigue is scientifically established.</p>
+
+  <p>There is a measurable quality difference between the decisions an analyst makes at the beginning of a shift and the ones they make at the end. This is not a character issue. This is how the brain works.</p>
+
+  <p>A famous study of Israeli judges showed that decisions made in the morning were systematically different from those made in the evening. Same cases. Same judges. Different hours.</p>
+
+  <p>SOC analysts are judges. And they get tired.</p>
+
+  <p>The difference: judges hear a handful of cases per day. SOC analysts process hundreds of "cases" per day. Each one requiring context assembly, analysis, and a decision.</p>
+
+  <div class="callout">
+    <div class="callout-label">Key Principle</div>
+    <p>Systems should be designed knowing human limits — not in spite of them. Cognitive fatigue is not a flaw in the analyst. It is a flaw in the system that ignores it.</p>
+  </div>
+
+  <h2>What the Analyst's Role Should Actually Be</h2>
+
+  <p>Think about a detective.</p>
+
+  <p>A good detective doesn't clean the crime scene. Doesn't search for clues one by one across the internet. Doesn't manually compile witness addresses from scratch.</p>
+
+  <p>A good detective sits down and finds a file already assembled in front of them. Evidence collected. Context established. The question is simply: <em>"Given this evidence, what do I decide?"</em></p>
+
+  <p>That is where the SOC analyst should be.</p>
+
+  <p>The analyst is not a data laborer. They are a decision-maker. But today's systems use them as data laborers — and then complain about decision quality.</p>
+
+  <h2>The Institutional Memory Problem</h2>
+
+  <p>There is one more thing worth talking about: experience.</p>
+
+  <p>Where does a senior SOC analyst's value actually live? In technical knowledge, certainly. But the real value is here: <strong>they know what they've seen in that environment.</strong></p>
+
+  <p>That IP showed up last month. That pattern is usually a false positive. That kind of traffic at that hour is abnormal. That user's behavior has changed recently.</p>
+
+  <p>None of this is written anywhere. It lives in that analyst's mind.</p>
+
+  <p>And one day that analyst leaves. Goes on leave. Moves to another company.</p>
+
+  <p>The knowledge leaves with them. The system resets. The next analyst sees the same IP, asks the same question, starts from zero.</p>
+
+  <blockquote>
+    <p>Experience accumulates in people. The system stays empty. This is a structural memory loss — and no amount of hiring fixes it.</p>
+  </blockquote>
+
+  <h2>Redefining the Role</h2>
+
+  <p>When we built Inclysi, we asked ourselves one question:</p>
+
+  <p><em>"If every alert arrived with context already assembled, past decisions already visible, patterns already identified — what would the analyst do?"</em></p>
+
+  <p>The answer was clear: <strong>decide.</strong></p>
+
+  <p>Just decide. No searching. No gathering. No opening tabs.</p>
+
+  <p>That vision is the foundation of Inclysi. The system doesn't replace the analyst. It gives the analyst their actual role back.</p>
+
+  <p>When an alert arrives, entity history is ready. False positive patterns are visible. Kill chain position is determined. MITRE technique is mapped. The triage score is calculated and explained.</p>
+
+  <p>When the analyst looks at the screen, there is only one question: <strong>"How do I respond to this threat?"</strong></p>
+
+  <p>Nothing else.</p>
+
+  <h2>The Manifesto</h2>
+
+  <div class="manifesto">
+    <p>We believe this:</p>
+    <p>SOC analysts are the most critical people in cybersecurity. And today, these people are being used far below their capability.</p>
+    <p>They were trained to understand threats, not read alerts. They are here to make decisions, not open tabs. They chose this profession to see anomalies, not memorize patterns.</p>
+    <p>Giving them the system they deserve is our job.</p>
+    <p><strong>The analyst is not the problem. The job description is. And it's time to rewrite it.</strong></p>
+  </div>
+
+  <hr>
+
+  <p>Inclysi is built for security teams who believe their analysts deserve better than the system they've been given.</p>
+  <p><a href="https://inclysi.com">inclysi.com</a></p>
+
+</article>
+
+<!-- TURKISH -->
+<article class="post-body lang-section" id="tr-content">
+
+  <p>Bir SOC analistinin iş ilanını hiç okudun mu?</p>
+
+  <p><em>"Güvenlik olaylarını izler, analiz eder ve raporlar. Anormal aktiviteleri tespit eder. SIEM araçlarını kullanır. Alert'leri önceliklendirir."</em></p>
+
+  <p>Kulağa makul geliyor. Ama bu tanım, aslında bir insanı binlerce satır logun arasında kaybolmaya mahkum ediyor. Ve sonra şaşırıyoruz — neden bu kadar çok şey kaçırılıyor?</p>
+
+  <h2>Gerçekte Ne Yapıyor Bu İnsan?</h2>
+
+  <p>Sabah vardiyası başlıyor. Önünde 300 alert. Gece boyunca birikmiş.</p>
+
+  <p>İlk alert'i açıyor. QRadar'a giriyor. Log'lara bakıyor. IP'yi araştırıyor. Başka bir sekme. MITRE ATT&CK'ı açıyor. Başka bir sekme. Threat intel aracı. Başka bir sekme. Geçen haftaki benzer olay neydi? Birileri belgelediyse şanslı.</p>
+
+  <p>20 dakika sonra bir karar veriyor. False positive. Kapatıyor.</p>
+
+  <p>301. alert'e geçiyor.</p>
+
+  <p>Bu süreç içinde ne yaptı? Veri topladı. Bağlam derledi. Sekme açtı. Aradı. Buldu. Karşılaştırdı. Sonunda düşündü.</p>
+
+  <p>Peki karar vermeye ne kadar zaman kaldı? Birkaç dakika. Belki daha az.</p>
+
+  <blockquote>
+    <p>İş tanımı "analiz et" diyor. Gerçekte yaptığı iş "topla."</p>
+  </blockquote>
+
+  <h2>Bu Bir Yetenek Sorunu Değil</h2>
+
+  <p>Sektör her zaman aynı cevabı veriyor: daha iyi analistler. Daha fazla eğitim. Daha sıkı işe alım. Daha yüksek sertifikasyon standartları.</p>
+
+  <p>Yanlış teşhis. Yanlış ilaç.</p>
+
+  <p>Dünyanın en iyi SOC analistini al. Önüne günde 500 alert koy. Her biri için bağlamı manuel toplamak zorunda bırak. Geçmiş kararlar dokümante edilmemiş olsun. Geceleri çalışıyor olsun. 6. saatinde.</p>
+
+  <p>O analist başarısız olur. Çünkü sistem başarısız olacak şekilde tasarlanmış.</p>
+
+  <p><strong>Sorun insanda değil. Sorun insanı neye koştuğunda.</strong></p>
+
+  <h2>SIEM'in Yapamadığı Şey</h2>
+
+  <p>Modern SIEM teknolojisi inanılmaz derecede güçlü. Milyonlarca event'i gerçek zamanlı işleyebiliyor. Korelasyon kuralları yazabiliyor. Alert üretiyor.</p>
+
+  <p>Ama bir şeyi yapamıyor: <strong>karar veremez.</strong></p>
+
+  <p>Alert üretmek ile o alert'in ne anlama geldiğini anlamak arasında devasa bir boşluk var. SIEM size "bir şeyler oldu" diyor. Ama "bu önemli mi, neden önemli, ne yapmalısın" sorularını cevaplamıyor.</p>
+
+  <p>Bu boşluğu doldurmak için insan koyuyorsunuz. Ve o insan zamanının büyük çoğunluğunu — bağlam toplamak, geçmiş aramak, pattern bulmak — için harcıyor.</p>
+
+  <p>İnsan zihni bu iş için yanlış araç değil. <strong>Bu iş için kullanılmasını beklediğiniz yer yanlış.</strong></p>
+
+  <h2>Kognitif Yük Bir Zayıflık Değil, Bir Gerçek</h2>
+
+  <p>Karar yorgunluğu bilimsel olarak kanıtlanmış bir olgudur.</p>
+
+  <p>Bir analist vardiyasının başında verdiği kararla sonunda verdiği karar arasında ölçülebilir bir kalite farkı var. Bu bir karakter meselesi değil. Bu beyin nasıl çalışıyor sorusunun cevabı.</p>
+
+  <p>İsrail'de yapılan ünlü bir araştırma, yargıçların sabah verdiği kararların akşam verdiği kararlardan sistematik olarak farklı olduğunu gösterdi. Aynı davalar. Aynı yargıçlar. Farklı saatler.</p>
+
+  <p>SOC analistleri de yargıç. Ve onlar da yoruluyor.</p>
+
+  <p>Fark şu: yargıçlar günde birkaç dava görür. SOC analistleri günde yüzlerce "dava" görür. Her biri bağlam toplamayı, analiz etmeyi, karar vermeyi gerektiriyor.</p>
+
+  <div class="callout">
+    <div class="callout-label">Temel İlke</div>
+    <p>Sistemler insan sınırlarını bilerek tasarlanmalı — bu sınırlara rağmen değil. Kognitif yorgunluk analistteki bir kusur değil. Onu görmezden gelen sistemdeki kusur.</p>
+  </div>
+
+  <h2>Analistin Gerçek Rolü Ne Olmalı?</h2>
+
+  <p>Bir dedektifi düşünün.</p>
+
+  <p>İyi bir dedektif suç mahallini temizlemez. İpuçlarını tek tek internetten aramaz. Tanıkların adreslerini manuel olarak derlemez.</p>
+
+  <p>İyi bir dedektif ekrana oturduğunda önünde zaten derlenmiş bir dosya vardır. Kanıtlar toplanmıştır. Bağlamlar kurulmuştur. Soru şudur: <em>"Bu kanıtlara bakarak ne karar veriyorum?"</em></p>
+
+  <p>İşte SOC analistinin olması gereken yeri bu.</p>
+
+  <p>Analist bir veri işçisi değil, bir karar vericiydir. Ama bugünkü sistem onu veri işçisi olarak kullanıyor ve sonra karar kalitesinden şikayet ediyor.</p>
+
+  <h2>Kurumsal Hafıza Problemi</h2>
+
+  <p>Bir şeyi daha konuşalım: deneyim.</p>
+
+  <p>Kıdemli bir SOC analistinin değeri nerede? Teknik bilgisinde elbette. Ama asıl değeri şurada: <strong>o sistemde ne gördüğünü biliyor.</strong></p>
+
+  <p>Bu IP geçen ay da vardı. Bu pattern genellikle false positive. Bu saat diliminde bu tür trafik anormal. Bu kullanıcının davranışı son zamanlarda değişti.</p>
+
+  <p>Bu bilgi hiçbir yerde yazılı değil. O analistin zihninde yaşıyor.</p>
+
+  <p>Ve o analist bir gün ayrılıyor. İzne çıkıyor. Başka bir şirkete geçiyor.</p>
+
+  <p>Bilgi gidiyor. Sistem sıfırlanıyor. Bir sonraki analist aynı IP'yi görüyor, aynı soruyu soruyor, sıfırdan başlıyor.</p>
+
+  <blockquote>
+    <p>Deneyim birikiyor. Sistem biriktirmiyor. Bu yapısal bir hafıza kaybı — ve ne kadar işe alım yaparsanız yapın bu sorunu çözemezsiniz.</p>
+  </blockquote>
+
+  <h2>Rolü Yeniden Tanımlamak</h2>
+
+  <p>Inclysi'yi inşa ederken kendimize bir soru sorduk:</p>
+
+  <p><em>"Eğer analistin önüne her alert geldiğinde bağlam zaten derlenmiş olsaydı, geçmiş kararlar görünür olsaydı, pattern zaten tanımlanmış olsaydı — analist ne yapardı?"</em></p>
+
+  <p>Cevap netti: <strong>karar verirdi.</strong></p>
+
+  <p>Sadece karar verirdi. Aramadan, toplamadan, sekme açmadan.</p>
+
+  <p>Bu vizyon Inclysi'nin temelinde yatıyor. Sistem analistin yerini almıyor. Analistin gerçek rolünü geri veriyor.</p>
+
+  <p>Alert geldiğinde entity geçmişi hazır. False positive pattern'ları görünür. Kill chain pozisyonu belirlenmiş. MITRE tekniği eşlenmiş. Triage skoru hesaplanmış ve gerekçelendirilmiş.</p>
+
+  <p>Analist ekrana baktığında tek sorusu şu: <strong>"Bu tehdide nasıl yanıt vereceğim?"</strong></p>
+
+  <p>Başka hiçbir soru değil.</p>
+
+  <h2>Manifesto</h2>
+
+  <div class="manifesto">
+    <p>Biz şuna inanıyoruz:</p>
+    <p>SOC analistleri siber güvenliğin en kritik insanlarıdır. Ve bugün bu insanlar yeteneklerinin çok altında bir işe koşuluyor.</p>
+    <p>Alert okumak için değil, tehdit anlamak için eğitildiler. Sekme açmak için değil, karar vermek için buralar. Pattern ezberlemek için değil, anomali görmek için bu mesleği seçtiler.</p>
+    <p>Onlara hak ettikleri sistemi vermek bizim işimiz.</p>
+    <p><strong>Analist suçlu değil. İş tanımı suçlu. Ve iş tanımını değiştirmenin zamanı geldi.</strong></p>
+  </div>
+
+  <hr>
+
+  <p>Inclysi, analistlerinin hak ettiğinden daha iyisini hak ettiğine inanan güvenlik ekipleri için inşa edildi.</p>
+  <p><a href="https://inclysi.com">inclysi.com</a></p>
+
+</article>
+
+<div class="post-footer-nav">
+  <a href="../" class="back-link">&larr; All Posts</a>
+  <span class="share-label">inclysi.com</span>
+</div>
+
+<footer>
+  <a href="../../" class="footer-logo">
+    <svg width="22" height="22" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="50,2 93,26 93,74 50,98 7,74 7,26" stroke="white" stroke-width="6" fill="none"/><circle cx="50" cy="50" r="5" fill="white"/><circle cx="50" cy="22" r="4" fill="white"/><circle cx="75" cy="36" r="4" fill="white"/><circle cx="75" cy="64" r="4" fill="white"/><circle cx="50" cy="78" r="4" fill="white"/><circle cx="25" cy="64" r="4" fill="white"/><circle cx="25" cy="36" r="4" fill="white"/><line x1="50" y1="50" x2="50" y2="22" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="75" y2="36" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="75" y2="64" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="50" y2="78" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="25" y2="64" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="25" y2="36" stroke="white" stroke-width="2"/></svg>
+    <span>Inclysi AI</span>
+  </a>
+  <span class="footer-copy">&copy; 2026 Inclysi. All rights reserved.</span>
+  <div class="footer-links">
+    <a href="../">Blog</a>
+    <a href="mailto:contact@inclysi.com">Contact</a>
+  </div>
+</footer>
+
+<script>
+window.addEventListener('scroll',()=>{
+  const doc=document.documentElement;
+  const scrolled=(doc.scrollTop)/(doc.scrollHeight-doc.clientHeight)*100;
+  document.getElementById('progressBar').style.width=scrolled+'%';
+});
+document.querySelectorAll('.lang-btn[data-lang]').forEach(btn=>{
+  btn.addEventListener('click',e=>{
+    e.preventDefault();
+    const lang=btn.dataset.lang;
+    document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.lang-section').forEach(s=>s.classList.remove('active'));
+    document.getElementById(lang+'-content').classList.add('active');
+    document.getElementById('hero-en').style.display=lang==='en'?'block':'none';
+    document.getElementById('hero-tr').style.display=lang==='tr'?'block':'none';
+  });
+});
+</script>
+</body>
+</html>
