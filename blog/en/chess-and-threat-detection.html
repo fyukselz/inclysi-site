@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7W0LBMG3YK"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-7W0LBMG3YK');</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Grandmaster Doesn't Look at the Piece. They Look at the Position. — Inclysi</title>
+<meta name="description" content="What chess grandmasters and great SOC analysts have in common: they don't react to individual moves. They read the position. Pattern recognition, tempo, and institutional memory in threat detection.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090f;--bg2:#0c0f1a;--bg3:#111629;
+  --gold:#c9a84c;--gold2:#e8c36a;--red:#e63946;
+  --text:#e8eaf0;--muted:#8892a4;--border:#1a2035;
+  --font-display:'Syne',sans-serif;
+  --font-body:'DM Sans',sans-serif;
+  --font-serif:'DM Serif Display',serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:16px;line-height:1.7;overflow-x:hidden}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.2rem 4rem;background:rgba(7,9,15,0.9);backdrop-filter:blur(12px);border-bottom:1px solid rgba(26,32,53,0.6)}
+.nav-logo{display:flex;align-items:center;gap:0.75rem;text-decoration:none}
+.nav-logo span{font-family:var(--font-display);font-size:1.25rem;font-weight:700;color:var(--text);letter-spacing:0.02em}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{color:var(--muted);font-size:0.875rem;text-decoration:none;letter-spacing:0.04em;transition:color 0.2s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{font-size:0.8rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,168,76,0.4);padding:0.5rem 1.25rem;border-radius:2px;text-decoration:none;transition:all 0.2s}
+
+.progress-bar{position:fixed;top:0;left:0;height:2px;background:var(--gold);width:0%;z-index:200;transition:width 0.1s}
+
+.post-hero{padding:9rem 2rem 5rem;max-width:800px;margin:0 auto;border-bottom:1px solid var(--border)}
+.post-meta{display:flex;align-items:center;gap:1rem;margin-bottom:2rem;font-size:0.75rem;color:var(--muted)}
+.post-tag{font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);font-size:0.7rem;border:1px solid rgba(201,168,76,0.3);padding:0.2rem 0.6rem;border-radius:2px}
+.post-lang{display:flex;gap:0.5rem;margin-left:auto}
+.lang-btn{font-size:0.7rem;font-weight:500;letter-spacing:0.08em;padding:0.2rem 0.6rem;border-radius:2px;border:1px solid var(--border);color:var(--muted);text-decoration:none;transition:all 0.2s;cursor:pointer;background:none}
+.lang-btn.active,.lang-btn:hover{border-color:rgba(201,168,76,0.4);color:var(--gold)}
+.post-hero h1{font-family:var(--font-display);font-size:clamp(2rem,4.5vw,3.2rem);font-weight:800;line-height:1.1;margin-bottom:1.5rem}
+.post-hero .lead{font-size:1.15rem;color:var(--muted);font-weight:300;line-height:1.8}
+
+.post-cover{max-width:900px;margin:0 auto;padding:3rem 2rem 0}
+.post-cover img{width:100%;border-radius:4px;border:1px solid var(--border);display:block}
+.img-caption{font-size:0.75rem;color:var(--muted);text-align:center;margin-top:0.75rem;font-style:italic}
+
+.post-body{max-width:720px;margin:0 auto;padding:4rem 2rem 6rem}
+.post-body h2{font-family:var(--font-display);font-size:1.7rem;font-weight:700;margin:3rem 0 1rem;padding-top:1rem;border-top:1px solid var(--border)}
+.post-body p{font-size:1.05rem;font-weight:300;color:#c8cdd8;line-height:1.85;margin-bottom:1.5rem}
+.post-body strong{color:var(--text);font-weight:500}
+.post-body em{font-style:italic;color:var(--muted)}
+.post-body a{color:var(--gold);text-decoration:underline;text-underline-offset:3px}
+
+.post-body blockquote{border-left:3px solid var(--gold);padding:1.25rem 1.75rem;margin:2.5rem 0;background:rgba(201,168,76,0.04);border-radius:0 4px 4px 0}
+.post-body blockquote p{font-family:var(--font-serif);font-size:1.25rem;font-style:italic;color:var(--text);margin:0;line-height:1.6}
+.post-body blockquote cite{font-size:0.8rem;font-style:normal;color:var(--muted);display:block;margin-top:0.75rem}
+
+.callout{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:0 4px 4px 0;padding:1.25rem 1.5rem;margin:2rem 0}
+.callout-label{font-size:0.65rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem}
+.callout p{font-size:0.9rem;color:var(--muted);margin:0;line-height:1.7}
+
+/* Comparison table */
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:4px;overflow:hidden;margin:2.5rem 0}
+.compare-col{background:var(--bg2);padding:1.5rem}
+.compare-col h4{font-family:var(--font-display);font-size:0.8rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border)}
+.compare-col h4.gold{color:var(--gold)}
+.compare-item{font-size:0.875rem;color:#c8cdd8;font-weight:300;padding:0.5rem 0;border-bottom:1px solid rgba(26,32,53,0.5);line-height:1.5}
+.compare-item:last-child{border-bottom:none}
+
+.manifesto{background:linear-gradient(135deg,rgba(201,168,76,0.06) 0%,rgba(201,168,76,0.02) 100%);border:1px solid rgba(201,168,76,0.2);border-radius:4px;padding:2.5rem;margin:3rem 0}
+.manifesto p{color:var(--text);font-size:1.05rem;margin-bottom:1rem}
+.manifesto p:last-child{margin-bottom:0}
+.manifesto strong{color:var(--gold)}
+
+.post-body ul{padding-left:1.5rem;margin-bottom:1.5rem}
+.post-body li{font-size:1.05rem;font-weight:300;color:#c8cdd8;line-height:1.85;margin-bottom:0.5rem}
+.post-body ul li::marker{color:var(--gold)}
+.post-body hr{border:none;border-top:1px solid var(--border);margin:3rem 0}
+
+.lang-section{display:none}
+.lang-section.active{display:block}
+
+.post-footer-nav{max-width:720px;margin:0 auto;padding:3rem 2rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.back-link{font-size:0.8rem;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--gold);text-decoration:none;display:flex;align-items:center;gap:0.4rem}
+.share-label{font-size:0.75rem;color:var(--muted)}
+
+footer{padding:3rem 4rem;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border)}
+.footer-logo{display:flex;align-items:center;gap:0.75rem;text-decoration:none}
+.footer-logo span{font-family:var(--font-display);font-size:1rem;font-weight:600;color:var(--text)}
+.footer-copy{font-size:0.8rem;color:var(--muted)}
+.footer-links{display:flex;gap:2rem;align-items:center}
+.footer-links a{font-size:0.8rem;color:var(--muted);text-decoration:none;transition:color 0.2s}
+.footer-links a:hover{color:var(--text)}
+.footer-social{display:flex;gap:1rem;align-items:center;margin-left:1rem}
+.footer-social a{color:var(--muted);transition:color 0.2s;display:flex;align-items:center}
+.footer-social a:hover{color:var(--gold)}
+.footer-social svg{width:15px;height:15px}
+
+@media(max-width:900px){
+  nav{padding:1.2rem 2rem}
+  .nav-links{display:none}
+  .compare{grid-template-columns:1fr}
+  footer{flex-direction:column;gap:1.5rem;text-align:center;padding:2.5rem 2rem}
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<nav>
+  <a href="../../" class="nav-logo">
+    <svg width="28" height="28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="50,2 93,26 93,74 50,98 7,74 7,26" stroke="white" stroke-width="6" fill="none"/><circle cx="50" cy="50" r="5" fill="white"/><circle cx="50" cy="22" r="4" fill="white"/><circle cx="75" cy="36" r="4" fill="white"/><circle cx="75" cy="64" r="4" fill="white"/><circle cx="50" cy="78" r="4" fill="white"/><circle cx="25" cy="64" r="4" fill="white"/><circle cx="25" cy="36" r="4" fill="white"/><line x1="50" y1="50" x2="50" y2="22" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="75" y2="36" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="75" y2="64" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="50" y2="78" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="25" y2="64" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="25" y2="36" stroke="white" stroke-width="2"/></svg>
+    <span>Inclysi AI</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="../../#product">Product</a></li>
+    <li><a href="../../#how">How It Works</a></li>
+    <li><a href="../">Insights</a></li>
+  </ul>
+  <a href="mailto:contact@inclysi.com" class="nav-cta">Get in Touch</a>
+</nav>
+
+<div class="post-hero">
+  <div class="post-meta">
+    <span class="post-tag">Threat Intelligence</span>
+    <span>May 2026</span>
+    <span>·</span>
+    <span>11 min read</span>
+    <div class="post-lang">
+      <a href="#" class="lang-btn active" data-lang="en">EN</a>
+      <a href="#" class="lang-btn" data-lang="tr">TR</a>
+    </div>
+  </div>
+  <div id="hero-en">
+    <h1>A Grandmaster Doesn't Look at the Piece.<br>They Look at the Position.</h1>
+    <p class="lead">In 1997, Deep Blue defeated Kasparov by calculating faster. But Kasparov still saw the position better. The same distinction separates reactive SOCs from great ones — and it has nothing to do with processing speed.</p>
+  </div>
+  <div id="hero-tr" style="display:none">
+    <h1>Satranç Ustası Taşa Bakmaz,<br>Pozisyona Bakar.</h1>
+    <p class="lead">1997'de Deep Blue Kasparov'u daha hızlı hesaplayarak yendi. Ama Kasparov hâlâ pozisyonu daha iyi görüyordu. Aynı ayrım reaktif SOC'ları büyük SOC'lardan ayırıyor — ve bunun işlem hızıyla hiçbir ilgisi yok.</p>
+  </div>
+</div>
+
+<div class="post-cover">
+  <img src="../../assets/post-chess.png" alt="Chess and Threat Detection">
+  <p class="img-caption">Pattern recognition. Tempo. Memory. The grandmaster and the great SOC analyst share the same mental model.</p>
+</div>
+
+<!-- ENGLISH -->
+<article class="post-body lang-section active" id="en-content">
+
+  <p>1997. IBM's Deep Blue defeats Garry Kasparov.</p>
+
+  <p>The world is stunned. But the chess community notices something different: Deep Blue calculates millions of positions per move. Kasparov calculates far fewer. Yet Kasparov had been the better player for decades.</p>
+
+  <p>The difference was this: <strong>Kasparov saw the position. Deep Blue calculated it.</strong></p>
+
+  <p>This distinction explains the crisis happening in cybersecurity today.</p>
+
+  <h2>Two Kinds of Chess Players</h2>
+
+  <div class="compare">
+    <div class="compare-col">
+      <h4>The Beginner</h4>
+      <div class="compare-item">"Where can this piece go?"</div>
+      <div class="compare-item">One piece. One move. One moment.</div>
+      <div class="compare-item">Reacts to what's in front of them</div>
+      <div class="compare-item">Each move evaluated in isolation</div>
+    </div>
+    <div class="compare-col">
+      <h4 class="gold">The Grandmaster</h4>
+      <div class="compare-item">"Where is this position going?"</div>
+      <div class="compare-item">Structure. Pressure. Intent.</div>
+      <div class="compare-item">Reads where the game is heading</div>
+      <div class="compare-item">Pattern recognition across decades of memory</div>
+    </div>
+  </div>
+
+  <p>The grandmaster's mind has seen thousands of games over decades. So when they look at the board, they recognize patterns instantly. "This formation is the Sicilian Defense. The opponent will probably do this. If I respond here, in six moves the advantage is mine."</p>
+
+  <p>Not calculation. Recognition.</p>
+
+  <h2>The Same Equation in the SOC</h2>
+
+  <p>A SOC analyst has hundreds of alerts in front of them.</p>
+
+  <p>The inexperienced analyst looks at each alert individually. "Is this IP dangerous?" One event. One moment. One question.</p>
+
+  <p>The experienced analyst sees something different. The same IP has sent three signals this week. One failed login attempt, one port scan, one off-hours traffic spike. Looked at separately — unremarkable. Looked at together — the beginning of lateral movement.</p>
+
+  <blockquote>
+    <p>The experienced analyst isn't looking at the piece. They're looking at the position.</p>
+  </blockquote>
+
+  <p>And right here is where the industry's biggest structural problem surfaces: this ability to "see the position" lives in the human mind. Not in the tools. Not in the system. In that analyst's ten years of memory.</p>
+
+  <h2>Tempo: Who Controls It?</h2>
+
+  <p>Chess has a concept called "tempo." Not whose move it is — but who is controlling the position.</p>
+
+  <p>The better player puts the opponent in a reactive position. The opponent is always answering, never initiating. The player who loses tempo loses the game.</p>
+
+  <p>The same is true in cybersecurity. Attackers work to control tempo. They move slowly. They wait undetected. They stay below alert thresholds. They act during shift changes. They keep the SOC in reaction mode.</p>
+
+  <p>The SOC's goal is to take tempo back. But to do that, you need to see the position. You don't gain tempo by looking at individual alerts. You gain it by seeing the big picture.</p>
+
+  <div class="callout">
+    <div class="callout-label">Key Insight</div>
+    <p>A reactive SOC is always one step behind. Not because the analysts are slow — because the system doesn't show them the position. It shows them the pieces.</p>
+  </div>
+
+  <h2>The Sacrifice and the False Positive Tradeoff</h2>
+
+  <p>In chess, the most dramatic move is the sacrifice. A grandmaster gives up a piece — short-term loss, long-term positional advantage.</p>
+
+  <p>A beginner can't do this. They see the cost of losing a piece but can't see the positional gain. Not enough experience to read the big picture.</p>
+
+  <p>In the SOC, there's a similar tradeoff: false positive tolerance. You can't investigate every alert to the end. You have to pass on some low-priority signals — to focus on high-priority threats. This isn't a mistake. It's a deliberate choice.</p>
+
+  <p>But making this choice correctly requires seeing the big picture.</p>
+
+  <p><em>"I'm passing on this signal because looking at the pattern from this IP this week, it's clearly noise."</em> That's a grandmaster decision.</p>
+
+  <p><em>"I'm passing on this signal because there are 200 other alerts."</em> That's a fatigue decision.</p>
+
+  <p><strong>The difference between the two is seeing the position.</strong></p>
+
+  <h2>Memory: The Grandmaster's Secret Weapon</h2>
+
+  <p>Magnus Carlsen was once asked: "What separates you from the others?"</p>
+
+  <blockquote>
+    <p>"I don't forget positions. If I saw a game played twenty years ago today, I'd remember every nuance of that position."</p>
+    <cite>— Magnus Carlsen, World Chess Champion</cite>
+  </blockquote>
+
+  <p>This memory is a large part of what makes a grandmaster a grandmaster. Knowing what you've seen in the past makes sense of what you're seeing today.</p>
+
+  <p>In the SOC, where does this memory live? In the senior analyst's mind. And when that analyst goes on leave, resigns, moves to another company — the memory goes with them.</p>
+
+  <p>The next analyst sees the same IP. Asks the same question. Does the same investigation. Reaches the same conclusion — or doesn't.</p>
+
+  <p><strong>The grandmaster carries their memory. The SOC system doesn't.</strong></p>
+
+  <h2>Machine vs Human: The Wrong Question</h2>
+
+  <p>When Deep Blue defeated Kasparov in 1997, everyone said "the machine beat the human." But then something interesting happened: "freestyle chess" tournaments began. Human plus computer teams playing — not just computers, not just humans.</p>
+
+  <p>The results were surprising: even the most powerful supercomputers were beaten by average players who used the right strategy with their machines.</p>
+
+  <p>Human plus machine beats machine alone.</p>
+
+  <p>This finding applies directly to cybersecurity. The most powerful AI system is insufficient without an analyst who uses it correctly. The most talented analyst remains slow and blind without the right tools.</p>
+
+  <p><strong>The right question isn't "AI or human?" It's "how should these two work together?"</strong></p>
+
+  <h2>Inclysi's Chessboard</h2>
+
+  <p>When designing Inclysi, we asked: how do you build a system that lets an analyst think like a grandmaster?</p>
+
+  <p>The answer lives in three layers:</p>
+
+  <ul>
+    <li><strong>Positional memory.</strong> When an offense arrives, the system doesn't just look at that offense. It looks at entity history, similar past incidents, the behavioral pattern of that IP. It presents the big picture immediately.</li>
+    <li><strong>Campaign intelligence.</strong> It connects offenses that appear independent. "These three alerts are parts of the same attack chain." The analyst looks at the game, not just the piece.</li>
+    <li><strong>Learning memory.</strong> Every analyst decision feeds back into the system. Over time, the system becomes the grandmaster of that environment — knowing what's been seen there, which patterns are real, which are noise.</li>
+  </ul>
+
+  <p><strong>The analyst looks at the position. The system carries the memory.</strong></p>
+
+  <h2>The Bottom Line</h2>
+
+  <div class="manifesto">
+    <p>Kasparov said after losing to Deep Blue: "The machine calculates faster than me. But I still see the position better."</p>
+    <p>In the SOC, a similar distinction exists. AI processes faster. But the analyst still decides better — when given the right context.</p>
+    <p>The issue isn't speed. The issue is seeing the position.</p>
+    <p><strong>A grandmaster doesn't look at the piece. They look at the position. A great SOC doesn't look at the alert. It looks at the big picture.</strong></p>
+    <p>And seeing the big picture requires memory. Institutional memory. System memory. Inclysi is here to build that memory.</p>
+  </div>
+
+  <hr>
+
+  <p>Inclysi is built for security teams who want to stop reacting to pieces — and start reading the position.</p>
+  <p><a href="https://inclysi.com">inclysi.com</a></p>
+
+</article>
+
+<!-- TURKISH -->
+<article class="post-body lang-section" id="tr-content">
+
+  <p>1997. IBM'in Deep Blue bilgisayarı Garry Kasparov'u yeniyor.</p>
+
+  <p>Dünya şaşırıyor. Ama satranç camiası farklı bir şeyi fark ediyor: Deep Blue her hamlede milyonlarca pozisyonu hesaplıyor. Kasparov ise çok daha azını. Ama Kasparov on yıllarca daha iyi oynuyordu.</p>
+
+  <p>Fark şuydu: <strong>Kasparov pozisyonu görüyordu. Deep Blue pozisyonu hesaplıyordu.</strong></p>
+
+  <p>Bu fark, siber güvenlikte bugün yaşanan krizi anlatıyor.</p>
+
+  <h2>İki Tür Satranç Oyuncusu</h2>
+
+  <div class="compare">
+    <div class="compare-col">
+      <h4>Acemi</h4>
+      <div class="compare-item">"Bu taş nereye gidebilir?"</div>
+      <div class="compare-item">Tek taş. Tek hamle. Tek an.</div>
+      <div class="compare-item">Önündekine tepki veriyor</div>
+      <div class="compare-item">Her hamle ayrı ayrı değerlendiriliyor</div>
+    </div>
+    <div class="compare-col">
+      <h4 class="gold">Grandmaster</h4>
+      <div class="compare-item">"Bu pozisyon nereye gidiyor?"</div>
+      <div class="compare-item">Yapı. Baskı. Niyet.</div>
+      <div class="compare-item">Oyunun nereye gittiğini okuyor</div>
+      <div class="compare-item">On yıllık hafızadan gelen pattern tanıma</div>
+    </div>
+  </div>
+
+  <p>Grandmaster'ın beyni on yıllarca binlerce oyun görmüş. Bu sayede tahtaya baktığında pattern'ları anında tanıyor. "Bu dizilim Sicilian Defense. Rakip muhtemelen şunu yapacak. Ben de şunu yaparsam 6 hamle sonra avantaj bende olur."</p>
+
+  <p>Hesaplama değil. Tanıma.</p>
+
+  <h2>SOC'ta Aynı Denklem</h2>
+
+  <p>Bir SOC analistinin önünde yüzlerce alert var.</p>
+
+  <p>Deneyimsiz analist her alert'e ayrı ayrı bakıyor. "Bu IP tehlikeli mi?" Tek bir event. Tek bir an. Tek bir soru.</p>
+
+  <p>Deneyimli analist farklı bir şey görüyor. Aynı IP'den bu hafta 3 sinyal geldi. Biri başarısız giriş denemesi, biri port tarama, biri off-hours trafik. Tek tek baksan önemsiz. Birlikte baksan — lateral movement'ın başlangıcı.</p>
+
+  <blockquote>
+    <p>Deneyimli analist taşa değil pozisyona bakıyor.</p>
+  </blockquote>
+
+  <p>Ve işte tam burada sektörün en büyük yapısal sorunu ortaya çıkıyor: bu "pozisyonu görme" yeteneği insanın zihninde yaşıyor. Araçlarda değil. Sistemde değil. O analistin 10 yıllık hafızasında.</p>
+
+  <h2>Tempo: Kimin Kontrolünde?</h2>
+
+  <p>Satranç'ta "tempo" kavramı var. Kimin hamlesi olduğu değil — kimin pozisyonu yönettiği.</p>
+
+  <p>İyi oyuncu rakibini reaksiyon pozisyonuna sokar. Rakip sürekli cevap verir, asla inisiyatif alamaz. Tempo kaybeden oyuncu kaybeder.</p>
+
+  <p>Siber güvenlikte de aynısı geçerli. Saldırganlar tempo'yu belirlemek için çalışıyor. Yavaş hareket ediyorlar. Fark edilmeden bekliyorlar. Alert eşiklerinin altında kalıyorlar. Vardiya değişiminde aksiyon alıyorlar. SOC'u reaksiyon modunda tutuyorlar.</p>
+
+  <p>SOC'un amacı tempo'yu geri almak. Ama bunu yapabilmek için pozisyonu görmek lazım. Tek tek alert'lere bakmakla tempo kazanılmıyor. Büyük resmi görmekle kazanılıyor.</p>
+
+  <div class="callout">
+    <div class="callout-label">Temel Çıkarım</div>
+    <p>Reaktif SOC her zaman bir adım geride. Analistler yavaş olduğu için değil — sistem onlara pozisyonu göstermediği için. Taşları gösteriyor.</p>
+  </div>
+
+  <h2>Kurban Hamlesi ve False Positive Tradeoff'u</h2>
+
+  <p>Satranç'ta en dramatik hamle kurban hamlesidir. Grandmaster bir taşını feda eder — kısa vadede kayıp, uzun vadede üstün pozisyon.</p>
+
+  <p>Acemi oyuncu bunu yapamaz. Tek bir taşı kaybetmenin maliyetini görüyor ama pozisyonel kazancı göremıyor. Büyük resmi görmek için yeterli deneyim yok.</p>
+
+  <p>SOC'ta benzer bir tradeoff var: false positive toleransı. Her alert'i sonuna kadar araştırmak mümkün değil. Bazı düşük öncelikli sinyalleri geçmek zorundasın. Bu bir hata değil, bilinçli bir tercih.</p>
+
+  <p>Ama bu tercihi doğru yapabilmek için büyük resmi görmek lazım.</p>
+
+  <p><em>"Bu sinyali geçiyorum çünkü bu hafta bu IP'den gelen pattern'a bakınca bu noise olduğu açık."</em> Bu grandmaster kararı.</p>
+
+  <p><em>"Bu sinyali geçiyorum çünkü başka 200 alert var."</em> Bu yorgunluk kararı.</p>
+
+  <p><strong>İkisi arasındaki fark, pozisyonu görmektir.</strong></p>
+
+  <h2>Hafıza: Grandmaster'ın Gizli Silahı</h2>
+
+  <p>Magnus Carlsen'e bir kez soruldu: "Sizi diğerlerinden ayıran nedir?"</p>
+
+  <blockquote>
+    <p>"Ben pozisyonları unutmuyorum. 20 yıl önce oynanan bir oyunu bugün görsem, o pozisyondaki her nüansı hatırlarım."</p>
+    <cite>— Magnus Carlsen, Dünya Satranç Şampiyonu</cite>
+  </blockquote>
+
+  <p>Bu hafıza grandmaster'ı grandmaster yapan şeyin büyük bir parçası. Geçmişte ne gördüğünü bilmek, bugün ne gördüğünü anlamlandırıyor.</p>
+
+  <p>SOC'ta bu hafıza nerede? Kıdemli analistin zihninde. Ve o analist izne çıktığında, istifa ettiğinde, başka bir şirkete geçtiğinde — hafıza gidiyor.</p>
+
+  <p>Bir sonraki analist aynı IP'yi görüyor. Aynı soruyu soruyor. Aynı araştırmayı yapıyor. Aynı sonuca ulaşıyor — ya da ulaşamıyor.</p>
+
+  <p><strong>Grandmaster hafızasını taşır. SOC sistemi taşımıyor.</strong></p>
+
+  <h2>Makine vs İnsan: Yanlış Soru</h2>
+
+  <p>1997'de Deep Blue Kasparov'u yendiğinde herkes "makine insanı yendi" dedi. Ama sonra ilginç bir şey oldu: "freestyle satranç" turnuvaları başladı. İnsan + bilgisayar takımları oynuyor.</p>
+
+  <p>Sonuç şaşırtıcıydı: en güçlü süper bilgisayarları bile, doğru stratejiyle kullanan orta seviye oyuncular yendi.</p>
+
+  <p>İnsan + makine > sadece makine.</p>
+
+  <p>Bu sonuç siber güvenlik için de geçerli. En güçlü AI sistemi, onu doğru kullanan bir analist olmadan yetersizdir. En yetenekli analist, doğru araçlar olmadan yavaş ve kör kalır.</p>
+
+  <p><strong>Doğru soru "AI mı, insan mı?" değil. "Bu ikisi nasıl birlikte çalışmalı?"</strong></p>
+
+  <h2>Inclysi'nin Satranç Tahtası</h2>
+
+  <p>Inclysi'yi tasarlarken şu soruyu sorduk: bir analistin önüne grandmaster gibi düşünmesini sağlayacak bir sistem nasıl kurulur?</p>
+
+  <p>Cevap üç katmanda yatıyor:</p>
+
+  <ul>
+    <li><strong>Pozisyon hafızası.</strong> Her offense geldiğinde sistem sadece o offense'a bakmıyor. Entity geçmişine, benzer geçmiş olaylara, o IP'nin davranış pattern'ına bakıyor. Büyük resmi anında sunuyor.</li>
+    <li><strong>Kampanya zekası.</strong> Birbirinden bağımsız görünen offense'ları bir araya getiriyor. "Bu üç alert aslında aynı saldırı zincirinin parçası." Analist tek taşa değil, oyuna bakıyor.</li>
+    <li><strong>Öğrenen hafıza.</strong> Her analist kararı sisteme geri besleniyor. Zamanla sistem o ortamın grandmaster'ı oluyor — o ortamda ne görüldüğünü, hangi pattern'ların gerçek, hangilerinin noise olduğunu biliyor.</li>
+  </ul>
+
+  <p><strong>Analist pozisyona bakıyor. Sistem hafızayı taşıyor.</strong></p>
+
+  <h2>Sonuç</h2>
+
+  <div class="manifesto">
+    <p>Kasparov, Deep Blue'ya yenilmesinden sonra şunu söyledi: "Makine benden daha hızlı hesaplıyor. Ama ben hâlâ pozisyonu daha iyi görüyorum."</p>
+    <p>SOC'ta da benzer bir ayrım var. AI daha hızlı işliyor. Ama analist hâlâ daha iyi karar veriyor — doğru bağlam verildiğinde.</p>
+    <p>Mesele hız değil. Mesele pozisyonu görmek.</p>
+    <p><strong>Grandmaster taşa bakmaz, pozisyona bakar. İyi bir SOC da alert'e bakmaz, büyük resme bakar.</strong></p>
+    <p>Ve büyük resmi görmek için hafızaya ihtiyaç var. Kurumsal hafızaya. Sistem hafızasına. Inclysi o hafızayı inşa etmek için burada.</p>
+  </div>
+
+  <hr>
+
+  <p>Inclysi, taşlara tepki vermeyi bırakıp pozisyonu okumak isteyen güvenlik ekipleri için inşa edildi.</p>
+  <p><a href="https://inclysi.com">inclysi.com</a></p>
+
+</article>
+
+<div class="post-footer-nav">
+  <a href="../" class="back-link">&larr; All Posts</a>
+  <span class="share-label">inclysi.com</span>
+</div>
+
+<footer>
+  <a href="../../" class="footer-logo">
+    <svg width="22" height="22" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="50,2 93,26 93,74 50,98 7,74 7,26" stroke="white" stroke-width="6" fill="none"/><circle cx="50" cy="50" r="5" fill="white"/><circle cx="50" cy="22" r="4" fill="white"/><circle cx="75" cy="36" r="4" fill="white"/><circle cx="75" cy="64" r="4" fill="white"/><circle cx="50" cy="78" r="4" fill="white"/><circle cx="25" cy="64" r="4" fill="white"/><circle cx="25" cy="36" r="4" fill="white"/><line x1="50" y1="50" x2="50" y2="22" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="75" y2="36" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="75" y2="64" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="50" y2="78" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="25" y2="64" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="25" y2="36" stroke="white" stroke-width="2"/></svg>
+    <span>Inclysi AI</span>
+  </a>
+  <span class="footer-copy">&copy; 2026 Inclysi. All rights reserved.</span>
+  <div class="footer-links">
+    <a href="../">Blog</a>
+    <a href="mailto:contact@inclysi.com">Contact</a>
+    <div class="footer-social">
+      <a href="https://www.linkedin.com/company/inclysi-ai/" target="_blank" aria-label="LinkedIn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+      </a>
+      <a href="https://www.instagram.com/inclysiai/" target="_blank" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+      </a>
+    </div>
+  </div>
+</footer>
+
+<script>
+window.addEventListener('scroll',()=>{
+  const doc=document.documentElement;
+  const scrolled=(doc.scrollTop)/(doc.scrollHeight-doc.clientHeight)*100;
+  document.getElementById('progressBar').style.width=scrolled+'%';
+});
+document.querySelectorAll('.lang-btn[data-lang]').forEach(btn=>{
+  btn.addEventListener('click',e=>{
+    e.preventDefault();
+    const lang=btn.dataset.lang;
+    document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.lang-section').forEach(s=>s.classList.remove('active'));
+    document.getElementById(lang+'-content').classList.add('active');
+    document.getElementById('hero-en').style.display=lang==='en'?'block':'none';
+    document.getElementById('hero-tr').style.display=lang==='tr'?'block':'none';
+  });
+});
+</script>
+</body>
+</html>
