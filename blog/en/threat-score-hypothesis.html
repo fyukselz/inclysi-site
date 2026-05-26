@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7W0LBMG3YK"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-7W0LBMG3YK');</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Threat Score Is a Hypothesis, Not a Verdict — Inclysi</title>
+<meta name="description" content="AI-generated scores are a starting point, not a conclusion. The teams that understand this are using AI correctly. The ones that don't are either following blindly or ignoring it entirely.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090f;--bg2:#0c0f1a;--bg3:#111629;
+  --gold:#c9a84c;--gold2:#e8c36a;--red:#e63946;
+  --text:#e8eaf0;--muted:#8892a4;--border:#1a2035;
+  --font-display:'Syne',sans-serif;
+  --font-body:'DM Sans',sans-serif;
+  --font-serif:'DM Serif Display',serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:16px;line-height:1.7;overflow-x:hidden}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.2rem 4rem;background:rgba(7,9,15,0.9);backdrop-filter:blur(12px);border-bottom:1px solid rgba(26,32,53,0.6)}
+.nav-logo{display:flex;align-items:center;gap:0.75rem;text-decoration:none}
+.nav-logo span{font-family:var(--font-display);font-size:1.25rem;font-weight:700;color:var(--text);letter-spacing:0.02em}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{color:var(--muted);font-size:0.875rem;text-decoration:none;letter-spacing:0.04em;transition:color 0.2s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{font-size:0.8rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,168,76,0.4);padding:0.5rem 1.25rem;border-radius:2px;text-decoration:none;transition:all 0.2s}
+
+.progress-bar{position:fixed;top:0;left:0;height:2px;background:var(--gold);width:0%;z-index:200;transition:width 0.1s}
+
+.post-hero{padding:9rem 2rem 5rem;max-width:800px;margin:0 auto;border-bottom:1px solid var(--border)}
+.post-meta{display:flex;align-items:center;gap:1rem;margin-bottom:2rem;font-size:0.75rem;color:var(--muted)}
+.post-tag{font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);font-size:0.7rem;border:1px solid rgba(201,168,76,0.3);padding:0.2rem 0.6rem;border-radius:2px}
+.post-lang{display:flex;gap:0.5rem;margin-left:auto}
+.lang-btn{font-size:0.7rem;font-weight:500;letter-spacing:0.08em;padding:0.2rem 0.6rem;border-radius:2px;border:1px solid var(--border);color:var(--muted);text-decoration:none;transition:all 0.2s;cursor:pointer;background:none}
+.lang-btn.active,.lang-btn:hover{border-color:rgba(201,168,76,0.4);color:var(--gold)}
+.post-hero h1{font-family:var(--font-display);font-size:clamp(2rem,4.5vw,3.2rem);font-weight:800;line-height:1.1;margin-bottom:1.5rem}
+.post-hero .lead{font-size:1.15rem;color:var(--muted);font-weight:300;line-height:1.8}
+
+.post-cover{max-width:900px;margin:0 auto;padding:3rem 2rem 0}
+.post-cover img{width:100%;border-radius:4px;border:1px solid var(--border);display:block}
+.img-caption{font-size:0.75rem;color:var(--muted);text-align:center;margin-top:0.75rem;font-style:italic}
+
+.post-body{max-width:720px;margin:0 auto;padding:4rem 2rem 6rem}
+.post-body h2{font-family:var(--font-display);font-size:1.7rem;font-weight:700;margin:3rem 0 1rem;padding-top:1rem;border-top:1px solid var(--border)}
+.post-body p{font-size:1.05rem;font-weight:300;color:#c8cdd8;line-height:1.85;margin-bottom:1.5rem}
+.post-body strong{color:var(--text);font-weight:500}
+.post-body em{font-style:italic;color:var(--muted)}
+.post-body a{color:var(--gold);text-decoration:underline;text-underline-offset:3px}
+
+.post-body blockquote{border-left:3px solid var(--gold);padding:1.25rem 1.75rem;margin:2.5rem 0;background:rgba(201,168,76,0.04);border-radius:0 4px 4px 0}
+.post-body blockquote p{font-family:var(--font-serif);font-size:1.25rem;font-style:italic;color:var(--text);margin:0;line-height:1.6}
+
+.callout{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:0 4px 4px 0;padding:1.25rem 1.5rem;margin:2rem 0}
+.callout-label{font-size:0.65rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem}
+.callout p{font-size:0.9rem;color:var(--muted);margin:0;line-height:1.7}
+
+/* Score display */
+.score-demo{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:2rem;
+  margin:2.5rem 0;
+}
+.score-number{
+  font-family:var(--font-display);
+  font-size:4rem;font-weight:800;
+  color:var(--gold);line-height:1;
+  margin-bottom:0.25rem;
+}
+.score-label{font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1.5rem}
+.evidence-list{display:flex;flex-direction:column;gap:0.75rem;margin-top:1rem}
+.evidence-item{display:flex;align-items:flex-start;gap:1rem;padding:0.75rem 1rem;background:var(--bg3);border-radius:3px;border:1px solid var(--border)}
+.evidence-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);margin-top:0.45rem;flex-shrink:0}
+.evidence-text{font-size:0.875rem;color:#c8cdd8;font-weight:300;line-height:1.5}
+.evidence-text strong{color:var(--text);font-weight:500}
+
+/* Manifesto block */
+.manifesto{
+  background:linear-gradient(135deg,rgba(201,168,76,0.06) 0%,rgba(201,168,76,0.02) 100%);
+  border:1px solid rgba(201,168,76,0.2);
+  border-radius:4px;
+  padding:2.5rem;
+  margin:3rem 0;
+}
+.manifesto p{color:var(--text);font-size:1.05rem;margin-bottom:1rem}
+.manifesto p:last-child{margin-bottom:0}
+.manifesto strong{color:var(--gold)}
+
+.post-body ul{padding-left:1.5rem;margin-bottom:1.5rem}
+.post-body li{font-size:1.05rem;font-weight:300;color:#c8cdd8;line-height:1.85;margin-bottom:0.5rem}
+.post-body ul li::marker{color:var(--gold)}
+.post-body hr{border:none;border-top:1px solid var(--border);margin:3rem 0}
+
+.lang-section{display:none}
+.lang-section.active{display:block}
+
+.post-footer-nav{max-width:720px;margin:0 auto;padding:3rem 2rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.back-link{font-size:0.8rem;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--gold);text-decoration:none;display:flex;align-items:center;gap:0.4rem}
+.share-label{font-size:0.75rem;color:var(--muted)}
+
+footer{padding:3rem 4rem;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border)}
+.footer-logo{display:flex;align-items:center;gap:0.75rem;text-decoration:none}
+.footer-logo span{font-family:var(--font-display);font-size:1rem;font-weight:600;color:var(--text)}
+.footer-copy{font-size:0.8rem;color:var(--muted)}
+.footer-links{display:flex;gap:2rem;align-items:center}
+.footer-links a{font-size:0.8rem;color:var(--muted);text-decoration:none;transition:color 0.2s}
+.footer-links a:hover{color:var(--text)}
+.footer-social{display:flex;gap:1rem;align-items:center;margin-left:1rem}
+.footer-social a{color:var(--muted);transition:color 0.2s;display:flex;align-items:center}
+.footer-social a:hover{color:var(--gold)}
+.footer-social svg{width:15px;height:15px}
+
+@media(max-width:900px){
+  nav{padding:1.2rem 2rem}
+  .nav-links{display:none}
+  footer{flex-direction:column;gap:1.5rem;text-align:center;padding:2.5rem 2rem}
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<nav>
+  <a href="../../" class="nav-logo">
+    <svg width="28" height="28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="50,2 93,26 93,74 50,98 7,74 7,26" stroke="white" stroke-width="6" fill="none"/><circle cx="50" cy="50" r="5" fill="white"/><circle cx="50" cy="22" r="4" fill="white"/><circle cx="75" cy="36" r="4" fill="white"/><circle cx="75" cy="64" r="4" fill="white"/><circle cx="50" cy="78" r="4" fill="white"/><circle cx="25" cy="64" r="4" fill="white"/><circle cx="25" cy="36" r="4" fill="white"/><line x1="50" y1="50" x2="50" y2="22" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="75" y2="36" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="75" y2="64" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="50" y2="78" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="25" y2="64" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="25" y2="36" stroke="white" stroke-width="2"/></svg>
+    <span>Inclysi AI</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="../../#product">Product</a></li>
+    <li><a href="../../#how">How It Works</a></li>
+    <li><a href="../">Insights</a></li>
+  </ul>
+  <a href="mailto:contact@inclysi.com" class="nav-cta">Get in Touch</a>
+</nav>
+
+<div class="post-hero">
+  <div class="post-meta">
+    <span class="post-tag">AI &amp; Security</span>
+    <span>May 2026</span>
+    <span>·</span>
+    <span>10 min read</span>
+    <div class="post-lang">
+      <a href="#" class="lang-btn active" data-lang="en">EN</a>
+      <a href="#" class="lang-btn" data-lang="tr">TR</a>
+    </div>
+  </div>
+  <div id="hero-en">
+    <h1>A Threat Score Is a Hypothesis,<br>Not a Verdict</h1>
+    <p class="lead">The system printed a number. 87. What the analyst does next reveals everything about how their team understands AI — and whether they're using it correctly.</p>
+  </div>
+  <div id="hero-tr" style="display:none">
+    <h1>Tehdit Skoru Bir Hipotezdir,<br>Karar Değil</h1>
+    <p class="lead">Sistem ekrana bir sayı yazdı. 87. Analistin bundan sonra ne yapacağı, ekibinin AI'ı nasıl anladığını — ve doğru kullanıp kullanmadığını — ortaya koyuyor.</p>
+  </div>
+</div>
+
+<div class="post-cover">
+  <img src="../../assets/post-hypothesis.png" alt="Threat Score Hypothesis">
+  <p class="img-caption">A score without explanation is a verdict without evidence. One is intelligence. The other is noise.</p>
+</div>
+
+<!-- ENGLISH -->
+<article class="post-body lang-section active" id="en-content">
+
+  <p>The system printed a number on the screen. 87.</p>
+
+  <p>What does the analyst do?</p>
+
+  <p>The question sounds simple. But inside it lives the most fundamental and least discussed tension in cybersecurity AI.</p>
+
+  <h2>Two Wrong Responses</h2>
+
+  <p>In real SOC environments, there are two common answers to this question. Both are wrong.</p>
+
+  <p><strong>The first: Blind acceptance.</strong> "87 is high, escalate." The score isn't questioned. What's behind it isn't examined. Whatever the system says is correct. This response is dangerous — because the model can be wrong, context can be missing, a false positive pattern encountered before might not yet have been learned. An analyst who accepts a score without question has effectively delegated the decision to the system. This isn't relief from responsibility. It's blindness.</p>
+
+  <p><strong>The second: Complete rejection.</strong> "I don't trust AI, I'll look myself." The score is ignored. The tool is wasted. The analyst starts from zero, loses time, receives no assistance. This response is also wrong — because denying the system's value is the same as refusing to learn how to use it correctly.</p>
+
+  <p>There is a right place between the two. But the industry hasn't fully defined it yet.</p>
+
+  <h2>What Is a Hypothesis?</h2>
+
+  <p>A researcher enters a laboratory with a hypothesis. "Under these conditions, this result will occur." The hypothesis may be right. It may be wrong. But working without one is impossible — you won't know where to look or what to measure.</p>
+
+  <p>A hypothesis is a starting point. It exists to be questioned, tested, proven, or refuted. No scientist automatically accepts a hypothesis as correct. But no scientist can work without one either.</p>
+
+  <blockquote>
+    <p>A threat score is exactly this — not a conclusion, but a proposition. A starting point built to be challenged.</p>
+  </blockquote>
+
+  <p>"This offense may be dangerous for the following reasons," the system says. The analyst's job is to test it, question it, compare it against context, and arrive at a decision.</p>
+
+  <p>If the score is 87, the analyst's question should be: <strong>"Why 87? Which signals are saying this? Does this make sense in this context? Is anything missing?"</strong></p>
+
+  <h2>A Score Alone Means Nothing</h2>
+
+  <p>Consider this: a doctor tells you "your cholesterol is 240" and walks out of the room.</p>
+
+  <p>Is that number dangerous? It depends. How old are you? Are there other risk factors? What did you eat yesterday? Is there a family history of heart disease?</p>
+
+  <p>240 carries no meaning on its own. It gains meaning through context. A threat score works the same way. Without knowing which signals were weighted, which history was considered, which pattern was matched — it's an empty number. The analyst either accepts or rejects it. Both are decisions made without thinking.</p>
+
+  <h2>The Real Danger of Black-Box AI</h2>
+
+  <p>Black-box AI in cybersecurity is discussed frequently — usually around hallucination and false positives. But the real danger is more insidious.</p>
+
+  <p><strong>A black-box score prevents the analyst from thinking.</strong></p>
+
+  <p>If a system tells you "87" and cannot show you why, you cannot test that score. Something you cannot test, you either accept or reject. This dilemma, over time, passivizes the analyst. Whatever the system says. Or the system is ignored entirely.</p>
+
+  <div class="callout">
+    <div class="callout-label">Core Problem</div>
+    <p>Explainability is not a transparency issue. It is about preserving the analyst's capacity to think. A score they can examine is a score they can use. A score they cannot examine is a score they will either follow blindly or ignore.</p>
+  </div>
+
+  <h2>The Right Relationship: Analyst and Score</h2>
+
+  <p>Here is the ideal scenario.</p>
+
+  <p>An offense arrives. The system calculates the score: 87. And alongside it, shows this:</p>
+
+  <div class="score-demo">
+    <div class="score-number">87</div>
+    <div class="score-label">Threat Score — High Confidence</div>
+    <div class="evidence-list">
+      <div class="evidence-item">
+        <div class="evidence-dot"></div>
+        <div class="evidence-text"><strong>IP Reputation: High Risk</strong> — flagged across three threat intelligence sources, previously associated with credential-stuffing campaigns</div>
+      </div>
+      <div class="evidence-item">
+        <div class="evidence-dot"></div>
+        <div class="evidence-text"><strong>Behavioral Deviation: +3.1σ</strong> — authentication pattern deviates 3.1 standard deviations from the 90-day baseline</div>
+      </div>
+      <div class="evidence-item">
+        <div class="evidence-dot"></div>
+        <div class="evidence-text"><strong>Temporal Anomaly: Off-Hours</strong> — activity at 02:47 AM, representing 4% of normal for this entity</div>
+      </div>
+      <div class="evidence-item">
+        <div class="evidence-dot"></div>
+        <div class="evidence-text"><strong>Kill Chain: Lateral Movement</strong> — event sequence matches credential access followed by initial foothold pattern</div>
+      </div>
+      <div class="evidence-item">
+        <div class="evidence-dot"></div>
+        <div class="evidence-text"><strong>Entity History: 3 Prior Incidents</strong> — this IP appeared in three previous events; one was escalated</div>
+      </div>
+    </div>
+  </div>
+
+  <p>The analyst sees this picture. And now they are actually thinking.</p>
+
+  <p><em>"IP reputation is high, but this IP is a scanner running in our test environment — this could be a false positive."</em> They override the score. Make a decision. Feed it back to the system. The next analyst learns from that decision.</p>
+
+  <p>Or: <em>"Everything looks consistent, entity history reinforces it — this is real."</em> They escalate.</p>
+
+  <p>In both cases, the analyst used the score as a hypothesis. Took it as a starting point. Tested it. Decided.</p>
+
+  <p><strong>AI didn't think for them — it prepared the ground for thinking.</strong></p>
+
+  <h2>Inclysi's Position on This</h2>
+
+  <p>We didn't design the score as an answer. We designed it as a question.</p>
+
+  <p>Every triage card shows the score. But immediately beneath it is the evidence chain. Every signal is visible individually. Every weight is open. The analyst can examine each one, override a signal, record their verdict with its reasoning back into the system.</p>
+
+  <p>This design is not a detail. It is the reflection of a philosophy.</p>
+
+  <p><strong>The analyst was the decision-maker. The analyst will remain the decision-maker.</strong></p>
+
+  <p>AI's job is to prepare better ground for asking better questions. Not to provide the answer.</p>
+
+  <h2>The Bottom Line</h2>
+
+  <div class="manifesto">
+    <p>Teams that follow blindly inherit the tool's mistakes as their own.</p>
+    <p>Teams that reject entirely grow slower against competitors who don't.</p>
+    <p>Teams that build the right relationship — using the score as a hypothesis, questioning it, testing it, feeding it back — move faster and maintain accuracy.</p>
+    <p>This difference is less a choice of tool and more a choice of mental model.</p>
+    <p><strong>A threat score is a hypothesis. Use it like one.</strong></p>
+  </div>
+
+  <hr>
+
+  <p>Inclysi is built on the belief that AI should make analysts think better — not think for them.</p>
+  <p><a href="https://inclysi.com">inclysi.com</a></p>
+
+</article>
+
+<!-- TURKISH -->
+<article class="post-body lang-section" id="tr-content">
+
+  <p>Sistem ekrana bir sayı yazdı. 87.</p>
+
+  <p>Analist ne yapacak?</p>
+
+  <p>Bu soru kulağa basit geliyor. Ama içinde siber güvenlik yapay zekasının en temel ve en az konuşulan gerilimi yatıyor.</p>
+
+  <h2>İki Yanlış Tepki</h2>
+
+  <p>Gerçek SOC ortamlarında bu soruya verilen iki yaygın cevap var. İkisi de yanlış.</p>
+
+  <p><strong>Birincisi: Körce kabul.</strong> "87 yüksek, escalate et." Skor sorgulanmıyor. Arkasında ne olduğu incelenmiyor. Sistem ne derse doğrudur. Bu tepki tehlikeli — çünkü model yanılabilir, bağlam eksik olabilir, daha önce görülmüş bir false positive pattern'ı henüz öğrenilmemiş olabilir. Skoru sorgusuz sualsiz kabul eden bir analist, aslında kararı sisteme devretmiş demektir. Bu sorumluluktan kaçış değil — bu körlük.</p>
+
+  <p><strong>İkincisi: Tamamen reddetmek.</strong> "AI'a güvenmem, kendim bakarım." Skor görmezden geliniyor. Araç boşa harcanıyor. Analist sıfırdan başlıyor, zaman kaybediyor, yardımdan mahrum kalıyor. Bu tepki de yanlış — çünkü sistemin değerini inkâr etmek, onu doğru kullanmayı öğrenmekten kaçınmakla aynı şey.</p>
+
+  <p>İkisi arasında doğru bir yer var. Ama sektör bu yeri henüz tam olarak tanımlayamadı.</p>
+
+  <h2>Hipotez Nedir?</h2>
+
+  <p>Bir araştırmacı laboratuvara girdiğinde elinde bir hipotez vardır. "Şu koşullar altında şu sonuç ortaya çıkacak" der. Bu hipotez doğru olabilir, yanlış olabilir. Ama hipotezsiz çalışmak mümkün değildir — nereye bakacağını, neyi ölçeceğini bilemezsin.</p>
+
+  <p>Hipotez bir başlangıç noktasıdır. Sorgulanmak, test edilmek, kanıtlanmak ya da çürütülmek için vardır. Hiçbir bilim insanı hipotezi otomatik olarak doğru kabul etmez. Ama hipotezi olmadan da çalışamaz.</p>
+
+  <blockquote>
+    <p>Bir tehdit skoru tam olarak budur — bir sonuç değil, bir önerme. Sorgulanmak için kurulmuş bir başlangıç noktası.</p>
+  </blockquote>
+
+  <p>"Bu offense şu nedenlerle tehlikeli olabilir" diyor sistem. Analistin görevi bunu test etmek, sorgulamak, bağlamla karşılaştırmak ve bir karara varmak.</p>
+
+  <p>Skor 87 ise analistin sorusu şu olmalı: <strong>"Neden 87? Hangi sinyaller bunu söylüyor? Bu bağlamda mantıklı mı? Eksik bir şey var mı?"</strong></p>
+
+  <h2>Skor Tek Başına Hiçbir Şey İfade Etmez</h2>
+
+  <p>Düşünün: bir doktor size "kolesterol değeriniz 240" diyor ve odadan çıkıyor.</p>
+
+  <p>Bu sayı tehlikeli mi? Bağlama göre değişir. Yaşınız ne? Başka risk faktörleriniz var mı? Dün ne yediniz? Ailede kalp hastalığı geçmişi var mı?</p>
+
+  <p>240 tek başına bir anlam taşımıyor. Bağlamıyla birlikte anlam kazanıyor. Tehdit skoru da böyle. Hangi sinyallerin ağırlıklandırıldığını, hangi geçmişin hesaba katıldığını, hangi pattern'ın eşleştiğini bilmeden boş bir sayıdır. Analist ya kabul eder ya reddeder. İkisi de düşünmeden verilen kararlardır.</p>
+
+  <h2>Black-Box AI'ın Asıl Tehlikesi</h2>
+
+  <p>Siber güvenlikte black-box yapay zeka tartışılıyor — çoğunlukla hallucination ve yanlış pozitif bağlamında. Ama asıl tehlike daha sinsi.</p>
+
+  <p><strong>Black-box skor analistin düşünmesini engelliyor.</strong></p>
+
+  <p>Bir sistem size "87" diyorsa ve neden 87 olduğunu gösteremiyorsa, siz bu skoru test edemezsiniz. Test edemediğiniz bir şeyi ya kabul edersiniz ya reddedersiniz. Bu ikilem, zamanla analisti pasifleştirir.</p>
+
+  <div class="callout">
+    <div class="callout-label">Temel Problem</div>
+    <p>Explainability sadece şeffaflık meselesi değil. Analistin düşünme kapasitesini koruma meselesi. İnceleyebildiği bir skor kullanabildiği bir skordur. İnceleyemediği skor ya körce takip edilir ya da tamamen görmezden gelinir.</p>
+  </div>
+
+  <h2>Doğru İlişki: Analist ve Skor</h2>
+
+  <p>İdeal senaryoyu tanımlayalım.</p>
+
+  <p>Offense geliyor. Sistem skoru hesaplıyor: 87. Ve bununla birlikte şunu gösteriyor:</p>
+
+  <div class="score-demo">
+    <div class="score-number">87</div>
+    <div class="score-label">Tehdit Skoru — Yüksek Güven</div>
+    <div class="evidence-list">
+      <div class="evidence-item">
+        <div class="evidence-dot"></div>
+        <div class="evidence-text"><strong>IP İtibarı: Yüksek Risk</strong> — 3 farklı tehdit istihbarat kaynağında işaretli, daha önce kimlik bilgisi doldurma kampanyalarıyla ilişkilendirilmiş</div>
+      </div>
+      <div class="evidence-item">
+        <div class="evidence-dot"></div>
+        <div class="evidence-text"><strong>Davranışsal Sapma: +3.1σ</strong> — kimlik doğrulama pattern'ı 90 günlük taban çizgisinden 3.1 standart sapma sapıyor</div>
+      </div>
+      <div class="evidence-item">
+        <div class="evidence-dot"></div>
+        <div class="evidence-text"><strong>Zamansal Anomali: Mesai Dışı</strong> — 02:47'de aktivite, bu varlık için normun %4'ü</div>
+      </div>
+      <div class="evidence-item">
+        <div class="evidence-dot"></div>
+        <div class="evidence-text"><strong>Kill Chain: Lateral Movement</strong> — olay dizisi kimlik bilgisi erişiminden ilk tutunmaya pattern'ıyla eşleşiyor</div>
+      </div>
+      <div class="evidence-item">
+        <div class="evidence-dot"></div>
+        <div class="evidence-text"><strong>Entity Geçmişi: 3 Önceki Olay</strong> — bu IP daha önce üç güvenlik olayında göründü; biri escalate edildi</div>
+      </div>
+    </div>
+  </div>
+
+  <p>Analist bu tabloyu görüyor. Ve şimdi gerçekten düşünüyor.</p>
+
+  <p><em>"IP reputation yüksek ama bu IP bizim test ortamımızda çalışan bir scanner — false positive olabilir."</em> Skoru override ediyor. Kararını veriyor. Sisteme geri besliyor. Bir sonraki analist bu karardan öğreniyor.</p>
+
+  <p>Ya da: <em>"Her şey tutarlı görünüyor, entity geçmişi de güçlendiriyor — bu gerçek."</em> Escalate ediyor.</p>
+
+  <p>Her iki durumda da analist skoru hipotez olarak kullandı. Başlangıç noktası olarak aldı. Test etti. Karar verdi.</p>
+
+  <p><strong>AI düşündürmedi — düşünmeye zemin hazırladı.</strong></p>
+
+  <h2>Inclysi'nin Bu Konudaki Pozisyonu</h2>
+
+  <p>Biz skoru bir cevap olarak tasarlamadık. Bir soru olarak tasarladık.</p>
+
+  <p>Her triage kartında skor görünüyor. Ama hemen altında kanıt zinciri var. Her sinyal ayrı ayrı görünür. Her birinin ağırlığı açık. Analist isterse tek tek inceleyebilir, isterse bir sinyali override edebilir, isterse verdict'ini gerekçesiyle birlikte sisteme kaydedebilir.</p>
+
+  <p>Bu tasarım bir ayrıntı değil. Bir felsefenin yansıması.</p>
+
+  <p><strong>Analist karar vericiydi, karar verici olmaya devam edecek.</strong></p>
+
+  <p>AI'ın görevi daha iyi sorular sormak için daha iyi zemin hazırlamak. Cevabı vermek değil.</p>
+
+  <h2>Sonuç</h2>
+
+  <div class="manifesto">
+    <p>Körce takip eden ekipler, aracın hatasını kendi hatası olarak üstlenir.</p>
+    <p>Tamamen reddeden ekipler, rakipleri karşısında giderek daha yavaş kalır.</p>
+    <p>Doğru ilişkiyi kuran ekipler — skoru hipotez olarak kullanan, sorgulayan, test eden, geri besleyen — hem hızlanır hem doğruluğu korur.</p>
+    <p>Bu fark, araç seçiminden çok zihinsel model seçimidir.</p>
+    <p><strong>Tehdit skoru bir hipotezdir. Onu öyle kullanın.</strong></p>
+  </div>
+
+  <hr>
+
+  <p>Inclysi, AI'ın analistleri daha iyi düşündürmesi gerektiğine — onlar adına düşünmesi değil — inanan güvenlik ekipleri için inşa edildi.</p>
+  <p><a href="https://inclysi.com">inclysi.com</a></p>
+
+</article>
+
+<div class="post-footer-nav">
+  <a href="../" class="back-link">&larr; All Posts</a>
+  <span class="share-label">inclysi.com</span>
+</div>
+
+<footer>
+  <a href="../../" class="footer-logo">
+    <svg width="22" height="22" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="50,2 93,26 93,74 50,98 7,74 7,26" stroke="white" stroke-width="6" fill="none"/><circle cx="50" cy="50" r="5" fill="white"/><circle cx="50" cy="22" r="4" fill="white"/><circle cx="75" cy="36" r="4" fill="white"/><circle cx="75" cy="64" r="4" fill="white"/><circle cx="50" cy="78" r="4" fill="white"/><circle cx="25" cy="64" r="4" fill="white"/><circle cx="25" cy="36" r="4" fill="white"/><line x1="50" y1="50" x2="50" y2="22" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="75" y2="36" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="75" y2="64" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="50" y2="78" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="25" y2="64" stroke="white" stroke-width="2"/><line x1="50" y1="50" x2="25" y2="36" stroke="white" stroke-width="2"/></svg>
+    <span>Inclysi AI</span>
+  </a>
+  <span class="footer-copy">&copy; 2026 Inclysi. All rights reserved.</span>
+  <div class="footer-links">
+    <a href="../">Blog</a>
+    <a href="mailto:contact@inclysi.com">Contact</a>
+    <div class="footer-social">
+      <a href="https://www.linkedin.com/company/inclysi-ai/" target="_blank" aria-label="LinkedIn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+      </a>
+      <a href="https://www.instagram.com/inclysiai/" target="_blank" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+      </a>
+    </div>
+  </div>
+</footer>
+
+<script>
+window.addEventListener('scroll',()=>{
+  const doc=document.documentElement;
+  const scrolled=(doc.scrollTop)/(doc.scrollHeight-doc.clientHeight)*100;
+  document.getElementById('progressBar').style.width=scrolled+'%';
+});
+document.querySelectorAll('.lang-btn[data-lang]').forEach(btn=>{
+  btn.addEventListener('click',e=>{
+    e.preventDefault();
+    const lang=btn.dataset.lang;
+    document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.lang-section').forEach(s=>s.classList.remove('active'));
+    document.getElementById(lang+'-content').classList.add('active');
+    document.getElementById('hero-en').style.display=lang==='en'?'block':'none';
+    document.getElementById('hero-tr').style.display=lang==='tr'?'block':'none';
+  });
+});
+</script>
+</body>
+</html>
