@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#06080C">
+<title>Inclysi | AI SOC Intelligence</title>
+<meta name="description" content="Inclysi reads every incident your SIEM raises with a local model, decides on each one and shows the evidence. Air-gapped AI triage for any SIEM.">
+<link rel="canonical" href="https://inclysi.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Inclysi">
+<meta property="og:title" content="Inclysi | AI SOC Intelligence">
+<meta property="og:description" content="Every alert read. Every decision explained. Nothing leaves your network.">
+<meta property="og:url" content="https://inclysi.com/">
+<meta property="og:image" content="https://inclysi.com/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Crect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%2306080C%22/%3E%3Cg transform=%22translate%2814 8%29 scale%280.56%29%22%3E%3Cpath fill=%22%230A37E8%22 d=%22M0 33L53 0V26L0 59Z%22/%3E%3Cpath fill=%22%23D6D9E0%22 d=%22M10 61L63 28V54L10 87Z%22/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&amp;family=Funnel+Sans:ital,wght@0,300..800;1,300..800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#06080C;--ink-2:#0B0E14;--ink-3:#10141C;--line:#1A1F29;--line-2:#2A3040;
+  --royal:#0A37E8;--royal-2:#2F5BFF;--royal-text:#6A8CFF;--royal-deep:#0B2FC6;
+  --silver:#D6D9E0;--white:#F5F6F8;--mute:#8E95A6;--dim:#5A6273;
+  --display:"Funnel Display","Funnel Sans",system-ui,sans-serif;
+  --font:"Funnel Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --pad:clamp(20px,4vw,48px);--max:1200px;--gap:clamp(40px,6vw,88px);
+}
+*{box-sizing:border-box}
+html{background:var(--ink);color:var(--silver);font-family:var(--font);font-size:17px;line-height:1.55;-webkit-text-size-adjust:100%;scroll-padding-top:84px}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+body{margin:0;background:var(--ink);min-height:100%}
+a{color:inherit;text-decoration:none}
+p{margin:0;text-wrap:pretty}
+h1,h2,h3{margin:0;font-family:var(--display);font-weight:500;color:var(--white);text-wrap:balance}
+ul,ol,dl,dd{margin:0;padding:0;list-style:none}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+svg{display:block}
+:focus-visible{outline:2px solid var(--royal-2);outline-offset:3px}
+::selection{background:var(--royal);color:#fff}
+.wrap{max-width:var(--max);margin:0 auto;padding-left:var(--pad);padding-right:var(--pad)}
+
+/* brand pieces */
+.wordmark{display:inline-block;height:26px;width:auto;color:var(--white)}
+.wordmark svg{height:100%;width:auto}
+.mark{height:22px;width:auto}
+.chip{display:inline-block;width:11px;height:13px;flex:none;background:var(--royal);clip-path:polygon(0 7px,100% 0,100% 6px,0 100%)}
+.chip.silver{background:var(--silver)}
+.chip.dim{background:var(--dim)}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;height:48px;padding:0 22px;border:1px solid transparent;border-radius:4px;font-size:15px;font-weight:500;white-space:nowrap;transition:background-color .18s ease,border-color .18s ease,color .18s ease}
+.btn-primary{background:var(--royal);color:#fff}
+.btn-primary:hover{background:var(--royal-2)}
+.btn-light{background:var(--white);color:var(--ink)}
+.btn-light:hover{background:#fff}
+.btn-ghost{color:var(--silver);border-color:var(--line-2)}
+.btn-ghost:hover{border-color:var(--silver)}
+.textlink{color:var(--silver);text-decoration:underline;text-decoration-color:var(--line-2);text-underline-offset:5px;transition:text-decoration-color .18s ease}
+.textlink:hover{text-decoration-color:var(--silver)}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:50;background:rgba(6,8,12,.78);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:68px;gap:24px}
+.nav-links{display:flex;align-items:center;gap:32px;font-size:15px;color:var(--mute)}
+.nav-links a{padding:6px 0;transition:color .18s ease}
+.nav-links a:hover{color:var(--white)}
+.nav-right{display:flex;align-items:center;gap:28px}
+.nav-social{display:flex;gap:20px;font-size:14px;color:var(--mute)}
+.nav-social a:hover{color:var(--white)}
+.nav .btn{height:40px;padding:0 16px;font-size:14px}
+.menu-btn{display:none;font-size:14px;color:var(--silver);border:1px solid var(--line-2);border-radius:4px;height:40px;padding:0 14px}
+.mobile-menu{display:none;border-top:1px solid var(--line);background:var(--ink)}
+.mobile-menu a{display:block;padding:16px var(--pad);border-bottom:1px solid var(--line);font-size:16px;color:var(--silver)}
+.mobile-menu.open{display:block}
+
+/* hero */
+.hero{padding:clamp(32px,4.5vw,52px) 0 clamp(48px,6vw,80px)}
+.tagline{display:flex;align-items:center;gap:12px;color:var(--mute);font-size:15px;margin-bottom:20px}
+.tagline .mark{height:18px}
+.hero h1{font-size:clamp(40px,5vw,70px);line-height:1.02;letter-spacing:-.025em}
+.hero h1 .ln{display:block}
+.hero-row{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:var(--gap);align-items:end;margin-top:clamp(24px,3vw,36px)}
+.hero .lede{max-width:46ch;color:var(--mute);font-size:clamp(17px,1.3vw,19px);line-height:1.55}
+.hero .actions{display:flex;align-items:center;gap:28px;flex-wrap:wrap;justify-self:end}
+@media (prefers-reduced-motion:no-preference){
+  .hero h1 .ln{opacity:0;transform:translateY(14px);animation:rise .7s cubic-bezier(.2,.7,.2,1) forwards}
+  .hero h1 .ln:nth-child(2){animation-delay:.07s}.hero h1 .ln:nth-child(3){animation-delay:.14s}
+  .hero-row,.tagline{opacity:0;animation:rise .7s cubic-bezier(.2,.7,.2,1) .24s forwards}
+  .inst{opacity:0;animation:rise .8s cubic-bezier(.2,.7,.2,1) .34s forwards}
+  @keyframes rise{to{opacity:1;transform:none}}
+}
+
+/* ---------- instrument ---------- */
+.inst{margin-top:clamp(36px,4.5vw,52px);background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden;display:grid;grid-template-columns:minmax(0,1.22fr) minmax(0,1.05fr) minmax(0,1fr);gap:1px;font-family:var(--mono);font-size:12.5px;line-height:1.5;color:var(--silver)}
+.inst-col{background:var(--ink-2);min-width:0;display:flex;flex-direction:column;height:540px}
+.inst-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:13px 18px 11px;border-bottom:1px solid var(--line);color:var(--mute);font-size:11.5px;flex:none}
+.inst-head b{font-weight:500;color:var(--white);font-variant-numeric:tabular-nums}
+.inst-foot{grid-column:1/-1;background:var(--ink-3);display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;color:var(--mute);font-size:11.5px}
+.inst-foot span{padding:11px 18px;background:var(--ink-3)}
+.inst-foot span+span{box-shadow:-1px 0 0 var(--line)}
+.inst-foot b{color:var(--white);font-weight:500;margin-left:8px}
+
+/* queue */
+.queue{flex:1;min-height:0;overflow:hidden;position:relative;-webkit-mask-image:linear-gradient(to bottom,#000 78%,transparent);mask-image:linear-gradient(to bottom,#000 78%,transparent)}
+.queue li{border-bottom:1px solid var(--line)}
+.queue button{display:grid;grid-template-columns:5.5ch minmax(0,1fr) auto;gap:14px;align-items:center;width:100%;height:33px;padding:0 18px;text-align:left;white-space:nowrap;color:var(--silver);transition:background-color .15s ease}
+.queue button:hover{background:var(--ink-3);color:var(--white)}
+.queue .id{color:var(--dim)}
+.queue .name{overflow:hidden;text-overflow:ellipsis}
+.queue .ent{color:var(--mute)}
+.queue li.pick button{color:var(--white);background:linear-gradient(90deg,rgba(10,55,232,.26),transparent 70%);box-shadow:inset 2px 0 0 var(--royal)}
+.queue li.done .id{color:var(--royal-text)}
+@media (prefers-reduced-motion:no-preference){
+  .queue li.new{animation:feedin .35s cubic-bezier(.2,.7,.2,1)}
+  @keyframes feedin{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
+}
+
+/* reasoning */
+.reason{flex:1;min-height:0;padding:16px 18px 14px;display:flex;flex-direction:column;gap:14px;overflow:hidden}
+.subject{display:flex;flex-direction:column;gap:3px}
+.subject .sid{color:var(--dim)}
+.subject .sname{color:var(--white);font-family:var(--font);font-size:16px;font-weight:500;line-height:1.3}
+.fields{display:grid;grid-template-columns:auto 1fr;column-gap:16px;row-gap:3px;font-size:11.5px}
+.fields dt{color:var(--dim)}
+.fields dd{color:var(--silver);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.evidence{display:flex;flex-direction:column;gap:7px;border-top:1px solid var(--line);padding-top:12px;min-height:150px}
+.evidence li{display:grid;grid-template-columns:12px minmax(0,1fr) auto;gap:10px;align-items:start;font-family:var(--font);font-size:13.5px;line-height:1.35;color:var(--silver)}
+.evidence .sg{font-family:var(--mono);color:var(--royal-text);font-size:12.5px;line-height:1.5}
+.evidence li.neg .sg{color:var(--mute)}
+.evidence .dt{font-family:var(--mono);color:var(--white);font-variant-numeric:tabular-nums;font-size:12.5px;line-height:1.5}
+.evidence li.neg .dt{color:var(--mute)}
+.evidence .wt{display:flex;gap:2px;padding-top:5px}
+.evidence .wt i{display:block;width:7px;height:9px;background:var(--line-2);clip-path:polygon(0 5px,100% 0,100% 4px,0 100%)}
+.evidence li.pos .wt i.on{background:var(--royal)}
+.evidence li.neg .wt i.on{background:var(--mute)}
+@media (prefers-reduced-motion:no-preference){
+  .evidence li.new{animation:evin .4s cubic-bezier(.2,.7,.2,1)}
+  @keyframes evin{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:none}}
+}
+.score{margin-top:auto;display:grid;grid-template-columns:auto auto minmax(0,1fr);align-items:center;gap:14px;border-top:1px solid var(--line);padding-top:12px;color:var(--mute);font-size:11.5px;white-space:nowrap}
+.score b{color:var(--white);font-weight:500;font-size:15px;font-variant-numeric:tabular-nums;min-width:4ch}
+.bar{display:flex;gap:3px;min-width:0}
+.bar i{display:block;flex:1 1 0;max-width:10px;min-width:4px;height:13px;background:var(--line-2);clip-path:polygon(0 7px,100% 0,100% 6px,0 100%)}
+.bar i.on{background:var(--royal)}
+.verdict{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:22px;font-size:11.5px;color:var(--mute)}
+.stamp{display:inline-flex;align-items:center;gap:8px;font-weight:500;color:var(--white);letter-spacing:.02em;font-size:12.5px}
+.verdict .cf b{color:var(--white);font-weight:500}
+.cursor{display:inline-block;width:7px;height:13px;background:var(--mute);vertical-align:-2px;margin-left:4px}
+@media (prefers-reduced-motion:no-preference){.cursor{animation:blink 1s steps(2,start) infinite}@keyframes blink{to{visibility:hidden}}}
+
+/* decisions */
+.decisions{flex:1;min-height:0;overflow:hidden;padding:4px 18px;-webkit-mask-image:linear-gradient(to bottom,#000 85%,transparent);mask-image:linear-gradient(to bottom,#000 85%,transparent)}
+.decisions li{display:grid;grid-template-columns:auto 1fr auto;grid-template-areas:"stamp sub sc" "text text text" "resp resp resp";column-gap:12px;row-gap:6px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.decisions .stamp{grid-area:stamp}
+.decisions .dsub{grid-area:sub;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11.5px}
+.decisions .dsc{grid-area:sc;color:var(--white);font-variant-numeric:tabular-nums}
+.decisions p{grid-area:text;font-family:var(--font);font-size:13.5px;line-height:1.4;color:var(--mute)}
+.decisions .dresp{grid-area:resp;color:var(--dim);font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.decisions .dresp b{color:var(--mute);font-weight:500}
+.decisions li.old{opacity:.6}
+@media (prefers-reduced-motion:no-preference){
+  .decisions li.new{animation:decin .45s cubic-bezier(.2,.7,.2,1)}
+  @keyframes decin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+}
+
+/* ---------- sections ---------- */
+.section{padding:clamp(72px,9vw,128px) 0;border-top:1px solid var(--line)}
+.section h2{font-size:clamp(30px,3.6vw,46px);line-height:1.08;letter-spacing:-.02em;max-width:18ch}
+.section .sub{margin-top:18px;color:var(--mute);max-width:46ch;font-size:17px}
+.two{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:var(--gap);align-items:start}
+.sticky{position:sticky;top:96px}
+
+/* problem */
+.problem .two{align-items:center}
+.problem .copy{margin-top:26px;color:var(--mute);max-width:46ch}
+.problem .copy p+p{margin-top:18px}
+.segfig{margin:0}
+.segbar{display:flex;flex-wrap:wrap;gap:4px}
+.segbar i{display:block;width:10px;height:24px;background:var(--line-2);clip-path:polygon(0 6px,100% 0,100% 18px,0 100%)}
+.segbar i.on{background:var(--royal)}
+.segfig figcaption{margin-top:22px;display:grid;grid-template-columns:auto 1fr;gap:12px 14px;align-items:baseline;font-size:15px;color:var(--mute)}
+.segfig figcaption b{font-family:var(--display);font-weight:500;color:var(--white);font-size:26px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.segfig figcaption i{display:inline-block;width:12px;height:12px;vertical-align:-1px;margin-right:8px;background:var(--line-2);clip-path:polygon(0 4px,100% 0,100% 8px,0 100%)}
+.segfig figcaption i.on{background:var(--royal)}
+@media (prefers-reduced-motion:no-preference){
+  .segbar.live i{opacity:0;animation:segin .4s ease forwards;animation-delay:calc(var(--i) * 22ms)}
+  @keyframes segin{to{opacity:1}}
+}
+
+/* platform */
+.caps{border-top:1px solid var(--line)}
+.caps > div{display:grid;grid-template-columns:28px minmax(0,1fr);gap:18px;padding:26px 0;border-bottom:1px solid var(--line)}
+.caps .chip{margin-top:7px}
+.caps dt{font-family:var(--display);font-size:22px;font-weight:500;letter-spacing:-.01em;line-height:1.25;color:var(--white)}
+.caps dd{margin-top:8px;color:var(--mute);max-width:58ch;font-size:16px}
+.caps dd.ex{margin-top:12px;font-family:var(--mono);font-size:12px;line-height:1.7;color:var(--dim)}
+.caps dd.ex b{font-weight:500;color:var(--mute)}
+
+
+/* response */
+.resp{margin-top:56px;background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden;display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:1px;font-family:var(--mono);font-size:12.5px;line-height:1.5;color:var(--silver)}
+.resp-main,.resp-side{background:var(--ink-2);min-width:0;display:flex;flex-direction:column;height:470px}
+.resp-foot{grid-column:1/-1}
+.ops{flex:1;min-height:0;overflow:hidden;padding:0 18px;-webkit-mask-image:linear-gradient(to bottom,#000 86%,transparent);mask-image:linear-gradient(to bottom,#000 86%,transparent)}
+.ops li{display:grid;grid-template-columns:152px minmax(0,1.1fr) minmax(0,1fr) 84px 36px;grid-template-areas:"st case act sys age" "why why why why why";column-gap:14px;row-gap:5px;align-items:baseline;padding:13px 0;border-bottom:1px solid var(--line)}
+.ops .st{grid-area:st;display:inline-flex;align-items:center;gap:8px;font-weight:500;color:var(--white);white-space:nowrap}
+.ops .st .x{font-style:normal;color:var(--mute);width:11px;text-align:center}
+.ops .case{grid-area:case;font-family:var(--font);font-size:13.5px;color:var(--silver);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ops .case b{font-family:var(--mono);font-weight:400;color:var(--dim);font-size:12px;margin-right:6px}
+.ops .act{grid-area:act;font-family:var(--font);font-size:13.5px;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ops .sys{grid-area:sys;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ops .age{grid-area:age;color:var(--dim);text-align:right;font-variant-numeric:tabular-nums}
+.ops .why{grid-area:why;font-family:var(--font);font-size:13px;color:var(--mute);line-height:1.4}
+.ops li.st-await .st{color:var(--silver)}
+.ops li.st-fail .st,.ops li.st-expired .st{color:var(--silver)}
+.ops li.st-fail .why{color:var(--silver)}
+.ops li.st-exec .chip{animation:none}
+@media (prefers-reduced-motion:no-preference){
+  .ops li.new{animation:decin .45s cubic-bezier(.2,.7,.2,1)}
+  .ops li.st-exec .chip{animation:pulse 1.1s ease-in-out infinite}
+  @keyframes pulse{50%{opacity:.35}}
+}
+.systems{padding:6px 18px 0}
+.systems li{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);white-space:nowrap}
+.systems .pr{color:var(--dim)}
+.systems .ok{color:var(--royal-text)}
+.systems li.off{color:var(--dim)}
+.systems li.off .pr{color:var(--dim)}
+.sys-note{margin-top:auto;padding:14px 18px 16px;font-family:var(--font);font-size:13px;color:var(--mute);line-height:1.45;border-top:1px solid var(--line)}
+
+/* architecture */
+.diagram{margin-top:56px;border:1px solid var(--line);border-radius:6px;background:var(--ink-2);overflow-x:auto}
+.diagram svg{width:100%;min-width:820px;height:auto}
+.diagram text{font-family:var(--mono);font-size:12px;fill:var(--mute)}
+.diagram .t-wire{font-size:11.5px}
+.diagram .t-title{font-family:var(--font);font-size:15px;font-weight:500;fill:var(--white)}
+.diagram .t-mod{font-family:var(--font);font-size:13.5px;fill:var(--silver)}
+.diagram .t-dim{fill:var(--dim)}
+.diagram .t-blue{fill:var(--royal-text)}
+.diagram .t-white{fill:var(--white)}
+.diagram .box{fill:var(--ink-3);stroke:var(--line-2)}
+.diagram .box-blue{fill:var(--ink-3);stroke:var(--royal)}
+.diagram .mod{fill:var(--ink-2);stroke:var(--line-2)}
+.diagram .wire{fill:none;stroke:var(--line-2);stroke-width:1.25}
+.diagram .wire-blue{fill:none;stroke:var(--royal);stroke-width:1.25}
+.diagram .wire-dead{fill:none;stroke:var(--dim);stroke-width:1.25;stroke-dasharray:3 4}
+.diagram .boundary{fill:none;stroke:var(--silver);stroke-width:1.25;stroke-dasharray:6 6}
+.arch-notes{margin-top:28px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px;color:var(--mute);font-size:15px}
+.arch-notes b{display:block;color:var(--white);font-weight:500;margin-bottom:4px}
+
+/* rule assistant */
+.ra{margin-top:56px;border:1px solid var(--line);border-radius:6px;background:var(--ink-2);font-family:var(--mono);font-size:12.5px;line-height:1.6;color:var(--silver);overflow:hidden}
+.ra-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid var(--line);color:var(--mute);font-size:11.5px}
+.ra-head button{color:var(--mute);border:1px solid var(--line-2);border-radius:3px;padding:3px 10px;font-size:11.5px;transition:color .18s ease,border-color .18s ease}
+.ra-head button:hover{color:var(--white);border-color:var(--silver)}
+.ra-prompt{padding:18px 18px 16px;font-family:var(--font);font-size:clamp(17px,1.6vw,21px);line-height:1.4;color:var(--white);min-height:92px;border-bottom:1px solid var(--line);display:flex;gap:12px}
+.ra-prompt .pr{color:var(--royal-text);font-family:var(--mono);font-size:14px;line-height:1.9;flex:none}
+.ra-body{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);background:var(--line);gap:1px}
+.ra-body > div{background:var(--ink-2);padding:16px 18px 18px;min-width:0}
+.ra-lbl{color:var(--mute);font-size:11.5px;margin-bottom:12px}
+.ground{display:grid;grid-template-columns:auto 1fr;column-gap:16px;row-gap:8px;min-height:170px;align-content:start}
+.ground dt{color:var(--dim)}
+.ground dd{color:var(--silver);overflow-wrap:anywhere}
+.ground dd b{color:var(--white);font-weight:500}
+.rule{min-height:170px;display:flex;flex-direction:column;gap:6px}
+.rule li{display:grid;grid-template-columns:7ch minmax(0,1fr);column-gap:12px;color:var(--silver);overflow-wrap:anywhere}
+.rule li .k{color:var(--dim)}
+.rule li.head .v{color:var(--white)}
+.rule li.cont{margin-top:-4px}
+.rule li.note{display:block;margin-top:8px;color:var(--mute);border-top:1px solid var(--line);padding-top:10px}
+.rule li.note b{color:var(--white);font-weight:500}
+@media (prefers-reduced-motion:no-preference){
+  .ra .in{animation:evin .4s cubic-bezier(.2,.7,.2,1)}
+}
+.hid{display:none}
+
+/* cta */
+.cta{background:var(--royal);color:#fff;position:relative;overflow:hidden;border-top:0}
+.cta .wrap{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:var(--gap);align-items:center}
+.cta h2{color:#fff;font-size:clamp(32px,4vw,52px);max-width:14ch}
+.cta p{margin-top:18px;color:rgba(255,255,255,.78);max-width:40ch;font-size:17px}
+.cta .side{display:flex;flex-direction:column;align-items:flex-start;gap:18px}
+.cta .mail{font-family:var(--mono);font-size:14px;color:rgba(255,255,255,.85);text-decoration:underline;text-underline-offset:5px;text-decoration-color:rgba(255,255,255,.35)}
+.cta .mail:hover{text-decoration-color:#fff}
+.cta .bigmark{position:absolute;right:-4%;top:50%;height:140%;width:auto;transform:translateY(-50%);pointer-events:none}
+
+/* footer */
+.footer{padding:56px 0 40px;border-top:1px solid var(--line)}
+.footer .top{display:flex;justify-content:space-between;align-items:flex-start;gap:40px;flex-wrap:wrap}
+.lockup .wordmark{height:30px}
+.lockup .lockup-tag{margin-top:12px;font-family:var(--mono);font-size:11px;letter-spacing:.42em;color:var(--mute);padding-left:2px}
+.footer-links{display:flex;gap:36px;font-size:15px;color:var(--mute)}
+.footer-links a:hover{color:var(--white)}
+.footer .bottom{margin-top:48px;padding-top:20px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;color:var(--dim);font-size:13px}
+
+/* ---------- responsive ---------- */
+@media (max-width:1060px){
+  .inst{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .inst-queue{grid-column:1/-1;height:300px}
+  .inst-foot{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .inst-foot span:nth-child(3){box-shadow:none}
+}
+@media (max-width:980px){
+  .hero-row{grid-template-columns:1fr;align-items:start}
+  .hero .actions{justify-self:start}
+  .two{grid-template-columns:1fr}
+  .sticky{position:static}
+  .arch-notes{grid-template-columns:1fr;gap:20px}
+  .ra-body{grid-template-columns:1fr}
+  .resp{grid-template-columns:1fr}
+  .resp-side{height:auto}
+  .ops li{grid-template-columns:152px minmax(0,1fr) 84px 36px;grid-template-areas:"st act sys age" "case case case case" "why why why why"}
+  .cta .wrap{grid-template-columns:1fr}
+  .cta .bigmark{height:120%;right:-30%;opacity:.5}
+}
+@media (max-width:760px){
+  .nav-links,.nav-social{display:none}
+  .menu-btn{display:inline-flex;align-items:center}
+  .nav .btn-primary{display:none}
+  .hero h1{font-size:clamp(36px,10.5vw,50px)}
+  .inst{grid-template-columns:1fr}
+  .inst-col{height:auto}
+  .inst-queue{height:250px}
+  .inst-dec{height:380px}
+  .queue button{grid-template-columns:5ch minmax(0,1fr)}
+  .queue .ent{display:none}
+  .evidence{min-height:0}
+  .inst-foot{grid-template-columns:1fr}
+  .inst-foot span:nth-child(n+2){box-shadow:0 -1px 0 var(--line)}
+  .caps > div{grid-template-columns:22px 1fr;gap:14px}
+  .cta .bigmark{display:none}
+  .resp-main{height:430px}
+  .ops li{grid-template-columns:minmax(0,1fr) 36px;grid-template-areas:"st age" "act act" "case case" "why why"}
+  .ops .sys{display:none}
+  .systems li{grid-template-columns:minmax(0,1fr) auto}
+  .systems .pr{display:none}
+  .segbar i{width:9px;height:20px;clip-path:polygon(0 5px,100% 0,100% 15px,0 100%)}
+}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="wordmark" href="/" aria-label="Inclysi home"><svg viewBox="-115 -904 3238 1131" role="img" aria-label="Inclysi"><path fill="currentColor" d="M61 0H251V-542L61 -424Z M2909 -622H3099V-742H2909Z M334 0V-542H515V-388L480 -433Q511 -492 565 -522Q619 -551 687 -551Q750 -551 801 -526Q852 -500 882 -447Q911 -394 911 -310V0H721V-279Q721 -337 698 -364Q674 -390 632 -390Q602 -390 577 -376Q552 -363 538 -335Q524 -307 524 -262V0Z M1274 9Q1184 9 1114 -27Q1043 -63 1003 -126Q963 -190 963 -272Q963 -354 1003 -417Q1043 -480 1114 -516Q1184 -551 1274 -551Q1366 -551 1433 -512Q1500 -473 1528 -402L1381 -327Q1362 -365 1334 -382Q1306 -400 1273 -400Q1240 -400 1213 -385Q1186 -370 1170 -342Q1155 -313 1155 -272Q1155 -230 1170 -201Q1186 -172 1213 -157Q1240 -142 1273 -142Q1306 -142 1334 -160Q1362 -177 1381 -215L1528 -140Q1500 -69 1433 -30Q1366 9 1274 9Z M1558 0V-742H1748V0Z M1924 203Q1881 203 1838 190Q1794 176 1767 154L1833 21Q1850 36 1872 44Q1895 53 1917 53Q1948 53 1966 39Q1984 25 1997 -5L2022 -68L2037 -87L2221 -542H2402L2168 22Q2140 92 2104 132Q2067 171 2022 187Q1978 203 1924 203ZM1998 23 1759 -542H1954L2130 -104Z M2599 9Q2530 9 2464 -7Q2399 -23 2359 -47L2416 -177Q2454 -154 2505 -140Q2556 -127 2605 -127Q2653 -127 2672 -137Q2690 -147 2690 -164Q2690 -180 2672 -188Q2655 -195 2626 -199Q2598 -203 2564 -208Q2530 -213 2496 -222Q2461 -230 2432 -248Q2404 -265 2387 -295Q2370 -325 2370 -371Q2370 -423 2400 -464Q2431 -504 2490 -528Q2549 -551 2634 -551Q2691 -551 2750 -540Q2808 -528 2848 -505L2791 -376Q2751 -399 2711 -408Q2671 -416 2635 -416Q2587 -416 2568 -405Q2548 -394 2548 -378Q2548 -362 2565 -354Q2582 -345 2610 -340Q2639 -336 2673 -332Q2707 -327 2742 -318Q2776 -309 2804 -292Q2833 -274 2850 -244Q2867 -215 2867 -169Q2867 -119 2836 -79Q2806 -39 2746 -15Q2687 9 2599 9Z M2909 0V-542H3099V0Z"/><path fill="#0A37E8" d="M-91 -459L251 -671V-880L-91 -668Z"/></svg></a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#platform">Platform</a>
+      <a href="#response">Response</a>
+      <a href="#deployment">Deployment</a>
+      <a href="#rules">Rule Assistant</a>
+    </nav>
+    <div class="nav-right">
+      <div class="nav-social">
+        <a href="https://www.linkedin.com/company/inclysi-ai/" rel="noopener">LinkedIn</a>
+        <a href="https://www.instagram.com/inclysiai/" rel="noopener">Instagram</a>
+      </div>
+      <a class="btn btn-primary" href="mailto:contact@inclysi.com">Get in touch</a>
+      <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mobile-menu" id="menu-btn">Menu</button>
+    </div>
+  </div>
+  <nav class="mobile-menu" id="mobile-menu" aria-label="Mobile">
+    <a href="#platform">Platform</a>
+    <a href="#response">Response</a>
+    <a href="#deployment">Deployment</a>
+    <a href="#rules">Rule Assistant</a>
+    <a href="mailto:contact@inclysi.com">Get in touch</a>
+    <a href="https://www.linkedin.com/company/inclysi-ai/" rel="noopener">LinkedIn</a>
+    <a href="https://www.instagram.com/inclysiai/" rel="noopener">Instagram</a>
+  </nav>
+</header>
+
+<main>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="wrap">
+    <div class="tagline"><svg class="mark" viewBox="0 0 63 87" aria-hidden="true"><path fill="#0A37E8" d="M0 33L53 0V26L0 59Z"/><path fill="#D6D9E0" d="M10 61L63 28V54L10 87Z"/></svg><span>AI SOC Intelligence</span></div>
+    <h1><span class="ln">Every alert read.</span><span class="ln">Every decision explained.</span><span class="ln">Nothing leaves your network.</span></h1>
+    <div class="hero-row">
+      <p class="lede">Inclysi sits on your SIEM, whichever one it is, and reads every incident it raises with a local model: scored, ranked and backed by the evidence that produced the score. Analysts open a ticket already knowing why, and approve the response in the same place.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="#platform">See the platform</a>
+        <a class="textlink" href="#rules">Try Rule Assistant</a>
+      </div>
+    </div>
+
+    <div class="inst" id="inst" aria-label="Illustration: incidents from the SIEM are read, scored with evidence, and decided">
+      <div class="inst-col inst-queue">
+        <div class="inst-head"><span>Incident queue</span><span><b id="c-read">1,284</b> read</span></div>
+        <ol class="queue" id="queue"><li class="done" data-k="0" data-id="48224"><button type="button" title="Read this incident"><span class="id">48224</span><span class="name">Suspicious PowerShell Encoded Command</span><span class="ent">FIN-WS-0117</span></button></li><li data-k="1" data-id="48223"><button type="button" title="Read this incident"><span class="id">48223</span><span class="name">Excessive Firewall Denies from One Source</span><span class="ent">10.20.4.9</span></button></li><li data-k="2" data-id="48222"><button type="button" title="Read this incident"><span class="id">48222</span><span class="name">Possible DNS Tunneling</span><span class="ent">DEV-LAB-03</span></button></li><li data-k="3" data-id="48221"><button type="button" title="Read this incident"><span class="id">48221</span><span class="name">Admin Share Access from Workstation</span><span class="ent">OPS-WS-0042</span></button></li><li data-k="4" data-id="48220"><button type="button" title="Read this incident"><span class="id">48220</span><span class="name">Repeated Login Failures for One Account</span><span class="ent">svc_backup</span></button></li><li data-k="5" data-id="48219"><button type="button" title="Read this incident"><span class="id">48219</span><span class="name">Outbound Connection to Threat Intel Match</span><span class="ent">10.31.7.210</span></button></li><li data-k="6" data-id="48218"><button type="button" title="Read this incident"><span class="id">48218</span><span class="name">Scheduled Task Created by Non-Admin User</span><span class="ent">HR-WS-0210</span></button></li><li data-k="7" data-id="48217"><button type="button" title="Read this incident"><span class="id">48217</span><span class="name">Repeated Access to Honeytoken File</span><span class="ent">10.20.6.14</span></button></li><li data-k="8" data-id="48216"><button type="button" title="Read this incident"><span class="id">48216</span><span class="name">Internal Port Scan</span><span class="ent">10.12.0.77</span></button></li><li data-k="9" data-id="48215"><button type="button" title="Read this incident"><span class="id">48215</span><span class="name">Impossible Travel Login</span><span class="ent">d.okafor</span></button></li><li data-k="10" data-id="48214"><button type="button" title="Read this incident"><span class="id">48214</span><span class="name">Database Query Outside Business Hours</span><span class="ent">DB-ERP-02</span></button></li><li data-k="1" data-id="48213"><button type="button" title="Read this incident"><span class="id">48213</span><span class="name">Excessive Firewall Denies from One Source</span><span class="ent">10.20.4.9</span></button></li><li data-k="3" data-id="48212"><button type="button" title="Read this incident"><span class="id">48212</span><span class="name">Admin Share Access from Workstation</span><span class="ent">OPS-WS-0042</span></button></li><li data-k="5" data-id="48211"><button type="button" title="Read this incident"><span class="id">48211</span><span class="name">Outbound Connection to Threat Intel Match</span><span class="ent">10.31.7.210</span></button></li></ol>
+      </div>
+      <div class="inst-col inst-reason">
+        <div class="inst-head"><span>Reasoning</span><span id="r-state">local model</span></div>
+        <div class="reason">
+          <div class="subject"><span class="sid" id="sid">48224</span><span class="sname" id="sname">Suspicious PowerShell Encoded Command</span></div>
+          <dl class="fields" id="fields"><dt>source</dt><dd>FIN-WS-0117</dd><dt>user</dt><dd>m.lindqvist</dd><dt>log source</dt><dd>Windows Security</dd><dt>events</dt><dd>3 in 40 s</dd></dl>
+          <ol class="evidence" id="evidence"><li class="pos"><span class="sg">+</span><span>parent process is outlook.exe, child powershell.exe -enc</span><span class="wt"><i class="on"></i><i class="on"></i><i class="on"></i></span></li><li class="pos"><span class="sg">+</span><span>command decodes to a download cradle (IEX, WebClient)</span><span class="wt"><i class="on"></i><i class="on"></i><i></i></span></li><li class="pos"><span class="sg">+</span><span>two similar incidents in memory, one confirmed phishing</span><span class="wt"><i class="on"></i><i class="on"></i><i></i></span></li><li class="pos"><span class="sg">+</span><span>host has no history of script execution</span><span class="wt"><i class="on"></i><i></i><i></i></span></li><li class="neg"><span class="sg">−</span><span>endpoint agent reports the process killed on exit</span><span class="wt"><i class="on"></i><i></i><i></i></span></li></ol>
+          <div class="score"><span>threat score</span><b id="score">0.94</b><span class="bar" id="bar"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+          <div class="verdict" id="verdict"><span class="stamp"><i class="chip"></i>Escalate</span><span class="cf">confidence <b>0.91</b></span></div>
+        </div>
+      </div>
+      <div class="inst-col inst-dec">
+        <div class="inst-head"><span>Decisions</span><span><b id="c-raised">7</b> raised</span></div>
+        <ol class="decisions" id="decisions"><li><span class="stamp"><i class="chip"></i>Escalate</span><span class="dsub">48224  FIN-WS-0117</span><span class="dsc">0.94</span><p>Encoded PowerShell spawned by Outlook on FIN-WS-0117, download cradle, matches a confirmed phishing case.</p><span class="dresp">response <b>isolate FIN-WS-0117 (EDR)</b> awaiting approval</span></li><li class="old"><span class="stamp"><i class="chip dim"></i>Benign</span><span class="dsub">48223  10.20.4.9</span><span class="dsc">0.09</span><p>Scheduled vulnerability scan from 10.20.4.9; the identical pattern was closed benign 41 times.</p></li><li class="old"><span class="stamp"><i class="chip silver"></i>Watch</span><span class="dsub">48222  DEV-LAB-03</span><span class="dsc">0.67</span><p>First DNS to a high-entropy domain from DEV-LAB-03; no history for this host, watching for a repeat.</p></li></ol>
+      </div>
+      <div class="inst-foot"><span>runs on<b>your hardware</b></span><span>outbound traffic<b>0 B</b></span><span>every decision<b>explained</b></span><span>analyst<b>in the loop</b></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROBLEM ============ -->
+<section class="section problem">
+  <div class="wrap two">
+    <div>
+      <h2>Most of the queue is never read.</h2>
+      <div class="copy">
+        <p>A mid-size SIEM raises thousands of incidents a day. Analysts clear what they can, suppress what they can’t, and the rest expires unread. The threats that matter are in there, averaged out by everything that doesn’t.</p>
+        <p>Another dashboard doesn’t change that. Reading every incident, deciding on each one and writing down why, does.</p>
+      </div>
+    </div>
+    <figure class="segfig">
+      <div class="segbar" id="segbar" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <figcaption>
+        <b>70%</b><span><i></i>of alerts are never investigated</span>
+        <b>4.5 h</b><span><i class="on"></i>average triage time for the ones that are</span>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ PLATFORM ============ -->
+<section class="section" id="platform">
+  <div class="wrap two">
+    <div class="sticky">
+      <h2>What it does</h2>
+      <p class="sub">Not another dashboard. A system that reads, decides and remembers, inside your perimeter.</p>
+    </div>
+    <dl class="caps">
+      <div><i class="chip"></i><div><dt>Triage</dt><dd>Every incident is read, scored and ranked before an analyst sees it. The queue you open in the morning is already in order, with the reason next to each line.</dd><dd class="ex">48224 <b>0.94</b> escalate &nbsp; 48223 <b>0.09</b> benign &nbsp; 48222 <b>0.67</b> watch</dd></div></div>
+      <div><i class="chip"></i><div><dt>Evidence chain</dt><dd>Each decision shows what it rests on: the events, the history, the similar cases and how they ended. Analysts can follow the chain, or dispute it.</dd><dd class="ex">+ parent process outlook.exe &nbsp; + two similar cases, one confirmed &nbsp; − process killed on exit</dd></div></div>
+      <div><i class="chip"></i><div><dt>Divergence Intel</dt><dd>When the analyst and Inclysi disagree, the disagreement isn’t lost. It becomes a signal of its own, pointing at blind spots on either side.</dd><dd class="ex">analyst <b>benign</b> &nbsp; inclysi <b>escalate 0.87</b> &nbsp; kept as a divergence</dd></div></div>
+      <div><i class="chip"></i><div><dt>Response</dt><dd>A decision can carry an action: block, isolate, disable, notify, annotate. Inclysi proposes it, an analyst approves it, the connected system carries it out, and Inclysi reads back to confirm it happened.</dd><dd class="ex">#4224 isolate FIN-WS-0117 &nbsp; approved by s.tanaka &nbsp; <b>verified</b> 41 s later</dd></div></div>
+      <div><i class="chip"></i><div><dt>Rule Assistant</dt><dd>Describe a threat in plain language and get a rule written in your SIEM’s own rule language, checked against history, delivered disabled until someone enables it.</dd><dd class="ex">"admin shares on more than three servers in five minutes" &nbsp; <b>6 conditions</b> &nbsp; checked on 14 days &nbsp; 2 matches</dd></div></div>
+      <div><i class="chip"></i><div><dt>Memory</dt><dd>What the SOC learns stays in the SOC. Verdicts, entity history and baselines accumulate into a knowledge base that doesn’t resign when a senior analyst does.</dd><dd class="ex">10.20.4.9 &nbsp; <b>41 verdicts</b> &nbsp; scanner, benign &nbsp; last seen Tue 02:04</dd></div></div>
+      <div><i class="chip"></i><div><dt>Deployment</dt><dd>A single VM on your hardware. The model runs inside it. The SIEM is read through its API; nothing is replaced and nothing is sent out to be analyzed.</dd><dd class="ex">analysis leaving the network <b>0 B</b> &nbsp; model inside the VM &nbsp; SIEM read-only, rules opt-in</dd></div></div>
+    </dl>
+  </div>
+</section>
+
+<!-- ============ RESPONSE ============ -->
+<section class="section" id="response">
+  <div class="wrap">
+    <h2>It can act. It asks first.</h2>
+    <p class="sub">A decision can carry a response: block the address, isolate the host, disable the account, notify, annotate the case. Inclysi proposes it, an analyst approves it, the connected system carries it out, and Inclysi reads the system back to confirm. Every step is on the ledger, including the ones that failed.</p>
+    <div class="resp" id="resp" aria-label="Illustration: response ledger and connected systems">
+      <div class="resp-main">
+        <div class="inst-head"><span>Response ledger</span><span><b id="l-open">3</b> open</span></div>
+        <ol class="ops" id="ops"><li class="op st-await" data-s="14" data-c="4224"><span class="st"><i class="chip dim"></i>Awaiting approval</span><span class="case"><b>#4224</b>Encoded PowerShell, FIN-WS-0117</span><span class="act">Isolate host</span><span class="sys">EDR</span><span class="age">14s</span><p class="why">Proposed by Inclysi from decision #4224. Waiting for an analyst.</p></li><li class="op st-exec" data-s="41" data-c="4231"><span class="st"><i class="chip silver"></i>Executing</span><span class="case"><b>#4231</b>Admin share fan-out, OPS-WS-0042</span><span class="act">Disable account r.patel</span><span class="sys">directory</span><span class="age">41s</span><p class="why">Approved by j.weber. Call in progress.</p></li><li class="op st-verified" data-s="130" data-c="4218"><span class="st"><i class="chip"></i>Verified</span><span class="case"><b>#4218</b>Beaconing to C2, 10.31.7.210</span><span class="act">Block address at the perimeter</span><span class="sys">firewall</span><span class="age">2m</span><p class="why">Read back from the firewall: rule present, 0 hits since.</p></li><li class="op st-fail" data-s="188" data-c="4210"><span class="st"><i class="x">×</i>Failed</span><span class="case"><b>#4210</b>Honeytoken read, 10.20.6.14</span><span class="act">Add investigation note</span><span class="sys">SIEM</span><span class="age">3m</span><p class="why">The call did not succeed: the SIEM answered 401. Nothing was changed; needs attention.</p></li><li class="op st-verified" data-s="412" data-c="4203"><span class="st"><i class="chip"></i>Verified</span><span class="case"><b>#4203</b>Salary table pulled, DB-ERP-02</span><span class="act">Notify the DBA on call</span><span class="sys">email</span><span class="age">6m</span><p class="why">Read back from the relay: accepted for delivery, one recipient.</p></li><li class="op st-expired" data-s="14520" data-c="4197"><span class="st"><i class="x">–</i>Expired</span><span class="case"><b>#4197</b>Impossible travel, d.okafor</span><span class="act">Revoke sessions</span><span class="sys">identity</span><span class="age">242m</span><p class="why">Nobody decided within 4 hours. The proposal expired; nothing was changed.</p></li></ol>
+      </div>
+      <div class="resp-side">
+        <div class="inst-head"><span>Connected systems</span><span>outbound only</span></div>
+        <ul class="systems">
+          <li><span>perimeter firewall</span><span class="pr">HTTPS</span><span class="ok">ready</span></li>
+          <li><span>endpoint, EDR</span><span class="pr">HTTPS</span><span class="ok">ready</span></li>
+          <li><span>directory</span><span class="pr">LDAPS</span><span class="ok">ready</span></li>
+          <li><span>email relay</span><span class="pr">SMTP</span><span class="ok">ready</span></li>
+          <li><span>your SIEM</span><span class="pr">HTTPS</span><span class="ok">ready</span></li>
+          <li class="off"><span>identity provider</span><span class="pr">HTTPS</span><span>not declared</span></li>
+        </ul>
+        <p class="sys-note">A system you haven’t declared isn’t offered. Nothing listens; nothing connects back.</p>
+      </div>
+      <div class="inst-foot resp-foot"><span>proposed by<b>Inclysi</b></span><span>approved by<b>an analyst</b></span><span>carried out by<b>the system</b></span><span>verified by<b>reading back</b></span></div>
+    </div>
+    <div class="arch-notes">
+      <div><b>Proposed, not fired</b>Every response starts as a proposal attached to a decision. An analyst approves it, or lets it expire. Nothing runs on its own.</div>
+      <div><b>Scoped per system</b>Each connected system has a write scope you set. An action outside it is never offered, whoever asks.</div>
+      <div><b>Verified and recorded</b>After execution Inclysi reads the target back and records what it found. Failures stay on the ledger with the reason, so nobody assumes a block that never landed.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ARCHITECTURE ============ -->
+<section class="section" id="deployment">
+  <div class="wrap">
+    <h2>Everything runs inside the line.</h2>
+    <p class="sub">One VM next to your SIEM. Everything Inclysi needs to read, decide and remember lives on it. Nothing listens, nothing connects back, and no connection exists until you declare it.</p>
+    <div class="diagram"><svg viewBox="0 0 1100 486" role="img" aria-label="Deployment: SIEM, Inclysi, analysts and declared response targets inside your network; no route out for analysis"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="ahp"/></marker><marker id="ahb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="ahb"/></marker><pattern id="hatch" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(-32)"><path d="M0 0V9" class="hatch"/></pattern></defs><style>.ahp{fill:var(--line-2)}.ahb{fill:var(--royal)}.hatch{stroke:var(--line-2);stroke-width:1;opacity:.55}</style><rect class="boundary" x="40" y="36" width="880" height="406" rx="8"/><text x="60" y="64" class="t-white">your network</text><text x="480" y="470" text-anchor="middle" class="t-dim">nothing listens, nothing connects back</text><rect class="box" x="62" y="150" width="178" height="140" rx="5"/><text x="80" y="182" class="t-title">SIEM</text><text x="80" y="214">incidents, events</text><text x="80" y="232">flows, lists, rules</text><text x="80" y="250">any vendor</text><text x="80" y="274" class="t-dim">unchanged</text><rect class="box-blue" x="430" y="110" width="200" height="220" rx="5"/><rect x="431" y="111" width="198" height="218" rx="4" fill="url(#hatch)"/><g transform="translate(510 158) scale(0.62)"><path fill="#0A37E8" d="M0 33L53 0V26L0 59Z"/><path fill="#D6D9E0" d="M10 61L63 28V54L10 87Z"/></g><text x="530" y="250" text-anchor="middle" class="t-title">Inclysi</text><text x="530" y="272" text-anchor="middle" class="t-dim">one VM, sealed</text><rect class="box" x="780" y="86" width="130" height="132" rx="5"/><text x="798" y="118" class="t-title">Analysts</text><text x="798" y="148">confirm</text><text x="798" y="168">override</text><text x="798" y="188">approve actions</text><text x="798" y="208">enable rules</text><rect class="box" x="770" y="236" width="140" height="136" rx="5"/><text x="788" y="268" class="t-title">Response targets</text><text x="788" y="298">firewall, EDR</text><text x="788" y="318">directory, email</text><text x="788" y="338">your SIEM</text><text x="788" y="358" class="t-dim">declared by you</text><path class="wire-blue" d="M240 192H428" marker-end="url(#ahb)"/><text x="334" y="180" text-anchor="middle" class="t-blue t-wire">incidents, events, flows</text><path class="wire" d="M430 258H242" marker-end="url(#ah)"/><text x="334" y="278" text-anchor="middle" class="t-wire">rules, delivered disabled</text><path class="wire-blue" d="M630 140H778" marker-end="url(#ahb)"/><text x="704" y="128" text-anchor="middle" class="t-blue t-wire">decisions, evidence</text><path class="wire" d="M780 178H632" marker-end="url(#ah)"/><text x="704" y="198" text-anchor="middle" class="t-wire">verdicts, approvals</text><path class="wire-blue" d="M630 290H768" marker-end="url(#ahb)"/><text x="699" y="264" text-anchor="middle" class="t-blue t-wire">approved actions</text><text x="699" y="279" text-anchor="middle" class="t-blue t-wire">within scope</text><path class="wire" d="M770 322H632" marker-end="url(#ah)"/><text x="699" y="342" text-anchor="middle" class="t-wire">read back, verified</text><path class="wire-dead" d="M530 330V404H918"/><path d="M913 398L925 410M925 398L913 410" stroke="#D6D9E0" stroke-width="1.25" fill="none"/><rect class="box" x="968" y="382" width="100" height="44" rx="5"/><text x="1018" y="409" text-anchor="middle" class="t-dim">internet</text><text x="724" y="392" text-anchor="middle" class="t-dim t-wire">analysis, memory, model: no route</text></svg></div>
+    <div class="arch-notes">
+      <div><b>Read, not replace</b>Incidents, events and flows come in through your SIEM’s API, whichever SIEM it is. Your correlation rules keep running as they are.</div>
+      <div><b>No external calls for analysis</b>The model runs inside the VM. No API keys, no usage metering, no data sent anywhere to be scored.</div>
+      <div><b>Response targets are yours to declare</b>Firewall, EDR, directory, email, SIEM: reached outbound, only after you configure them. A system you haven’t declared is never offered.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RULE ASSISTANT ============ -->
+<section class="section" id="rules">
+  <div class="wrap">
+    <h2>Describe the threat. Get the rule.</h2>
+    <p class="sub">Rule Assistant grounds plain language in what your SIEM already knows: data sources, event IDs, fields, lists. Then it writes the rule in your SIEM’s own rule language and replays it against history before anyone enables it.</p>
+    <div class="ra" id="ra">
+      <div class="ra-head"><span>Rule Assistant</span><button type="button" id="ra-replay">Replay</button></div>
+      <div class="ra-prompt"><span class="pr">&gt;</span><span id="ra-text"></span></div>
+      <div class="ra-body">
+        <div>
+          <div class="ra-lbl">grounding</div>
+          <dl class="ground" id="ground"></dl>
+        </div>
+        <div>
+          <div class="ra-lbl">rule</div>
+          <ol class="rule" id="rule"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section class="section cta" id="contact">
+  <svg class="bigmark" viewBox="0 0 63 87" aria-hidden="true"><path fill="#0B2FC6" d="M0 33L53 0V26L0 59Z"/><path fill="#D6D9E0" fill-opacity=".9" d="M10 61L63 28V54L10 87Z"/></svg>
+  <div class="wrap">
+    <div>
+      <h2>Run it on your own incidents.</h2>
+      <p>Inclysi deploys inside your network and works on the SIEM data you already have. Talk to us about a pilot.</p>
+    </div>
+    <div class="side">
+      <a class="btn btn-light" href="mailto:contact@inclysi.com">Get in touch</a>
+      <a class="mail" href="mailto:contact@inclysi.com">contact@inclysi.com</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="top">
+      <div class="lockup">
+        <a class="wordmark" href="/" aria-label="Inclysi home"><svg viewBox="-115 -904 3238 1131" role="img" aria-label="Inclysi"><path fill="currentColor" d="M61 0H251V-542L61 -424Z M2909 -622H3099V-742H2909Z M334 0V-542H515V-388L480 -433Q511 -492 565 -522Q619 -551 687 -551Q750 -551 801 -526Q852 -500 882 -447Q911 -394 911 -310V0H721V-279Q721 -337 698 -364Q674 -390 632 -390Q602 -390 577 -376Q552 -363 538 -335Q524 -307 524 -262V0Z M1274 9Q1184 9 1114 -27Q1043 -63 1003 -126Q963 -190 963 -272Q963 -354 1003 -417Q1043 -480 1114 -516Q1184 -551 1274 -551Q1366 -551 1433 -512Q1500 -473 1528 -402L1381 -327Q1362 -365 1334 -382Q1306 -400 1273 -400Q1240 -400 1213 -385Q1186 -370 1170 -342Q1155 -313 1155 -272Q1155 -230 1170 -201Q1186 -172 1213 -157Q1240 -142 1273 -142Q1306 -142 1334 -160Q1362 -177 1381 -215L1528 -140Q1500 -69 1433 -30Q1366 9 1274 9Z M1558 0V-742H1748V0Z M1924 203Q1881 203 1838 190Q1794 176 1767 154L1833 21Q1850 36 1872 44Q1895 53 1917 53Q1948 53 1966 39Q1984 25 1997 -5L2022 -68L2037 -87L2221 -542H2402L2168 22Q2140 92 2104 132Q2067 171 2022 187Q1978 203 1924 203ZM1998 23 1759 -542H1954L2130 -104Z M2599 9Q2530 9 2464 -7Q2399 -23 2359 -47L2416 -177Q2454 -154 2505 -140Q2556 -127 2605 -127Q2653 -127 2672 -137Q2690 -147 2690 -164Q2690 -180 2672 -188Q2655 -195 2626 -199Q2598 -203 2564 -208Q2530 -213 2496 -222Q2461 -230 2432 -248Q2404 -265 2387 -295Q2370 -325 2370 -371Q2370 -423 2400 -464Q2431 -504 2490 -528Q2549 -551 2634 -551Q2691 -551 2750 -540Q2808 -528 2848 -505L2791 -376Q2751 -399 2711 -408Q2671 -416 2635 -416Q2587 -416 2568 -405Q2548 -394 2548 -378Q2548 -362 2565 -354Q2582 -345 2610 -340Q2639 -336 2673 -332Q2707 -327 2742 -318Q2776 -309 2804 -292Q2833 -274 2850 -244Q2867 -215 2867 -169Q2867 -119 2836 -79Q2806 -39 2746 -15Q2687 9 2599 9Z M2909 0V-542H3099V0Z"/><path fill="#0A37E8" d="M-91 -459L251 -671V-880L-91 -668Z"/></svg></a>
+        <div class="lockup-tag">AI SOC INTELLIGENCE</div>
+      </div>
+      <nav class="footer-links" aria-label="Footer">
+        <a href="mailto:contact@inclysi.com">Contact</a>
+        <a href="https://www.linkedin.com/company/inclysi-ai/" rel="noopener">LinkedIn</a>
+        <a href="https://www.instagram.com/inclysiai/" rel="noopener">Instagram</a>
+      </nav>
+    </div>
+    <div class="bottom">
+      <span>© 2026 Inclysi. All rights reserved.</span>
+      <span>inclysi.com</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+  var motion=!!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: no-preference)').matches);
+  var T=motion?1:0; // delay multiplier
+  function fmt(n){return n.toLocaleString('en-US');}
+  function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+  /* ---------- mobile menu ---------- */
+  var btn=document.getElementById('menu-btn'),menu=document.getElementById('mobile-menu');
+  if(btn&&menu){
+    btn.addEventListener('click',function(){
+      var open=menu.classList.toggle('open');
+      btn.setAttribute('aria-expanded',open?'true':'false');btn.textContent=open?'Close':'Menu';
+    });
+    menu.addEventListener('click',function(e){
+      if(e.target.tagName==='A'){menu.classList.remove('open');btn.setAttribute('aria-expanded','false');btn.textContent='Menu';}
+    });
+  }
+
+  /* ---------- instrument ---------- */
+  var POOL=[{"name":"Suspicious PowerShell Encoded Command","ent":"FIN-WS-0117","fields":[["source","FIN-WS-0117"],["user","m.lindqvist"],["log source","Windows Security"],["events","3 in 40 s"]],"ev":[["parent process is outlook.exe, child powershell.exe -enc",0.18],["command decodes to a download cradle (IEX, WebClient)",0.14],["two similar incidents in memory, one confirmed phishing",0.12],["host has no history of script execution",0.06],["endpoint agent reports the process killed on exit",-0.06]],"score":0.94,"v":"esc","conf":0.91,"resp":"isolate FIN-WS-0117 (EDR)","sum":"Encoded PowerShell spawned by Outlook on FIN-WS-0117, download cradle, matches a confirmed phishing case."},{"name":"Excessive Firewall Denies from One Source","ent":"10.20.4.9","fields":[["source","10.20.4.9"],["destinations","212"],["log source","Perimeter firewall"],["events","1,840 in 10 min"]],"ev":[["1,840 denies across 212 destinations in ten minutes",0.08],["source is the vulnerability scanner in the Scanners list",-0.22],["41 prior verdicts on this pattern, all benign",-0.15],["inside the Tuesday 02:00 scan window",-0.12]],"score":0.09,"v":"benign","conf":0.96,"sum":"Scheduled vulnerability scan from 10.20.4.9; the identical pattern was closed benign 41 times."},{"name":"Possible DNS Tunneling","ent":"DEV-LAB-03","fields":[["source","DEV-LAB-03"],["domain","first seen today"],["log source","DNS resolver"],["events","312 in 15 min"]],"ev":[["312 queries to one domain, labels with high entropy",0.14],["domain first seen today, no reputation data either way",0.09],["host is in the dev lab subnet, tooling there is noisy",-0.06]],"score":0.67,"v":"watch","conf":0.72,"sum":"First DNS to a high-entropy domain from DEV-LAB-03; no history for this host, watching for a repeat."},{"name":"Admin Share Access from Workstation","ent":"OPS-WS-0042","fields":[["source","OPS-WS-0042"],["user","r.patel"],["log source","Windows Security"],["events","5140 × 6"]],"ev":[["ADMIN$ reached on three servers within four minutes",0.16],["account has no admin share activity in 90 days",0.13],["one of the targets is a domain controller",0.12],["working hours, interactive session",-0.02]],"score":0.89,"v":"esc","conf":0.88,"resp":"disable r.patel (directory)","sum":"Admin share fan-out from OPS-WS-0042 to three servers including DC-01; the account has no such history."},{"name":"Repeated Login Failures for One Account","ent":"svc_backup","fields":[["user","svc_backup"],["source","SRV-BKP-01"],["log source","Windows Security"],["events","58 in 6 min"]],"ev":[["58 failures in six minutes from SRV-BKP-01",0.07],["password rotated at 02:00, failures stop at 02:06",-0.21],["same job failed the same way after the last rotation",-0.16],["source is the backup server itself",-0.1]],"score":0.1,"v":"benign","conf":0.94,"sum":"svc_backup failures followed a password rotation and stopped inside the window; same as last rotation."},{"name":"Outbound Connection to Threat Intel Match","ent":"10.31.7.210","fields":[["source","10.31.7.210"],["indicator","added yesterday"],["log source","Proxy, firewall"],["events","61 in 5 h"]],"ev":[["destination matches a C2 indicator added yesterday",0.17],["beaconing: 61 connections at 300-second intervals",0.15],["same host raised an incident an hour earlier",0.1],["indicator source carries a 3% false-positive rate",-0.03]],"score":0.89,"v":"esc","conf":0.9,"resp":"block 10.31.7.210 at the perimeter","sum":"Beaconing from 10.31.7.210 to a fresh C2 indicator every 300 seconds; the host already raised earlier today."},{"name":"Scheduled Task Created by Non-Admin User","ent":"HR-WS-0210","fields":[["source","HR-WS-0210"],["user","a.moreau"],["log source","Windows Security"],["events","4698 × 1"]],"ev":[["task runs a script from the user profile folder",0.12],["user is not a member of any admin group",0.06],["one similar case in memory, closed benign (HR macro)",-0.07]],"score":0.61,"v":"watch","conf":0.7,"sum":"New scheduled task on HR-WS-0210 running a profile-folder script; one similar case was benign, watching."},{"name":"Repeated Access to Honeytoken File","ent":"10.20.6.14","fields":[["source","10.20.6.14"],["target","SRV-FILE-01"],["log source","File audit"],["events","4 in 2 min"]],"ev":[["honeytoken path read four times; nothing legitimate reads it",0.24],["host is on the watchlist since an earlier divergence",0.11],["reads followed a new SMB session from a workstation",0.08]],"score":0.93,"v":"esc","conf":0.93,"resp":"isolate 10.20.6.14 (EDR)","sum":"Honeytoken on SRV-FILE-01 read four times from 10.20.6.14, a host already on the watchlist."},{"name":"Internal Port Scan","ent":"10.12.0.77","fields":[["source","10.12.0.77"],["targets","40 hosts"],["log source","Flow collector"],["events","1,022 ports"]],"ev":[["1,022 ports on 40 hosts in three minutes",0.1],["source is the asset-inventory scanner in the Scanners list",-0.24],["scheduled nightly at 03:00, 30 prior benign verdicts",-0.19]],"score":0.17,"v":"benign","conf":0.95,"sum":"Nightly asset-inventory scan from 10.12.0.77; the pattern was closed benign 30 times."},{"name":"Impossible Travel Login","ent":"d.okafor","fields":[["user","d.okafor"],["logins","Madrid, Singapore"],["log source","Identity provider"],["interval","19 min"]],"ev":[["two logins 11,000 km apart within nineteen minutes",0.15],["second login is the corporate VPN egress in Singapore",-0.2],["user is on this week's travel list",-0.09]],"score":0.36,"v":"benign","conf":0.86,"sum":"Madrid then Singapore in 19 minutes, but the second login is the Singapore VPN egress and the user is travelling."},{"name":"Database Query Outside Business Hours","ent":"DB-ERP-02","fields":[["database","DB-ERP-02"],["account","app_erp"],["log source","Database activity monitor"],["rows","12,000"]],"ev":[["SELECT on the salary table at 01:14 from a workstation",0.16],["12,000 rows returned, forty times the account's baseline",0.14],["account is normally used by the application server only",0.11]],"score":0.91,"v":"esc","conf":0.89,"resp":"notify the DBA on call (email)","sum":"Salary table pulled at 01:14 from a workstation with app_erp, forty times the usual row count."}];
+  var SHOW_WEIGHTS=false; // true: show numeric contributions and a running score
+  var LABEL={esc:'Escalate',watch:'Watch',benign:'Benign'},CHIP={esc:'',watch:' silver',benign:' dim'};
+  function wtHTML(w){var n=Math.abs(w)>=0.15?3:(Math.abs(w)>=0.09?2:1),h='';for(var i=0;i<3;i++)h+='<i'+(i<n?' class="on"':'')+'></i>';return '<span class="wt">'+h+'</span>';}
+  var queue=document.getElementById('queue'),evidence=document.getElementById('evidence'),fields=document.getElementById('fields'),
+      sid=document.getElementById('sid'),sname=document.getElementById('sname'),bar=document.getElementById('bar'),
+      scoreEl=document.getElementById('score'),verdictEl=document.getElementById('verdict'),decisions=document.getElementById('decisions'),
+      cRead=document.getElementById('c-read'),cRaised=document.getElementById('c-raised'),rState=document.getElementById('r-state');
+  var nextId=48225,read=1284,raised=7,busy=false,cycleTimer=null,queueTimer=null,shown=0.94,tween=null;
+
+  function stampHTML(v){return '<span class="stamp"><i class="chip'+CHIP[v]+'"></i>'+LABEL[v]+'</span>';}
+
+  function setScore(v){
+    shown=v;scoreEl.textContent=v.toFixed(2);
+    var on=Math.round(v*20),segs=bar.children;
+    for(var i=0;i<segs.length;i++) segs[i].classList.toggle('on',i<on);
+  }
+  function animateScore(to,ms){
+    if(tween) cancelAnimationFrame(tween);
+    if(!motion){setScore(to);return;}
+    var from=shown,t0=null;
+    function step(ts){
+      if(t0===null) t0=ts;
+      var p=Math.min(1,(ts-t0)/ms),e=1-Math.pow(1-p,3);
+      setScore(from+(to-from)*e);
+      if(p<1) tween=requestAnimationFrame(step); else tween=null;
+    }
+    tween=requestAnimationFrame(step);
+  }
+
+  function rowHTML(o,id){return '<button type="button" title="Read this incident"><span class="id">'+id+'</span><span class="name">'+esc(o.name)+'</span><span class="ent">'+esc(o.ent)+'</span></button>';}
+
+  function pushIncident(){
+    var o=POOL[Math.floor(Math.random()*POOL.length)],li=document.createElement('li');
+    li.className='new';li.dataset.k=POOL.indexOf(o);li.dataset.id=nextId;
+    li.innerHTML=rowHTML(o,nextId);
+    queue.insertBefore(li,queue.firstChild);
+    nextId++;read++;cRead.textContent=fmt(read);
+    while(queue.children.length>18) queue.removeChild(queue.lastChild);
+    queueTimer=setTimeout(pushIncident,520+Math.random()*420);
+  }
+
+  function analyze(li){
+    if(busy) return;
+    busy=true;
+    var o=POOL[+li.dataset.k],id=li.dataset.id;
+    li.classList.add('pick');
+    rState.textContent='reading';
+    sid.textContent=id;sname.textContent=o.name;
+    fields.innerHTML=o.fields.map(function(f){return '<dt>'+esc(f[0])+'</dt><dd>'+esc(f[1])+'</dd>';}).join('');
+    evidence.innerHTML='';verdictEl.innerHTML='<span>weighing evidence<i class="cursor"></i></span>';
+    if(SHOW_WEIGHTS) setScore(0.50); else {setScore(0);scoreEl.textContent='—';}
+    var total=0.50,t=420*T;
+    o.ev.forEach(function(e,i){
+      setTimeout(function(){
+        var neg=e[1]<0,el=document.createElement('li');
+        el.className=(neg?'neg':'pos')+' new';
+        el.innerHTML='<span class="sg">'+(neg?'−':'+')+'</span><span>'+esc(e[0])+'</span>'+(SHOW_WEIGHTS?'<span class="dt">'+(neg?'−':'+')+Math.abs(e[1]).toFixed(2)+'</span>':wtHTML(e[1]));
+        evidence.appendChild(el);
+        if(SHOW_WEIGHTS){total=Math.max(0,Math.min(1,total+e[1]));animateScore(total,520);}
+      },t);
+      t+=560*T;
+    });
+    setTimeout(function(){
+      if(SHOW_WEIGHTS) setScore(o.score); else animateScore(o.score,700);
+      verdictEl.innerHTML=stampHTML(o.v)+'<span class="cf">confidence <b>'+o.conf.toFixed(2)+'</b></span>';
+      rState.textContent='decided';
+    },t+180*T);
+    setTimeout(function(){
+      var d=document.createElement('li');
+      d.className='new';
+      d.innerHTML=stampHTML(o.v)+'<span class="dsub">'+id+'  '+esc(o.ent)+'</span><span class="dsc">'+o.score.toFixed(2)+'</span><p>'+esc(o.sum)+'</p>'+(o.resp?'<span class="dresp">response <b>'+esc(o.resp)+'</b> awaiting approval</span>':'');
+      decisions.insertBefore(d,decisions.firstChild);
+      var kids=decisions.children;for(var k=0;k<kids.length;k++) kids[k].classList.toggle('old',k>0);
+      while(decisions.children.length>5) decisions.removeChild(decisions.lastChild);
+      if(o.v==='esc'){raised++;cRaised.textContent=fmt(raised);}
+      li.classList.remove('pick');li.classList.add('done');
+      rState.textContent='local model';
+      busy=false;
+      schedule(6200);
+    },t+900*T);
+  }
+
+  function schedule(ms){
+    if(cycleTimer) clearTimeout(cycleTimer);
+    if(!motion) return;
+    cycleTimer=setTimeout(function(){
+      var rows=queue.querySelectorAll('li:not(.done)');
+      var li=rows[Math.min(rows.length-1,1+Math.floor(Math.random()*2))];
+      if(li) analyze(li); else schedule(1200);
+    },ms);
+  }
+
+  queue.addEventListener('click',function(e){
+    var li=e.target.closest('li');
+    if(!li||busy||li.classList.contains('done')) return;
+    if(cycleTimer) clearTimeout(cycleTimer);
+    analyze(li);
+  });
+
+  // static rows carry data-k/data-id from markup; start the feed and the cycle
+  if(motion){
+    queueTimer=setTimeout(pushIncident,1200);
+    schedule(2600);
+    // pause the instrument when the tab is hidden
+    document.addEventListener('visibilitychange',function(){
+      if(document.hidden){clearTimeout(queueTimer);clearTimeout(cycleTimer);}
+      else{queueTimer=setTimeout(pushIncident,600);if(!busy) schedule(1800);}
+    });
+  }
+
+  /* ---------- problem bar ---------- */
+  var seg=document.getElementById('segbar');
+  if(seg&&motion&&'IntersectionObserver' in window){
+    var segs=seg.children;for(var i=0;i<segs.length;i++) segs[i].style.setProperty('--i',i);
+    var io=new IntersectionObserver(function(en){if(en[0].isIntersecting){seg.classList.add('live');io.disconnect();}},{threshold:.4});
+    io.observe(seg);
+  }
+
+
+  /* ---------- response ledger ---------- */
+  var OPS=[{"c":4224,"t":"Encoded PowerShell, FIN-WS-0117","a":"Isolate host","s":"edr","by":"s.tanaka","path":["await","exec","verified"],"v":"Read back from the EDR: host isolated, network contained, agent still reporting."},{"c":4231,"t":"Admin share fan-out, OPS-WS-0042","a":"Disable account r.patel","s":"dir","by":"j.weber","path":["await","exec","verified"],"v":"Read back from the directory: account disabled, active sessions revoked."},{"c":4218,"t":"Beaconing to C2, 10.31.7.210","a":"Block address at the perimeter","s":"firewall","by":"s.tanaka","path":["await","exec","verified"],"v":"Read back from the firewall: rule present, 0 hits since."},{"c":4210,"t":"Honeytoken read, 10.20.6.14","a":"Add investigation note","s":"siem","by":"m.lindqvist","path":["exec","fail"],"f":"The call did not succeed: the SIEM answered 401. Nothing was changed; needs attention."},{"c":4203,"t":"Salary table pulled, DB-ERP-02","a":"Notify the DBA on call","s":"mail","by":"j.weber","path":["await","exec","verified"],"v":"Read back from the relay: accepted for delivery, one recipient."},{"c":4197,"t":"Impossible travel, d.okafor","a":"Revoke sessions","s":"idp","by":"","path":["await","expired"],"x":"Nobody decided within 4 hours. The proposal expired; nothing was changed."}];
+  var ops=document.getElementById('ops'),lOpen=document.getElementById('l-open');
+  var SYS_LABEL={firewall:'firewall',edr:'EDR',dir:'directory',mail:'email',siem:'SIEM',idp:'identity'};
+  function opHTML(o,st,why,age){
+    var stamp;
+    if(st==='await') stamp='<span class="st"><i class="chip dim"></i>Awaiting approval</span>';
+    else if(st==='exec') stamp='<span class="st"><i class="chip silver"></i>Executing</span>';
+    else if(st==='verified') stamp='<span class="st"><i class="chip"></i>Verified</span>';
+    else if(st==='fail') stamp='<span class="st"><i class="x">×</i>Failed</span>';
+    else stamp='<span class="st"><i class="x">–</i>Expired</span>';
+    return stamp+'<span class="case"><b>#'+o.c+'</b>'+esc(o.t)+'</span><span class="act">'+esc(o.a)+'</span><span class="sys">'+SYS_LABEL[o.s]+'</span><span class="age">'+age+'</span><p class="why">'+why+'</p>';
+  }
+  function countOpen(){
+    var n=0,kids=ops.children;for(var i=0;i<kids.length;i++){if(/st-await|st-exec|st-fail/.test(kids[i].className)) n++;}
+    lOpen.textContent=n;
+  }
+  if(ops&&motion){
+    var oi=0,ageTimer=null;
+    function tick(){
+      var kids=ops.children;
+      for(var i=0;i<kids.length;i++){var a=kids[i].querySelector('.age'),v=+kids[i].dataset.s+1;kids[i].dataset.s=v;a.textContent=v<60?v+'s':(Math.floor(v/60)+'m');}
+    }
+    setInterval(tick,1000);
+    function setState(li,o,st,age){
+      li.className='op st-'+st+' new';li.dataset.s=age;
+      var why=st==='await'?'Proposed by Inclysi from decision #'+o.c+'. Waiting for an analyst.':
+              st==='exec'?'Approved by '+o.by+'. Call in progress.':
+              st==='verified'?o.v: st==='fail'?o.f:o.x;
+      li.innerHTML=opHTML(o,st,why,age<60?age+'s':Math.floor(age/60)+'m');
+      countOpen();
+    }
+    function addOp(){
+      var o=OPS[oi%OPS.length];oi++;
+      var li=document.createElement('li');li.dataset.c=o.c;
+      var dup=ops.querySelector('li[data-c="'+o.c+'"]');if(dup) ops.removeChild(dup);
+      ops.insertBefore(li,ops.firstChild);
+      while(ops.children.length>6) ops.removeChild(ops.lastChild);
+      var start=o.path[0]==='exec'?2:0;
+      setState(li,o,o.path[0],start);
+      var t=0;
+      for(var k=1;k<o.path.length;k++){(function(st,delay){setTimeout(function(){if(li.parentNode) setState(li,o,st,+li.dataset.s);},delay);})(o.path[k],t+=(o.path[k]==='exec'?3200:2600)+Math.random()*900);}
+      setTimeout(addOp,7800+Math.random()*2400);
+    }
+    // seed: carry the static rows' ages
+    var seeded=ops.children;for(var i=0;i<seeded.length;i++){if(!seeded[i].dataset.s) seeded[i].dataset.s=0;}
+    setTimeout(addOp,2200);
+  }
+
+  /* ---------- rule assistant ---------- */
+  var RA={"prompt":"Alert when a workstation reaches admin shares on more than three different servers within five minutes, but ignore the backup job.","ground":[["data source","Windows Security event log"],["event","<b>5140</b>, network share object accessed"],["field","share name (already extracted)"],["list","<b>Admin_Shares</b> (ADMIN$, C$, IPC$)"],["list","<b>Workstation_Subnets</b> (6 CIDR entries)"],["memory","“the backup job” → <b>svc_backup</b>, the account behind the nightly backup"]],"rule":[["head","<b>Lateral movement: admin share fan-out from workstation</b>","rule"],["row","Windows Security events, event ID <b>5140</b>","source"],["row","share name in list <b>Admin_Shares</b>","match"],["cont","source IP in list <b>Workstation_Subnets</b>",""],["cont","user is not <b>svc_backup</b>",""],["row","<b>3 or more</b> distinct destination hosts from the same source IP within <b>5 minutes</b>","when"],["row","open an incident, severity 7, grouped by source IP","then"],["note","Written into your SIEM in its own rule language, <b>disabled</b>, pending analyst review. Replayed on 14 days of events: <b>2 matches</b>, both OPS-WS-0042 on Oct 15."]]};
+  var raText=document.getElementById('ra-text'),ground=document.getElementById('ground'),rule=document.getElementById('rule'),replay=document.getElementById('ra-replay');
+  var raTimers=[],raDone=false;
+  function raClear(){raTimers.forEach(clearTimeout);raTimers=[];raText.textContent='';ground.innerHTML='';rule.innerHTML='';}
+  function at(ms,fn){raTimers.push(setTimeout(fn,ms*T));}
+  function runRA(){
+    raClear();raDone=true;
+    var t=0,p=RA.prompt;
+    if(motion){
+      raText.innerHTML='<i class="cursor"></i>';
+      for(var i=1;i<=p.length;i++){(function(i){at(t,function(){raText.innerHTML=esc(p.slice(0,i))+'<i class="cursor"></i>';});})(i);t+=26+(p[i-1]===' '?18:0);}
+      at(t,function(){raText.textContent=p;});
+      t+=500;
+    } else { raText.textContent=p; }
+    RA.ground.forEach(function(g){
+      at(t,function(){
+        var dt=document.createElement('dt'),dd=document.createElement('dd');
+        dt.textContent=g[0];dd.innerHTML=g[1];dt.className='in';dd.className='in';
+        ground.appendChild(dt);ground.appendChild(dd);
+      });
+      t+=380;
+    });
+    t+=200;
+    RA.rule.forEach(function(r){
+      at(t,function(){var li=document.createElement('li');li.className=r[0]+' in';li.innerHTML=(r[0]==='note'?r[1]:'<span class="k">'+r[2]+'</span><span class="v">'+r[1]+'</span>');rule.appendChild(li);});
+      t+=r[0]==='note'?700:300;
+    });
+  }
+  if(replay) replay.addEventListener('click',runRA);
+  if(ground&&rule){
+    if(motion&&'IntersectionObserver' in window){
+      var io2=new IntersectionObserver(function(en){if(en[0].isIntersecting&&!raDone){runRA();io2.disconnect();}},{threshold:.35});
+      io2.observe(document.getElementById('ra'));
+    } else { runRA(); }
+  }
+})();
+</script>
+</body>
+</html>
